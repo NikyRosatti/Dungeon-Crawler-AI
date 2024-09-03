@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2D Top-Down Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #game {
+      display: grid;
+      grid-template-columns: repeat(8, 60px);
+      grid-template-rows: repeat(8, 60px);
+      gap: 1px;
+      margin: 20px auto;
+      width: 960px;
+    }
+    .cell {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      background-size: cover;
+      position: relative;
+    }
+    .floor {
+      background-image: url('static/images/block2.png');
+      background-size: 60px 60px;
+      z-index: 1;
+    }
+    .wall {
+      background-image: url('static/images/block1.png');
+      background-size: 60px 60px;
+      z-index: 1;
+    }
+    .character {
+      background-image: url('static/images/character.png');
+      background-color: transparent;
+      z-index: 2;
+    }
+    .exit {
+      background-color: #0f0;
+      background-size: 60px 60px;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="game"></div>
+  
+  <script>
+    const gameElement = document.getElementById("game");
+    const map = [
+      [0, 0, 0, 0, 1, 1, 0, 0],
+      [1, 1, 0, 0, 0, 0, 0, 1],
+      [0, 0, 0, 1, 1, 0, 0, 0],
+      [0, 1, 1, 1, 0, 0, 1, 0],
+      [0, 0, 0, 0, 0, 1, 1, 0],
+      [0, 1, 1, 0, 0, 0, 0, 0],
+      [0, 0, 1, 0, 1, 1, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 'E']
+    ];
+    
+    const characterPosition = { x: 0, y: 0 };
+
+    function renderMap() {
+      gameElement.innerHTML = '';
+      for (let y = 0; y < 8; y++) {
+        for (let x = 0; x < 8; x++) {
+          const cell = document.createElement('div');
+          cell.classList.add('cell');
+          
+          if (map[y][x] === 1) {
+            cell.classList.add('wall');
+          } else if (map[y][x] === 'E') {
+            cell.classList.add('exit');
+          } else {
+            cell.classList.add('floor');
+          }
+          
+          if (x === characterPosition.x && y === characterPosition.y) {
+            cell.classList.add('character');
+            cell.textContent = '';
+          }
+          
+          gameElement.appendChild(cell);
+        }
+      }
+    }
+
+    function moveCharacter(dx, dy) {
+      const newX = characterPosition.x + dx;
+      const newY = characterPosition.y + dy;
+      
+      if (newX >= 0 && newX < 8 && newY >= 0 && newY < 8) {
+        if (map[newY][newX] !== 1) {
+          characterPosition.x = newX;
+          characterPosition.y = newY;
+          renderMap();
+
+          if (map[newY][newX] === 'E') {
+            setTimeout(() => alert('You reached the exit!'), 10);
+          }
+        }
+      }
+    }
+
+    document.addEventListener('keydown', (event) => {
+      switch (event.key) {
+        case 'ArrowUp':
+          moveCharacter(0, -1);
+          break;
+        case 'ArrowDown':
+          moveCharacter(0, 1);
+          break;
+        case 'ArrowLeft':
+          moveCharacter(-1, 0);
+          break;
+        case 'ArrowRight':
+          moveCharacter(1, 0);
+          break;
+      }
+    });
+
+    renderMap();
+  </script>
+</body>
+</html>

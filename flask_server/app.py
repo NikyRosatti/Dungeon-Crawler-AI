@@ -12,6 +12,10 @@ current_position = (0, 0)
 def index():
     return render_template('index.html')
 
+@app.route('/game')
+def game():
+    return render_template('game.html')
+
 @socketio.on('position_update')
 def handle_position_update(data):
     global current_position

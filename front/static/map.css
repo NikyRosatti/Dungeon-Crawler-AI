@@ -38,11 +38,11 @@ body {
 
 .start { 
     background: url(/static/media/puerta.png) center bottom / 60% no-repeat,
-                url(/static/media/ladrillos.webp) center center / cover no-repeat;
+                url(/static/media/piso2.jpg) center center / cover no-repeat;
 }
 
 .end {
     background: url(/static/media/salida.png) no-repeat center bottom / 60%,
-                url(/static/media/ladrillos.webp) center center / cover no-repeat;
+                url(/static/media/piso2.jpg) center center / cover no-repeat;
 
 }

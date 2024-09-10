@@ -1,11 +1,14 @@
 from flask import Flask, redirect, render_template, request, url_for, session
 from flask_socketio import SocketIO, emit
 from flask_migrate import Migrate
-from database.models import db, User
+import numpy as np
+from database.models import db, User, MazeBd
 from sqlalchemy import or_
+import json
 import threading
 import time
 from functools import wraps
+from environment import maze
 
 app = Flask(__name__)
 
@@ -30,6 +33,10 @@ def login_required(f):
             return redirect(url_for('login'))  # Redirigir al login si no está autenticado
         return f(*args, **kwargs)
     return decorated_function
+
+@app.route('/map')
+def map():
+    return render_template('map.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -71,9 +78,7 @@ def register():
         email = request.form['email']
 
         # Comprobar si ya existe un usuario con ese nombre o correo
-        existing_user = User.query.filter(
-            or_(User.username == username, User.email == email)
-        ).first()
+        existing_user = User.query.filter(or_(User.username == username, User.email == email)).first()
 
         if existing_user:
             # Si el usuario ya existe, devolver un mensaje de error
@@ -94,10 +99,71 @@ def register():
 
     return render_template('register.html')
 
-@app.route('/map')
-def map():
-    return render_template('map.html')
-   
+@app.route('/mode_creative', methods=['GET','POST'])
+def mode_creative():
+    if request.method == 'POST':
+        try:
+            cantRow = int(request.form.get('rows', 0))
+            print (1)
+            cantColumn = int(request.form.get('columns', 0))
+            print (2)
+            entradaX = int(request.form.get('entradaX', 0))
+            print (3)
+            entradaY = int(request.form.get('entradaY', 0))
+            print (4)
+            salidaX = int(request.form.get('salidaX', 0))
+            print (5)
+            salidaY = int(request.form.get('salidaY', 0))
+            print (6)
 
+            if cantRow < 5 or cantColumn < 5:
+                print (7)
+                return render_template('mode_creative.html', error="Mapa muy pequeño")
+
+            if entradaX >= cantRow or entradaY >= cantColumn or entradaX < 0 or entradaY < 0:
+                print (8)
+                return render_template('mode_creative.html', error="Entrada del maze inválida")
+
+            if salidaX >= cantRow or salidaY >= cantColumn or salidaX < 0 or salidaY < 0:
+                print (9)
+                return render_template('mode_creative.html', error="Salida del maze inválida")
+            print (10)
+            grid = np.zeros((cantRow, cantColumn))
+            grid[entradaX][entradaY] = 2
+            grid[salidaX][salidaY] = 3
+
+            for i in range(cantRow):
+                for j in range(cantColumn):
+                    try:
+                        cell_value = int(request.form.get(f'cell_{i}_{j}', 0))
+                        print (11)
+                        if cell_value in [1, 4]:
+                            print (12)
+                            grid[i][j] = cell_value
+                        else:
+                            print (13)
+                            return render_template('mode_creative.html', error="Número desconocido")
+                    except ValueError:
+                        print (14)
+                        return render_template('mode_creative.html', error="Entrada inválida")
+
+            # Aquí puedes agregar la lógica para verificar el laberinto y guardarlo en la base de datos
+            print (15)
+            json_str = json.dumps(grid.tolist())  # Convertir el array a lista para JSON
+            print (16)
+            new_maze = MazeBd(grid=json_str, entradaX=entradaX, entradaY=entradaY, salidaX=salidaX, salidaY=salidaY)
+            # Si el laberinto es válido, guardar en la base de datos
+            print (17)
+            return render_template('mode_creative.html', success="Mapa creado exitosamente")
+
+        except Exception as e:
+            print (18)
+            return render_template('mode_creative.html', error=f"Ocurrió un error: {str(e)}")
+
+    # Si el método es GET, simplemente devuelve el formulario
+    return render_template('mode_creative.html')
+    
+
+    
 if __name__ == '__main__':
     socketio.run(app, debug=True)

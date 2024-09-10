@@ -5,7 +5,8 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f0f0f0;
+
+    background: url(/static/media/fondoMAp.jpg) center center / cover no-repeat;
 }
 
 .container {
@@ -33,7 +34,8 @@ body {
 }
 
 .wall {
-    background: url(/static/media/ladrillos.webp) center center / cover no-repeat;
+    background: url(/static/media/pared2.jpg) center center / cover no-repeat;
+    filter: brightness(0.5);
 }
 
 .start { 

@@ -47,7 +47,7 @@ def login():
         # Verificar si el usuario existe y la contraseña es correcta
         if user and user.password == password:
             session['user_id'] = user.id  # Guardar el ID del usuario en la sesión
-            return redirect(url_for('home'))
+            return redirect(url_for('dashboard'))  # Redirigir al dashboard
         else:
             return render_template('login.html', error='Credenciales incorrectas')
 
@@ -84,7 +84,7 @@ def register():
             return render_template('register.html', error="Usuario ya registrado")
 
         # Crear un nuevo usuario
-        new_user = User(username=username, password=password, email=email,)
+        new_user = User(username=username, password=password, email=email)
         
         # Añadir el nuevo usuario a la base de datos
         db.session.add(new_user)
@@ -93,15 +93,19 @@ def register():
         # Guardar el ID del nuevo usuario en la sesión
         session['user_id'] = new_user.id
         
-        # Redirigir al home o a la página que prefieras después del registro
-        return redirect(url_for('login'))
+        # Redirigir al dashboard después del registro exitoso
+        return redirect(url_for('dashboard'))
 
     return render_template('register.html')
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
 
 @app.route('/map')
 def map():
     return render_template('map.html')
-   
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)

@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="/static/map.css">
 </head>
 <body>
-    <div class="grid" id="grid"  data-mapa-original="{{ mapa_original | tojson }}"></div>
+    <div class="grid" id="grid"></div>
+    <audio id="winSound" src="/static/sounds/win_sound.mp3" preload="auto"></audio>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js" ></script>"
     <script src="/static/script.js"></script>
 </body>
 </html>

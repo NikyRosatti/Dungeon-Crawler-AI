@@ -30,7 +30,7 @@ body {
 }
 
 .floor {
-    background: url(/static/media/piso.jpg) center center / cover no-repeat;
+    background: url(/static/media/dirt.jpg) center center / cover no-repeat;
 }
 
 .wall {
@@ -40,11 +40,22 @@ body {
 
 .start { 
     background: url(/static/media/puerta.png) center bottom / 60% no-repeat,
-                url(/static/media/piso2.jpg) center center / cover no-repeat;
+                url(/static/media/dirt.jpg) center center / cover no-repeat;
 }
 
 .end {
-    background: url(/static/media/salida.png) no-repeat center bottom / 60%,
-                url(/static/media/piso2.jpg) center center / cover no-repeat;
+    background: url(/static/media/puerta.png) no-repeat center bottom / 60%,
+                url(/static/media/dirt.jpg) center center / cover no-repeat;
 
+}
+
+.agent {        
+    background: url(/static/media/agent2.png) no-repeat center bottom / 55%,
+                url(/static/media/dirt.jpg) center center / cover no-repeat;
+}
+
+.winner_agent {        
+    background: url(/static/media/agent2.png) no-repeat center bottom / 55%,
+                url(/static/media/salida.png) no-repeat center bottom / 60%,
+                url(/static/media/dirt.jpg) center center / cover no-repeat;
 }

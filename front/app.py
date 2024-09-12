@@ -1,5 +1,5 @@
 from flask import Flask, redirect, render_template, request, url_for, session
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, send, emit
 from flask_migrate import Migrate
 from database.models import db, User
 from sqlalchemy import or_
@@ -94,16 +94,64 @@ def register():
 
     return render_template('register.html')
 
+mapa_original = [
+    -1, 0, 0, 0, 0, 0, 0,
+    1, 1, 1, 0, 1, 1 , 0, 
+    0, 1, 0, 0, 1, 0, 0,
+    0, 1, 0, 0, 1, 0, 1,
+    0, 0, 0, 0, 0, 0, 1,
+    0, 1, 0, 0, 1, 0, 1,
+    0, 0, 0, 1, 1, 0,3,
+]
+
+map_size = 7
+
+def find_player_position():
+    return mapa_original.index(-1)
 @app.route('/map')
 def map():
-    mapa_original = [
-        2, 0, 0, 0,
-        1, 1, 1, 0,
-        0, 1, 0, 0,
-        0, 0, 0, 3,
-    ]
-    return render_template('map.html', mapa_original = mapa_original)
-   
+    return render_template('map.html', mapa_original=mapa_original)
 
+@socketio.on('connect')
+def handle_connect():
+    emit('map', mapa_original)
+
+@socketio.on('move')
+def handle_move(direction):
+    global mapa_original 
+    print(f'Movimiento recibido: {direction}')
+
+    player_pos = find_player_position()
+
+    if direction == 'ArrowUp':
+        new_pos = player_pos - map_size if player_pos >= map_size else player_pos
+    elif direction == 'ArrowDown':
+        new_pos = player_pos + map_size if player_pos < len(mapa_original) - map_size else player_pos
+    elif direction == 'ArrowLeft':
+        new_pos = player_pos - 1 if player_pos % map_size != 0 else player_pos
+    elif direction == 'ArrowRight':
+        new_pos = player_pos + 1 if (player_pos + 1) % map_size != 0 else player_pos
+    else:
+        new_pos = player_pos  
+
+    if mapa_original[new_pos] == 0:
+        mapa_original[player_pos] = 0
+        mapa_original[new_pos] = -1  
+
+    if mapa_original[new_pos] == 3:
+        mapa_original[player_pos] = 0
+        mapa_original [new_pos] = -2
+        emit('finish_map', 'You Win!')
+              
+    emit('map', mapa_original)
+
+@socketio.on('restart_pos')
+def restart_position(position):
+    global mapa_original 
+    mapa_original[mapa_original.index(-2)] = 3
+    mapa_original[position] = -1
+    emit('map', mapa_original)
+
+    
 if __name__ == '__main__':
     socketio.run(app, debug=True)

@@ -5,7 +5,7 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-
+    flex-direction: column;
     background: url(/static/media/fondoMAp.jpg) center center / cover no-repeat;
 }
 

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/login.css">
+    <title> DC-AI, Login </title>
+  </head>
+  <body>
+    <div class="container">
+        <div class="main-title">
+          <div> Dungeons </div>
+          <div> Crawler </div>
+          <div> AI </div>
+        </div>
+        <div class="card">
+            <div class="titulo">
+                <h1><strong>
+                    <div> Login into an account </div>
+                </strong></h1>
+                <h2><strong>Challenge your mind: log in to explore</strong></h2>
+                <form action="/login" method="post" class="login-form">
+                    <div>
+                        <label for="username_or_email">Username or Email:</label>
+                        <input type="text" id="username_or_email" name="username" required>
+                    </div>
+                    <div>
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit">LOGIN</button>
+                </form>
+                <div class="register-link">
+                    <p>Don't have an account?</p>
+                    <a href="/register">Register</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

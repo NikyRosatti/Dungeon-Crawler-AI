@@ -1,0 +1,61 @@
+/* styles.css */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+
+    background: url(/static/media/fondoMAp.jpg) center center / cover no-repeat;
+}
+
+.container {
+    position: relative;
+    width: 40vw; /* 40% del ancho del viewport */
+    height: 40vw; /* Usar 40vw para que la altura sea igual al ancho y mantener un cuadrado */
+
+}
+
+.grid {
+    width: 40vw; /* 40% del ancho del viewport */
+    aspect-ratio: 1; /* Mantiene la proporción cuadrada */
+    display: grid;
+    gap: 2px ;
+    background-color: #000000;
+}
+
+.cell {
+    width: 100%;  /* Toma el 100% del ancho de la celda */
+    height: 100%; /* Toma el 100% del alto de la celda */
+}
+
+.floor {
+    background: url(/static/media/dirt.jpg) center center / cover no-repeat;
+}
+
+.wall {
+    background: url(/static/media/pared2.jpg) center center / cover no-repeat;
+    filter: brightness(0.5);
+}
+
+.start { 
+    background: url(/static/media/puerta.png) center bottom / 60% no-repeat,
+                url(/static/media/dirt.jpg) center center / cover no-repeat;
+}
+
+.end {
+    background: url(/static/media/puerta.png) no-repeat center bottom / 60%,
+                url(/static/media/dirt.jpg) center center / cover no-repeat;
+
+}
+
+.agent {        
+    background: url(/static/media/agent2.png) no-repeat center bottom / 55%,
+                url(/static/media/dirt.jpg) center center / cover no-repeat;
+}
+
+.winner_agent {        
+    background: url(/static/media/agent2.png) no-repeat center bottom / 55%,
+                url(/static/media/salida.png) no-repeat center bottom / 60%,
+                url(/static/media/dirt.jpg) center center / cover no-repeat;
+}

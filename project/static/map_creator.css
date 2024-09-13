@@ -1,0 +1,92 @@
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+
+    background: url(/static/media/fondoMAp.jpg) center center / cover no-repeat;
+}
+
+.grid {
+    display: grid;
+    gap: 2px;
+    margin-top: 20px;
+}
+
+.grid .cell {
+    background-color: lightgray;
+    position: relative;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+}
+
+.grid .cell-options {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid black;
+    top: 100%;
+    left: 0;
+    z-index: 100;
+}
+
+.grid .cell-options div {
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+    cursor: pointer;
+    border: 1px solid black;
+
+}
+
+.grid .cell.selected .cell-options {
+    display: block;
+}
+
+
+
+.cell {
+    width: 100%;  /* Toma el 100% del ancho de la celda */
+    height: 100%; /* Toma el 100% del alto de la celda */
+}
+
+.floor {
+    background: url(/static/media/dirt.jpg) center center / cover ;
+   
+}
+
+.wall {
+    background: url(/static/media/pared2.jpg) center center / cover ;
+    filter: brightness(0.5);
+   
+}
+
+.start { 
+    background: url(/static/media/puerta.png) center bottom / 60% ,
+                url(/static/media/dirt.jpg) center center / cover ;
+ 
+}
+
+.end {
+    background: url(/static/media/puerta.png) no-repeat center bottom / 60%,
+                url(/static/media/dirt.jpg) center center / cover no-repeat;
+
+}
+
+.agent {        
+    background: url(/static/media/agent2.png) no-repeat center bottom / 55%,
+                url(/static/media/dirt.jpg) center center / cover no-repeat;
+}
+
+.winner_agent {        
+    background: url(/static/media/agent2.png) no-repeat center bottom / 55%,
+                url(/static/media/salida.png) no-repeat center bottom / 60%,
+                url(/static/media/dirt.jpg) center center / cover no-repeat;
+}

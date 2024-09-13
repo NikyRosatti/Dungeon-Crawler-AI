@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creador de Mapas</title>
+    <link rel="stylesheet" href="/static/map_creator.css">
+</head>
+<body>
+    <div class="controls">
+        <label for="size">Tamaño del mapa:</label>
+        <input type="number" id="size" value="5" min="1" max="100">
+        <button id="generate">Generar Mapa</button>
+        <button id="export">Exportar Mapa</button>
+    </div>
+    
+    <div class="grid" id="grid"></div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js"></script>
+    <script src="/static/creador.js"></script>
+</body>
+</html>

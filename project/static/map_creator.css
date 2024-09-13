@@ -9,6 +9,28 @@ body {
     background: url(/static/media/fondoMAp.jpg) center center / cover no-repeat;
 }
 
+.controls {
+    color: white; /* Color de las letras en blanco */
+    background-color: #333; /*Fondo oscuro para contraste */
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.controls button {
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.controls button:hover {
+    background-color: #555;
+}
+
+
 .grid {
     display: grid;
     gap: 2px;

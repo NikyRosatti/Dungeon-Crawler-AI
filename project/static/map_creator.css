@@ -26,7 +26,6 @@ body {
     cursor: pointer;
 
 }
-
 .grid .cell-options {
     display: none;
     position: absolute;
@@ -34,7 +33,7 @@ body {
     border: 1px solid black;
     top: 100%;
     left: 0;
-    z-index: 100;
+    z-index: 10;
 }
 
 .grid .cell-options div {
@@ -43,8 +42,27 @@ body {
     margin: 2px;
     cursor: pointer;
     border: 1px solid black;
-
+    background-size: cover; /* Asegura que la imagen se ajuste al contenedor */
 }
+
+/* Agrega imágenes para cada opción */
+.grid .cell-options .floor {
+    background-image: url(/static/media/dirt.jpg);
+}
+
+.grid .cell-options .wall {
+    background-image: url(/static/media/pared2.jpg);
+    filter: brightness(0.5); /* Mantiene el filtro para el fondo de pared */
+}
+
+.grid .cell-options .start {
+    background-image: url(/static/media/puerta.png);
+}
+
+.grid .cell-options .end {
+    background-image: url(/static/media/puerta.png);
+}
+
 
 .grid .cell.selected .cell-options {
     display: block;
@@ -64,18 +82,16 @@ body {
 
 .wall {
     background: url(/static/media/pared2.jpg) center center / cover ;
-    filter: brightness(0.5);
-   
 }
 
 .start { 
-    background: url(/static/media/puerta.png) center bottom / 60% ,
-                url(/static/media/dirt.jpg) center center / cover ;
+    background: url(/static/media/puerta.png) center bottom / 60% no-repeat,
+                url(/static/media/dirt.jpg) center center / cover no-repeat;
  
 }
 
 .end {
-    background: url(/static/media/puerta.png) no-repeat center bottom / 60%,
+    background: url(/static/media/puerta.png) no-repeat center bottom / 60% ,
                 url(/static/media/dirt.jpg) center center / cover no-repeat;
 
 }

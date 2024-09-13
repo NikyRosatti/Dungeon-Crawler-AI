@@ -23,16 +23,16 @@ document.addEventListener('DOMContentLoaded', () => {
             // Tipos de celdas: floor, wall, start, end
             ['floor', 'wall', 'start', 'end'].forEach(type => {
                 const option = document.createElement('div');
+                option.classList.add(type);  // Agregar la clase correspondiente
                 option.dataset.type = type;
-                option.textContent = type;  // Mostrar el nombre del tipo (floor, wall, etc.)
                 option.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const row = Math.floor(i / size);
                     const col = i % size;
                     mapData[row][col] = type;
 
-                    // Primero, eliminar cualquier clase tipo 'floor', 'wall', 'start', 'end'
-                    cell.className = 'cell';  // Restablecer solo la clase base "cell"
+                    // Quitar todas las clases dinámicas y agregar la nueva clase seleccionada
+                    cell.classList.remove('floor', 'wall', 'start', 'end');
                     cell.classList.add(type);  // Añadir la nueva clase "floor", "wall", etc.
                     cell.classList.remove('selected');  // Remover la clase 'selected'
                 });

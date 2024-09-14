@@ -221,5 +221,10 @@ def restart_position(position):
     mapa_original[position] = -1
     emit('map', mapa_original)
     
+@app.route('/map_creator')
+def map_creator():
+    return render_template('map_creator.html')
+  
+
 if __name__ == '__main__':
     socketio.run(app, debug=True)

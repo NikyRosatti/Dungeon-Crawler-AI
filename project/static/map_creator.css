@@ -29,7 +29,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #3333337a;
+    background-color: rgba(0, 0, 0, 0.623);
     color: white;
     padding: 20px;
     font-family: 'Press Start 2P', sans-serif;
@@ -41,29 +41,30 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #3333337a;
+    background-color: rgba(0, 0, 0, 0.623);
     color: white;
     padding: 20px;
     font-family: 'Press Start 2P', sans-serif;
     border-radius: 5px;
     margin-left: 50px;
     font-size: large;
+    gap: 5px;
 }
 
 .controls2 button {
-    background-color:#345c066b;
-    color: white;
-    font-family: 'Jaro', sans-serif;
+    background-color:#768371;
+    color: rgb(255, 255, 255);
+    font-family: 'Handjet';
+    font-size: 22px;
     border: none;
     padding: 10px 20px;
-    
     border-radius: 5px;
     cursor: pointer;
     width: 150px;
 }
 
 .controls2 button.active {
-    background-color:  rgba(57, 112, 11, 0.2);
+    background-color:  #f3ff8b;
     border: 2px solid #fff;
 }
 
@@ -77,20 +78,22 @@ body {
     background-color: #f3f3f3;
     border-radius: 10px;
     transition: all 0.5s;
-    
+    font-weight: 1000;
+    text-align: center;
 }
 
 .controls2 input:hover,
 .controls2 input:focus {
-  border: 2px solid #345c06;
+  border: 2px solid #f3ff8b;
   box-shadow: 0px 0px 0px 7px rgba(57, 112, 11, 0.2);
   background-color: white;
 }
 /* Botones del panel de control */
 .controls button {
-    background-color:#345c066b;
-    color: white;
-    font-family: 'Jaro', sans-serif;
+    background-color:#768371;
+    color: rgb(255, 255, 255);
+    font-family: 'Handjet';
+    font-size: 32px;
     border: none;
     padding: 20px 40px;
     margin-bottom: 10px;
@@ -158,6 +161,7 @@ body {
 
 .wall {
     background: url(/static/media/pared2.jpg) center center / cover;
+    filter: brightness(0.6);
 }
 
 .start {

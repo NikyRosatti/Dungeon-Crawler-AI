@@ -1,53 +1,79 @@
-
+/* Estilos globales */
 body {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
     margin: 0;
+    background-color: #f0f0f0;
     flex-direction: column;
-    background: url(/static/media/fondoMAp.jpg) center center / cover no-repeat;
+    font-family: Arial, sans-serif;
+    background: url(/static/media/fondoMap.jpg) center center / cover no-repeat;
+    background-attachment: fixed; /* Fija el fondo para que no se mueva al hacer scroll */
+    background-size: cover; /* Hace que el fondo siempre cubra toda la pantalla */
 }
 
+/* Contenedor principal que incluye el panel de control y la grilla */
+.container {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente el contenido */
+    padding: 20px;
+    width: 100%;
+    margin: 10px auto;
+}
+
+/* Panel de control a la izquierda */
 .controls {
-    color: white; /* Color de las letras en blanco */
-    background-color: #333; /*Fondo oscuro para contraste */
-    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #3333337a;
+    color: white;
+    padding: 20px;
+    font-family: 'Press Start 2P', sans-serif;
     border-radius: 5px;
-    display: inline-block;
+    margin-left: 50px;
 }
 
+/* Botones del panel de control */
 .controls button {
     background-color: #444;
     color: white;
+    font-family: 'Jaro', sans-serif;
     border: none;
-    padding: 5px 10px;
-    border-radius: 3px;
+    padding: 20px 40px;
+    margin-bottom: 10px;
+    border-radius: 5px;
     cursor: pointer;
+    width: 150px;
 }
 
-.controls button:hover {
+.controls button.active {
     background-color: #555;
+    border: 2px solid #fff;
 }
 
-
-.grid {
+/* Contenedor de la grilla */
+.grid-container {
     display: grid;
+    grid-template-columns: repeat(10, 50px); /* Columnas del mapa */
+    grid-template-rows: repeat(10, 50px);    /* Filas del mapa */
     gap: 2px;
-    margin-top: 20px;
+    justify-content: center; /* Centra la grilla horizontalmente */
+    margin-left: auto; /* Empuja la grilla hacia la derecha */
+    margin-right: auto;
 }
 
-.grid .cell {
+/* Celdas de la grilla */
+.grid-container .cell {
     background-color: lightgray;
-    position: relative;
     width: 50px;
     height: 50px;
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
-
 }
+
+/* Opciones dentro de las celdas */
 .grid .cell-options {
     display: none;
     position: absolute;
@@ -58,73 +84,36 @@ body {
     z-index: 10;
 }
 
+/* Opciones de selección de celdas */
 .grid .cell-options div {
     width: 20px;
     height: 20px;
     margin: 2px;
     cursor: pointer;
     border: 1px solid black;
-    background-size: cover; /* Asegura que la imagen se ajuste al contenedor */
+    background-size: cover;
 }
 
-/* Agrega imágenes para cada opción */
-.grid .cell-options .floor {
-    background-image: url(/static/media/dirt.jpg);
-}
-
-.grid .cell-options .wall {
-    background-image: url(/static/media/pared2.jpg);
-    filter: brightness(0.5); /* Mantiene el filtro para el fondo de pared */
-}
-
-.grid .cell-options .start {
-    background-image: url(/static/media/puerta.png);
-}
-
-.grid .cell-options .end {
-    background-image: url(/static/media/puerta.png);
-}
-
-
+/* Mostrar las opciones cuando una celda está seleccionada */
 .grid .cell.selected .cell-options {
     display: block;
 }
 
-
-
-.cell {
-    width: 100%;  /* Toma el 100% del ancho de la celda */
-    height: 100%; /* Toma el 100% del alto de la celda */
-}
-
+/* Tipos de bloques (suelo, pared, inicio, fin) */
 .floor {
-    background: url(/static/media/dirt.jpg) center center / cover ;
-   
+    background: url(/static/media/dirt.jpg) center center / cover;
 }
 
 .wall {
-    background: url(/static/media/pared2.jpg) center center / cover ;
+    background: url(/static/media/pared2.jpg) center center / cover;
 }
 
-.start { 
+.start {
     background: url(/static/media/puerta.png) center bottom / 60% no-repeat,
                 url(/static/media/dirt.jpg) center center / cover no-repeat;
- 
 }
 
 .end {
-    background: url(/static/media/puerta.png) no-repeat center bottom / 60% ,
-                url(/static/media/dirt.jpg) center center / cover no-repeat;
-
-}
-
-.agent {        
-    background: url(/static/media/agent2.png) no-repeat center bottom / 55%,
-                url(/static/media/dirt.jpg) center center / cover no-repeat;
-}
-
-.winner_agent {        
-    background: url(/static/media/agent2.png) no-repeat center bottom / 55%,
-                url(/static/media/salida.png) no-repeat center bottom / 60%,
+    background: url(/static/media/puerta.png) no-repeat center bottom / 60%,
                 url(/static/media/dirt.jpg) center center / cover no-repeat;
 }

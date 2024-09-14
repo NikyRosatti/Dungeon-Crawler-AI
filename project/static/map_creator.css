@@ -8,15 +8,19 @@ body {
     background: url(/static/media/fondoMap.jpg) center center / cover no-repeat;
     background-attachment: fixed; /* Fija el fondo para que no se mueva al hacer scroll */
     background-size: cover; /* Hace que el fondo siempre cubra toda la pantalla */
+    justify-content: center; /* Centra verticalmente el contenido */
+    align-items: center; /* Centra horizontalmente el contenido */
+    min-height: 100vh; /* Asegura que el body ocupe toda la altura */
 }
 
 /* Contenedor principal que incluye el panel de control y la grilla */
 .container {
     display: flex;
     justify-content: center; /* Centra horizontalmente el contenido */
+    align-items: center; /* Centra verticalmente el contenido */
     padding: 20px;
     width: 100%;
-    margin: 10px auto;
+    margin: 0 auto; /* Asegura que el contenedor esté centrado */
 }
 
 /* Panel de control a la izquierda */
@@ -33,9 +37,58 @@ body {
     margin-left: 50px;
 }
 
+.controls2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #3333337a;
+    color: white;
+    padding: 20px;
+    font-family: 'Press Start 2P', sans-serif;
+    border-radius: 5px;
+    margin-left: 50px;
+    font-size: large;
+}
+
+.controls2 button {
+    background-color:#345c066b;
+    color: white;
+    font-family: 'Jaro', sans-serif;
+    border: none;
+    padding: 10px 20px;
+    
+    border-radius: 5px;
+    cursor: pointer;
+    width: 150px;
+}
+
+.controls2 button.active {
+    background-color:  rgba(57, 112, 11, 0.2);
+    border: 2px solid #fff;
+}
+
+.controls2 input {
+    border: 2px solid transparent;
+    width: 5em;
+    height: 2.5em;
+    padding-left: 0.8em;
+    outline: none;
+    overflow: hidden;
+    background-color: #f3f3f3;
+    border-radius: 10px;
+    transition: all 0.5s;
+    
+}
+
+.controls2 input:hover,
+.controls2 input:focus {
+  border: 2px solid #345c06;
+  box-shadow: 0px 0px 0px 7px rgba(57, 112, 11, 0.2);
+  background-color: white;
+}
 /* Botones del panel de control */
 .controls button {
-    background-color: #444;
+    background-color:#345c066b;
     color: white;
     font-family: 'Jaro', sans-serif;
     border: none;
@@ -47,7 +100,7 @@ body {
 }
 
 .controls button.active {
-    background-color: #555;
+    background-color:  rgba(57, 112, 11, 0.2);
     border: 2px solid #fff;
 }
 
@@ -58,8 +111,7 @@ body {
     grid-template-rows: repeat(10, 50px);    /* Filas del mapa */
     gap: 2px;
     justify-content: center; /* Centra la grilla horizontalmente */
-    margin-left: auto; /* Empuja la grilla hacia la derecha */
-    margin-right: auto;
+    margin-left: 30px;
 }
 
 /* Celdas de la grilla */

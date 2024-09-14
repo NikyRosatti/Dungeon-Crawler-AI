@@ -5,75 +5,103 @@ document.addEventListener('DOMContentLoaded', () => {
     const sizeInput = document.getElementById('size');
     let selectedBlockType = null;
     let mapData = [];
-    let startPlaced = false; // Variable para verificar si ya hay una entrada
-    let endPlaced = false;   // Variable para verificar si ya hay una salida
+    let startPlaced = false;
+    let endPlaced = false;
 
-    // Agregar funcionalidad a los botones de selección de bloques
+    // Función para agregar bordes de pared
+    const createMapWithBorders = (originalMap, n) => {
+        const mapWithWalls = [];
+
+        // Agregar fila superior de paredes
+        mapWithWalls.push(...Array(n + 2).fill("wall"));
+
+        // Agregar paredes laterales y el mapa original
+        for (let i = 0; i < n; i++) {
+            mapWithWalls.push("wall");  // Borde izquierdo
+            mapWithWalls.push(...originalMap.slice(i * n, (i + 1) * n));
+            mapWithWalls.push("wall");  // Borde derecho
+        }
+
+        // Agregar fila inferior de paredes
+        mapWithWalls.push(...Array(n + 2).fill("wall"));
+
+        return mapWithWalls;
+    };
+
+    // Manejo de selección de tipo de bloque
     document.querySelectorAll('.controls button').forEach(button => {
         button.addEventListener('click', () => {
-            // Desactivar otros botones
-            document.querySelectorAll('.controls button').forEach(btn => btn.classList.remove('active'));
-            // Activar el botón seleccionado
+            document.querySelectorAll('.controls button').forEach(btn => {
+                btn.classList.remove('active');
+            });
             button.classList.add('active');
-            selectedBlockType = button.getAttribute('data-block'); // Obtener el tipo de bloque seleccionado
+            selectedBlockType = button.getAttribute('data-block');
         });
     });
 
-    // Generar mapa dinámico
+    // Generar mapa dinámico con paredes alrededor
     generateButton.addEventListener('click', () => {
         const size = parseInt(sizeInput.value);
-        grid.style.gridTemplateColumns = `repeat(${size}, 50px)`; // Ajusta el tamaño de cada celda
-        grid.style.gridTemplateRows = `repeat(${size}, 50px)`;
+        const totalCells = size * size;
+
+        // Crear mapa vacío con suelo
+        const originalMap = Array(totalCells).fill("floor");
+        mapData = createMapWithBorders(originalMap, size);
+
+        grid.style.gridTemplateColumns = `repeat(${size + 2}, 50px)`; // +2 para los bordes
+        grid.style.gridTemplateRows = `repeat(${size + 2}, 50px)`;
         grid.innerHTML = '';  // Limpiar el grid
-        mapData = Array.from({ length: size }, () => Array(size).fill(null));
 
-        for (let i = 0; i < size * size; i++) {
+        // Generar celdas con bordes de pared fijos
+        mapData.forEach((value, index) => {
             const cell = document.createElement('div');
-            cell.classList.add('cell');  // Inicialmente solo tiene la clase "cell"
-            const row = Math.floor(i / size);
-            const col = i % size;
+            cell.classList.add('cell');
+            const row = Math.floor(index / (size + 2));
+            const col = index % (size + 2);
 
-            // Manejo del clic en la celda para aplicar el tipo de bloque seleccionado
-            cell.addEventListener('click', () => {
-                if (selectedBlockType) {
-                    if (selectedBlockType == 'start'){
-                        //no permitimos mas de una entrada
-                        if (startPlaced) {
-                            alert('Solo se permite una entrada (inicio)');
-                            return
+            switch (value) {
+                case "wall":
+                    cell.classList.add('wall');
+                    break;
+                case "floor":
+                    cell.classList.add('floor');
+                    // Permitir modificar celdas que no son paredes
+                    cell.addEventListener('click', () => {
+                        if (selectedBlockType) {
+                            if (selectedBlockType == 'start' && startPlaced) {
+                                alert('Solo se permite una entrada (inicio)');
+                                return;
+                            }
+                            if (selectedBlockType == 'end' && endPlaced) {
+                                alert('Solo se permite una salida (fin)');
+                                return;
+                            }
+                            if (selectedBlockType === 'start') startPlaced = true;
+                            if (selectedBlockType === 'end') endPlaced = true;
+                            
+                            mapData[index] = selectedBlockType;
+                            cell.className = 'cell';  // Limpiar clases previas
+                            cell.classList.add(selectedBlockType);
                         }
-                        startPlaced = true;
-                    } else if (selectedBlockType === 'end') {
-                        // no permitir mas de una salida
-                        if (endPlaced) {
-                            alert('Solo se permite una salida (fin)');
-                            return;
-                        }
-                        endPlaced = true; // Marcar como salida colocada
-                    }
-
-                    // Si la celda tiene una clase "start" o "end" y cambia de tipo, permitir colocar otra entrada/salida
-                    if (cell.classList.contains('start')) {
-                        startPlaced = false; // Permitir colocar otra entrada si se reemplaza
-                    }
-                    if (cell.classList.contains('end')) {
-                        endPlaced = false; // Permitir colocar otra salida si se reemplaza
-                    }
-
-                    // Quitar todas las clases existentes y agregar solo la seleccionada
-                    mapData[row][col] = selectedBlockType;
-                    cell.className = 'cell'; // Eliminar todas las clases y aplicar solo la seleccionada
-                    cell.classList.add(selectedBlockType);
-                }
-            });
+                    });
+                    break;
+            }
 
             grid.appendChild(cell);
-        }
+        });
     });
 
-    // Exportar el mapa como arreglo
+    // Exportar mapa sin las paredes añadidas
     exportButton.addEventListener('click', () => {
-        console.log('Mapa exportado:', mapData);
-        alert(JSON.stringify(mapData));
+        const size = parseInt(sizeInput.value);
+        const innerMap = [];
+
+        // Eliminar las paredes: recorremos las filas del centro, excluyendo las paredes
+        for (let i = 1; i <= size; i++) {
+            innerMap.push(...mapData.slice(i * (size + 2) + 1, (i + 1) * (size + 2) - 1));
+        }
+
+        console.log('Mapa exportado:', innerMap);
+        alert(JSON.stringify(innerMap));
     });
 });

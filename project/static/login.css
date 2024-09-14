@@ -42,7 +42,7 @@ body {
   position: relative;
   width: 450px;
   padding: 40px 30px;
-  background: rgba(0, 0, 0, 0.87);
+  background: rgba(9, 69, 73, 0.548);
   backdrop-filter: blur(15px);
   border-radius: 15px;
   box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);

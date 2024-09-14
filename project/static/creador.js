@@ -111,7 +111,25 @@ document.addEventListener('DOMContentLoaded', () => {
             innerMap.push(...mapData.slice(i * (size + 2) + 1, (i + 1) * (size + 2) - 1));
         }
 
+        const mapToValidate = innerMap.flat(); // Aplanar el arreglo para enviarlo fácilmente
+
+        fetch('/validate_map', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ map: mapToValidate }), // Enviar el mapa a Python
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.valid) {
+                alert('OK');
+            } else {
+                alert('No');
+            }
+        })
+        .catch(error => console.error('Error al validar el mapa:', error));
+
         console.log('Mapa exportado:', innerMap);
-        alert(JSON.stringify(innerMap));
     });
 });

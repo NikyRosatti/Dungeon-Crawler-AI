@@ -9,6 +9,7 @@ import threading
 import time
 from functools import wraps
 from environment import maze
+from flask import request, jsonify
 
 app = Flask(__name__)
 
@@ -221,6 +222,17 @@ def restart_position(position):
 def map_creator():
     return render_template('map_creator.html')
   
+@app.route('/validate_map', methods=['POST'])
+def validate_map():
+    data = request.get_json()  # Obtener los datos enviados desde el front
+    map_to_validate = data.get('map')  # Obtener el mapa desde la solicitud
 
+    #if map_to_validate:
+    #    is_valid = validate(map_to_validate)  # Llamar a tu función validate()
+    #    return jsonify({'valid': is_valid})  # Devolver el resultado en formato JSON
+    #else:
+    #    return jsonify({'valid': False}), 400  # Devolver error si no hay mapa
+    #
+    
 if __name__ == '__main__':
     socketio.run(app, debug=True)

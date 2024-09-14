@@ -79,6 +79,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (selectedBlockType === 'start') startPlaced = true;
                             if (selectedBlockType === 'end') endPlaced = true;
                             
+                             // Si la celda tiene una clase "start" o "end" y cambia de tipo, permitir colocar otra entrada/salida
+                            if (cell.classList.contains('start')) {
+                                startPlaced = false; // Permitir colocar otra entrada si se reemplaza
+                            }
+                            if (cell.classList.contains('end')) {
+                                endPlaced = false; // Permitir colocar otra salida si se reemplaza
+                            }
                             mapData[index] = selectedBlockType;
                             cell.className = 'cell';  // Limpiar clases previas
                             cell.classList.add(selectedBlockType);

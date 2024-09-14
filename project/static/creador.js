@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const sizeInput = document.getElementById('size');
     let selectedBlockType = null;
     let mapData = [];
-    let startPlaced = false;
-    let endPlaced = false;
 
     // Función para agregar bordes de pared
     const createMapWithBorders = (originalMap, n) => {
@@ -48,9 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const originalMap = Array(totalCells).fill("floor");
         mapData = createMapWithBorders(originalMap, size);
 
+
         grid.style.gridTemplateColumns = `repeat(${size + 2}, 50px)`; // +2 para los bordes
         grid.style.gridTemplateRows = `repeat(${size + 2}, 50px)`;
         grid.innerHTML = '';  // Limpiar el grid
+
+        
+        let startPlaced = false;
+        let endPlaced = false;
 
         // Generar celdas con bordes de pared fijos
         mapData.forEach((value, index) => {

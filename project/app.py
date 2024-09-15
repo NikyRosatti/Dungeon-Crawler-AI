@@ -52,7 +52,7 @@ def login():
         # Verificar si el usuario existe y la contraseña es correcta
         if user and bcrypt.checkpw(password, user.password):
             session['user_id'] = user.id  # Guardar el ID del usuario en la sesión
-            return redirect(url_for('home'))
+            return redirect(url_for('dashboard'))
         else:
             return render_template('login.html', error='Credenciales incorrectas')
 
@@ -98,9 +98,14 @@ def register():
         session['user_id'] = new_user.id
         
         # Redirigir al home o a la página que prefieras después del registro
-        return redirect(url_for('login'))
+        return redirect(url_for('dashboard'))
 
     return render_template('register.html')
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
 
 @app.route('/mode_creative', methods=['GET','POST'])
 def mode_creative():

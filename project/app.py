@@ -7,6 +7,7 @@ from sqlalchemy import or_
 import json
 import threading
 import time
+import bcrypt
 from functools import wraps
 from environment import maze
 from flask import request, jsonify
@@ -43,13 +44,13 @@ def index():
 def login():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']
+        password = request.form['password'].encode('utf-8')
 
         # Buscar el usuario en la base de datos
         user = User.query.filter(or_(User.username == username, User.email == username)).first()
 
         # Verificar si el usuario existe y la contraseña es correcta
-        if user and user.password == password:
+        if user and bcrypt.checkpw(password, user.password):
             session['user_id'] = user.id  # Guardar el ID del usuario en la sesión
             return redirect(url_for('home'))
         else:
@@ -75,7 +76,7 @@ def home():
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']
+        password = request.form['password'].encode('utf-8')
         email = request.form['email']
 
         # Comprobar si ya existe un usuario con ese nombre o correo
@@ -85,8 +86,9 @@ def register():
             # Si el usuario ya existe, devolver un mensaje de error
             return render_template('register.html', error="Usuario ya registrado")
 
-        # Crear un nuevo usuario
-        new_user = User(username=username, password=password, email=email,)
+        hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
+
+        new_user = User(username=username, password=hashed_password, email=email,)
         
         # Añadir el nuevo usuario a la base de datos
         db.session.add(new_user)

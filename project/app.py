@@ -1,3 +1,4 @@
+import math
 from flask import Flask, redirect, render_template, request, url_for, session
 from flask_socketio import SocketIO, send, emit
 from flask_migrate import Migrate
@@ -221,18 +222,40 @@ def restart_position(position):
 @app.route('/map_creator')
 def map_creator():
     return render_template('map_creator.html')
-  
+    
 @app.route('/validate_map', methods=['POST'])
 def validate_map():
-    data = request.get_json()  # Obtener los datos enviados desde el front
-    map_to_validate = data.get('map')  # Obtener el mapa desde la solicitud
+    data = request.get_json()
+    map_grid = data.get('map')  # El mapa que enviaste desde el frontend
+    size = int(len(map_grid) ** 0.5)  # Suponiendo que el mapa es cuadrado
 
-    #if map_to_validate:
-    #    is_valid = validate(map_to_validate)  # Llamar a tu función validate()
-    #    return jsonify({'valid': is_valid})  # Devolver el resultado en formato JSON
-    #else:
-    #    return jsonify({'valid': False}), 400  # Devolver error si no hay mapa
-    #
-    
+    # Buscar el punto de inicio y de salida en el mapa
+    start_point = None
+    exit_point = None
+
+    # Convertir el arreglo plano en una matriz
+    grid = [map_grid[i:i + size] for i in range(0, len(map_grid), size)]
+
+    # Identificar el punto de inicio (2) y de salida (3)
+    for row in range(size):
+        for col in range(size):
+            if grid[row][col] == 2:
+                start_point = (row, col)
+            if grid[row][col] == 3:
+                exit_point = (row, col)
+
+    if start_point is None or exit_point is None:
+        return jsonify({'valid': False, 'error': 'No se encontró el punto de inicio o salida'}), 400
+
+    # Crear la instancia del laberinto
+    new_maze = maze.Maze(grid, size, start_point, exit_point)
+
+    # Validar si el laberinto es resoluble
+    if new_maze.is_winneable():
+        return jsonify({'valid': True})
+    else:
+        return jsonify({'valid': False})
+
+
 if __name__ == '__main__':
     socketio.run(app, debug=True)

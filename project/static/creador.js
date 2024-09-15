@@ -11,17 +11,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const mapWithWalls = [];
 
         // Agregar fila superior de paredes
-        mapWithWalls.push(...Array(n + 2).fill("wall"));
+        mapWithWalls.push(...Array(n + 2).fill(1));
 
         // Agregar paredes laterales y el mapa original
         for (let i = 0; i < n; i++) {
-            mapWithWalls.push("wall");  // Borde izquierdo
+            mapWithWalls.push(1);  // Borde izquierdo
             mapWithWalls.push(...originalMap.slice(i * n, (i + 1) * n));
-            mapWithWalls.push("wall");  // Borde derecho
+            mapWithWalls.push(1);  // Borde derecho
         }
 
         // Agregar fila inferior de paredes
-        mapWithWalls.push(...Array(n + 2).fill("wall"));
+        mapWithWalls.push(...Array(n + 2).fill(1));
 
         return mapWithWalls;
     };
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.classList.remove('active');
             });
             button.classList.add('active');
-            selectedBlockType = button.getAttribute('data-block');
+            selectedBlockType =parseInt(button.getAttribute('data-block'));
         });
     });
 
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalCells = size * size;
 
         // Crear mapa vacío con suelo
-        const originalMap = Array(totalCells).fill("floor");
+        const originalMap = Array(totalCells).fill(0);
         mapData = createMapWithBorders(originalMap, size);
 
 
@@ -63,26 +63,26 @@ document.addEventListener('DOMContentLoaded', () => {
             const col = index % (size + 2);
 
             switch (value) {
-                case "wall":
+                case 1:
                     cell.classList.add('wall');
                     break;
-                case "floor":
+                case 0:
                     cell.classList.add('floor');
                     // Permitir modificar celdas que no son paredes
                     cell.addEventListener('click', () => {
-                        if (selectedBlockType) {
-                            if (selectedBlockType == 'start' && startPlaced) {
+                        if (selectedBlockType !== null && selectedBlockType !== undefined) {
+                            if (selectedBlockType == 2 && startPlaced) {
                                 alert('Solo se permite una entrada (inicio)');
                                 return;
                             }
-                            if (selectedBlockType == 'end' && endPlaced) {
+                            if (selectedBlockType == 3 && endPlaced) {
                                 alert('Solo se permite una salida (fin)');
                                 return;
                             }
-                            if (selectedBlockType === 'start') startPlaced = true;
-                            if (selectedBlockType === 'end') endPlaced = true;
+                            if (selectedBlockType === 2) startPlaced = true;
+                            if (selectedBlockType === 3) endPlaced = true;
                             
-                             // Si la celda tiene una clase "start" o "end" y cambia de tipo, permitir colocar otra entrada/salida
+                            // Si la celda tiene una clase "start" o "end" y cambia de tipo, permitir colocar otra entrada/salida
                             if (cell.classList.contains('start')) {
                                 startPlaced = false; // Permitir colocar otra entrada si se reemplaza
                             }
@@ -91,7 +91,20 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                             mapData[index] = selectedBlockType;
                             cell.className = 'cell';  // Limpiar clases previas
-                            cell.classList.add(selectedBlockType);
+                            switch (selectedBlockType) {
+                                case 0:
+                                    cell.classList.add("floor");
+                                    break;
+                                case 1:
+                                    cell.classList.add("wall");
+                                    break;
+                                case 2:
+                                    cell.classList.add("start");
+                                    break;
+                                case 3:
+                                    cell.classList.add("end");
+                                    break;
+                            }
                         }
                     });
                     break;
@@ -129,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
         .catch(error => console.error('Error al validar el mapa:', error));
-
+        alert(JSON.stringify(innerMap));
         console.log('Mapa exportado:', innerMap);
     });
 });

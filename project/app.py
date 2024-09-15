@@ -8,6 +8,7 @@ from sqlalchemy import or_
 import json
 import threading
 import time
+import bcrypt
 from functools import wraps
 from environment import maze
 from flask import request, jsonify
@@ -36,19 +37,23 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']
+        password = request.form['password'].encode('utf-8')
 
         # Buscar el usuario en la base de datos
         user = User.query.filter(or_(User.username == username, User.email == username)).first()
 
         # Verificar si el usuario existe y la contraseña es correcta
-        if user and user.password == password:
+        if user and bcrypt.checkpw(password, user.password):
             session['user_id'] = user.id  # Guardar el ID del usuario en la sesión
-            return redirect(url_for('home'))
+            return redirect(url_for('dashboard'))
         else:
             return render_template('login.html', error='Credenciales incorrectas')
 
@@ -72,7 +77,7 @@ def home():
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']
+        password = request.form['password'].encode('utf-8')
         email = request.form['email']
 
         # Comprobar si ya existe un usuario con ese nombre o correo
@@ -82,8 +87,9 @@ def register():
             # Si el usuario ya existe, devolver un mensaje de error
             return render_template('register.html', error="Usuario ya registrado")
 
-        # Crear un nuevo usuario
-        new_user = User(username=username, password=password, email=email,)
+        hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
+
+        new_user = User(username=username, password=hashed_password, email=email,)
         
         # Añadir el nuevo usuario a la base de datos
         db.session.add(new_user)
@@ -93,9 +99,14 @@ def register():
         session['user_id'] = new_user.id
         
         # Redirigir al home o a la página que prefieras después del registro
-        return redirect(url_for('login'))
+        return redirect(url_for('dashboard'))
 
     return render_template('register.html')
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
 
 @app.route('/mode_creative', methods=['GET','POST'])
 def mode_creative():

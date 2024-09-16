@@ -7,6 +7,7 @@ class User(db.Model):
     username = db.Column(db.String(150), nullable=False, unique=True)
     email = db.Column(db.String(150), nullable=False, unique=True)
     password = db.Column(db.String(150), nullable=False)
+    completed_dungeons = db.Column(db.Integer, nullable=False, default=0)
     
     def __repr__(self):
         return f'<User {self.username}>'

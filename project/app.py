@@ -1,5 +1,5 @@
 import math
-from flask import Flask, redirect, render_template, request, url_for, session
+from flask import Flask, redirect, render_template, request, url_for, session, request, jsonify, flash
 from flask_socketio import SocketIO, send, emit
 from flask_migrate import Migrate
 import numpy as np
@@ -11,7 +11,6 @@ import time
 import bcrypt
 from functools import wraps
 from environment import maze
-from flask import request, jsonify
 
 app = Flask(__name__)
 
@@ -23,6 +22,9 @@ app.config['SECRET_KEY'] = 'mysecretkey'  # Necesario para usar sesiones
 # Inicializar la base de datos con la aplicación
 db.init_app(app)
 socketio = SocketIO(app)
+
+# Inicializar Flask-Migrate
+migrate = Migrate(app, db)
 
 # Crear la base de datos y las tablas si no existen
 with app.app_context():
@@ -36,6 +38,12 @@ def login_required(f):
             return redirect(url_for('login'))  # Redirigir al login si no está autenticado
         return f(*args, **kwargs)
     return decorated_function
+
+def get_all_users():
+    users = User.query.all()
+    users_list = [{'username': user.username, 'completed_dungeons': user.completed_dungeons} for user in users]
+    
+    return users_list
 
 @app.route('/')
 def index():
@@ -107,6 +115,20 @@ def register():
 @login_required
 def dashboard():
     return render_template('dashboard.html')
+
+@app.route('/leaderboard')
+def leaderboard():
+    users = get_all_users()
+    
+    # Asegúrate de que todos los valores sean numéricos y no None
+    for user in users:
+        if user['completed_dungeons'] is None:
+            user['completed_dungeons'] = 0  # O asigna un valor predeterminado
+    
+    # Ordena la lista de usuarios
+    users_sorted = sorted(users, key=lambda user: user['completed_dungeons'], reverse=True)
+    
+    return render_template('leaderboard.html', users=users_sorted)
 
 @app.route('/mode_creative', methods=['GET','POST'])
 def mode_creative():

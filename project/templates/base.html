@@ -19,9 +19,10 @@
                 <h1>DC-AI</h1>
             </div>
             <ul class="menu">
+                <li><a href="{{ url_for('dashboard') }}" class="menu-item{% if request.path =="/dashboard" %} active{% endif %}">Dashboard</a></li>
                 <li><a href="" class="menu-item">Profile</a></li>
                 <li><a href="" class="menu-item">My Dungeons</a></li>
-                <li><a href="" class="menu-item">Leaderboard</a></li>
+                <li><a href="{{ url_for('leaderboard') }}" class="menu-item{% if request.path == "/leaderboard" %} active{% endif %}">Leaderboard</a></li>
                 <li><a href="" class="menu-item">Settings</a></li>
                 <li><a href="{{ url_for('logout') }}" class="menu-item">Logout</a></li>
             </ul>

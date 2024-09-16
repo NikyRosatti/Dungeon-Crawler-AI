@@ -248,3 +248,39 @@ footer p {
     margin-right: auto; /* Mantiene el texto a la izquierda y los links a la derecha */
     font-size: 20px; /* Aumenta el tamaño de la fuente */
 }
+
+/* Tabla de Leaderboard */
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 40px auto;
+    text-align: center;
+    font-family: 'Press Start 2P', cursive;
+    color: #d3e779;
+    background-color: rgba(9, 69, 73, 0.85);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.leaderboard-table th, .leaderboard-table td {
+    padding: 15px 20px;
+    border: 1px solid #fff; /* Borde blanco */
+}
+
+.leaderboard-table th {
+    background-color: #0a4737; /* Color de fondo para encabezado */
+    color: #FFD700; /* Color del texto en el encabezado */
+    text-shadow: 2px 2px 0 #000;
+}
+
+.leaderboard-table td {
+    background-color: rgba(9, 69, 73, 0.75);
+}
+
+.leaderboard-table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.1); /* Fila alterna */
+}
+
+.active {
+    background-color: rgba(255, 255, 255, 0.2); /* Destacar el item activo en el menú */
+}

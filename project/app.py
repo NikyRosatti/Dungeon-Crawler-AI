@@ -43,9 +43,6 @@ def get_all_users():
     users = User.query.all()
     users_list = [{'username': user.username, 'completed_dungeons': user.completed_dungeons} for user in users]
     
-    # Imprime los datos para depuración
-    print(users_list)
-    
     return users_list
 
 @app.route('/')

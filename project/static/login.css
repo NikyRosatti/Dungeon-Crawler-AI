@@ -191,3 +191,11 @@ button[type="submit"]:hover {
 .loader span:nth-child(5) {
   animation-delay: 1s;
 }
+
+.error-message {
+  background-color: #d4edda; /* Light green background */
+  color: #155724;         /* Dark green text */
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+}

@@ -14,7 +14,7 @@ body {
     font-family: 'Jaro', sans-serif;
     position: relative;
     background: url(/static/media/fondoLogin.png) center center / cover no-repeat;
-    backdrop-filter: blur(15px); /* Efecto de desenfoque */
+    backdrop-filter: blur(15px); 
 }
 
 .container {
@@ -25,7 +25,7 @@ body {
 
 .sidebar {
     width: 250px;
-    background-color: rgba(9, 69, 73, 0.75); /* Verde translúcido */
+    background-color: rgba(9, 69, 73, 0.75);
     padding: 30px;
     display: flex;
     flex-direction: column;
@@ -75,11 +75,11 @@ body {
     font-size: 32px;
     margin-bottom: 40px;
     color: #FFD700;
-    text-shadow: 0 0 10px #FFD700, /* Resplandor amarillo */
-    3px 3px 0 #000, /* Borde negro izquierdo y abajo */
-    -3px -3px 0 #000, /* Borde negro derecho y arriba */
-    3px -3px 0 #000, /* Borde negro diagonal izquierdo-arriba */
-    -3px 3px 0 #000; /* Borde negro diagonal derecho-abajo */
+    text-shadow: 0 0 10px #FFD700,
+    3px 3px 0 #000,
+    -3px -3px 0 #000,
+    3px -3px 0 #000,
+    -3px 3px 0 #000;
 }
 
 .stats {
@@ -90,13 +90,13 @@ body {
 
 .stat-card {
     background-color: rgba(9, 69, 73, 0.75);
-    padding: 40px; /* Aumentar el padding para agrandar los contenedores */
-    border-radius: 15px; /* Aumentar el radio del borde si se desea un aspecto más redondeado */
-    width: 200px; /* Aumentar el ancho del contenedor */
-    height: 200px; /* Aumentar la altura del contenedor */
+    padding: 40px;
+    border-radius: 15px;
+    width: 200px;
+    height: 200px;
     text-align: center;
     font-family: 'Press Start 2P';
-    color: #d3e779;
+    color: #ffffff;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -104,27 +104,27 @@ body {
 }
 
 .stat-card h3 {
-    font-size: 20px; /* Aumentar el tamaño del texto del encabezado */
-    margin-bottom: 15px; /* Aumentar el margen inferior del encabezado */
+    font-size: 20px;
+    margin-bottom: 15px;
 }
 
 .stat-card p {
-    font-size: 32px; /* Aumentar el tamaño del texto del párrafo */
+    font-size: 32px;
 }
 
 .actions {
     display: flex;
     justify-content: center;
-    gap: 60px; /* Aumentar separación entre los botones */
-    margin-top: 80px; /* Aumentar separación desde el contenido superior */
-    position: relative; /* Necesario para ajustar la posición */
-    top: 50px; /* Mover los botones un poco hacia abajo */
+    gap: 60px;
+    margin-top: 80px;
+    position: relative;
+    top: 50px;
 }
 
 .button-container {
     display: flex;
     align-items: center;
-    gap: 20px; /* Separación entre el botón y el cartel */
+    gap: 20px;
     position: relative;
 }
 
@@ -133,35 +133,34 @@ body {
     background-image: url('/static/media/torch.png');
     background-size: cover;
     background-position: center;
-    width: 200px; /* Tamaño del botón */
-    height: 300px; /* Tamaño del botón */
-    border: none; /* Sin borde */
+    width: 200px;
+    height: 300px;
+    border: none;
     text-align: center;
-    position: relative; /* Necesario para posicionar el texto */
-    overflow: hidden; /* Asegura que el texto no salga del botón */
+    position: relative;
+    overflow: hidden;
     transition: transform 0.3s ease;
 }
 
-/* Efecto de iluminación al pasar el mouse */
 .button:hover {
     transform: scale(1.1);
 }
 
 .button .button-text {
     position: absolute;
-    top: 20px; /* Posiciona el texto arriba del botón */
+    top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 30px; /* Aumenta el tamaño del texto del botón */
-    color: #FFD700; /* Color amarillo brillante */
+    font-size: 30px;
+    color: #FFD700;
     font-family: 'Press Start 2P', cursive;
-    opacity: 0; /* Inicialmente oculto */
+    opacity: 0;
     transition: opacity 0.3s ease;
-    text-shadow: 0 0 10px rgba(255, 255, 0, 0.8), /* Resplandor amarillo */
-    2px 2px 0 #000, /* Borde negro izquierdo y abajo */
-    -2px -2px 0 #000, /* Borde negro derecho y arriba */
-    2px -2px 0 #000, /* Borde negro diagonal izquierdo-arriba */
-    -2px 2px 0 #000; /* Borde negro diagonal derecho-abajo */
+    text-shadow: 0 0 10px rgba(255, 255, 0, 0.8),
+    2px 2px 0 #000,
+    -2px -2px 0 #000,
+    2px -2px 0 #000,
+    -2px 2px 0 #000;
 }
 
 /* Mostrar el texto al pasar el mouse */
@@ -182,36 +181,36 @@ body {
     background-image: url('/static/media/woodensign.png');
     background-size: cover;
     background-position: center;
-    width: 400px; /* Aumenta el tamaño del cartel */
-    height: 250px; /* Aumenta el tamaño del cartel */
-    padding: 30px; /* Ajusta el padding para más espacio alrededor del texto */
-    color: #FFD700;
-    text-shadow: 3px 3px 0 #000, /* Borde negro izquierdo y abajo */
-    -3px -3px 0 #000, /* Borde negro derecho y arriba */
-    3px -3px 0 #000, /* Borde negro diagonal izquierdo-arriba */
-    -3px 3px 0 #000; /* Borde negro diagonal derecho-abajo */
+    width: 400px;
+    height: 250px; 
+    padding: 30px; 
+    color: #ffffff;
+    text-shadow: 3px 3px 0 #000,
+    -3px -3px 0 #000,
+    3px -3px 0 #000,
+    -3px 3px 0 #000;
     font-family: 'Press Start 2P', cursive;
     text-align: center;
     position: absolute;
-    z-index: -1; /* Coloca el cartel detrás del botón */
+    z-index: -1;
     animation: glow 1.5s ease-in-out infinite;
 }
 
 .sign-left {
-    left: -375px; /* Ajusta la posición a la izquierda del botón */
+    left: -375px;
     top: 150px;
-    transform: translateY(-50%) rotate(-15deg); /* Inclinación hacia la izquierda */
+    transform: translateY(-50%) rotate(-15deg);
 }
 
 .sign-right {
-    right: -375px; /* Ajusta la posición a la derecha del botón */
+    right: -375px;
     top: 150px;
-    transform: translateY(-50%) rotate(15deg); /* Inclinación hacia la derecha */
+    transform: translateY(-50%) rotate(15deg);
 }
 
 .sign p {
-    margin-top: -180px; /* Ajustar la posición del texto */
-    font-size: 16px; /* Aumenta el tamaño del texto */
+    margin-top: -180px;
+    font-size: 16px;
 }
 
 .sign img {
@@ -225,38 +224,37 @@ footer {
     bottom: 0;
     right: 0;
     padding: 10px;
-    background-color:rgba(9, 69, 73, 0.75); /* Cambia el color si es necesario */
+    background-color:rgba(9, 69, 73, 0.75);
     color: white;
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    width: 100%; /* Opcional: para que el footer abarque toda la pantalla */
+    width: 100%;
 }
 
 .footer-links {
     display: flex;
-    gap: 15px; /* Espaciado entre los enlaces */
+    gap: 15px;
 }
 
 .footer-links a {
     color: rgb(255, 255, 255);
     text-decoration: none;
-    font-size: 24px; /* Aumenta el tamaño de la fuente */
+    font-size: 24px; 
 }
 
 footer p {
-    margin-right: auto; /* Mantiene el texto a la izquierda y los links a la derecha */
-    font-size: 20px; /* Aumenta el tamaño de la fuente */
+    margin-right: auto;
+    font-size: 20px;
 }
 
-/* Tabla de Leaderboard */
 .leaderboard-table {
     width: 100%;
     border-collapse: collapse;
     margin: 40px auto;
     text-align: center;
     font-family: 'Press Start 2P', cursive;
-    color: #d3e779;
+    color: #ffffff;
     background-color: rgba(9, 69, 73, 0.85);
     border-radius: 10px;
     overflow: hidden;
@@ -264,12 +262,12 @@ footer p {
 
 .leaderboard-table th, .leaderboard-table td {
     padding: 15px 20px;
-    border: 1px solid #fff; /* Borde blanco */
+    border: 1px solid #fff;
 }
 
 .leaderboard-table th {
-    background-color: #0a4737; /* Color de fondo para encabezado */
-    color: #FFD700; /* Color del texto en el encabezado */
+    background-color: #0a4737;
+    color: #FFD700;
     text-shadow: 2px 2px 0 #000;
 }
 
@@ -278,9 +276,9 @@ footer p {
 }
 
 .leaderboard-table tr:nth-child(even) {
-    background-color: rgba(255, 255, 255, 0.1); /* Fila alterna */
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .active {
-    background-color: rgba(255, 255, 255, 0.2); /* Destacar el item activo en el menú */
+    background-color: rgba(255, 255, 255, 0.2);
 }

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mode Creative</title>
+    <script>
+        function generateMatrixForm() {
+            // Obtener valores de filas y columnas
+            const rows = parseInt(document.getElementById('rows').value);
+            const columns = parseInt(document.getElementById('columns').value);
+
+            // Obtener el contenedor del formulario
+            const matrixContainer = document.getElementById('matrixContainer');
+            matrixContainer.innerHTML = ''; // Limpiar contenido previo
+
+            if (rows < 5 || columns < 5) {
+                alert('El mapa debe tener al menos 5 filas y 5 columnas.');
+                return;
+            }
+
+            // Crear formulario para la matriz
+            const table = document.createElement('table');
+            for (let i = 0; i < rows; i++) {
+                const row = document.createElement('tr');
+                for (let j = 0; j < columns; j++) {
+                    const cell = document.createElement('td');
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.name = `cell_${i}_${j}`; // Nombre único para cada celda
+                    input.placeholder = `(${i},${j})`;
+                    input.required = true;
+                    cell.appendChild(input);
+                    row.appendChild(cell);
+                }
+                table.appendChild(row);
+            }
+            matrixContainer.appendChild(table);
+        }
+    </script>
+</head>
+<body>
+    <form action="/mode_creative" method="post">
+        <div>
+            <label for="rows">Number of Rows:</label>
+            <input type="number" id="rows" name="rows" required>
+        </div>
+        <div>
+            <label for="columns">Number of Columns:</label>
+            <input type="number" id="columns" name="columns" required>
+        </div>
+        <div>
+            <label for="entradaX">Entrada X:</label>
+            <input type="number" id="entradaX" name="entradaX" required>
+        </div>
+        <div>
+            <label for="entradaY">Entrada Y:</label>
+            <input type="number" id="entradaY" name="entradaY" required>
+        </div>
+        <div>
+            <label for="salidaX">Salida X:</label>
+            <input type="number" id="salidaX" name="salidaX" required>
+        </div>
+        <div>
+            <label for="salidaY">Salida Y:</label>
+            <input type="number" id="salidaY" name="salidaY" required>
+        </div>
+        <button type="button" onclick="generateMatrixForm()">Generate Matrix Form</button>
+        <div id="matrixContainer"></div>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

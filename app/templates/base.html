@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <title>{% block title %}DC-AI{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h1>DC-AI</h1>
+            </div>
+            <ul class="menu">
+                <li><a href="{{ url_for('dashboard') }}" class="menu-item{% if request.path =="/dashboard" %} active{% endif %}">Dashboard</a></li>
+                <li><a href="" class="menu-item">Profile</a></li>
+                <li><a href="" class="menu-item">My Dungeons</a></li>
+                <li><a href="{{ url_for('leaderboard') }}" class="menu-item{% if request.path == "/leaderboard" %} active{% endif %}">Leaderboard</a></li>
+                <li><a href="" class="menu-item">Settings</a></li>
+                <li><a href="{{ url_for('logout') }}" class="menu-item">Logout</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+</body>
+<footer>
+    <p>© 2024 Dungeons Crawler AI. All Rights Reserved.</p>
+</footer>
+</html>

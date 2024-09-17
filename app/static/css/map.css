@@ -6,7 +6,7 @@ body {
     height: 100vh;
     margin: 0;
 
-    background: url(/static/img/fondoMAp.jpg) center center / cover no-repeat;
+    background: url(/static/img/fondoMap.jpg) center center / cover no-repeat;
 }
 
 .container {

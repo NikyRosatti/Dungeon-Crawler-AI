@@ -128,7 +128,9 @@ def profile():
         '/static/avatars/GonzaAvatar.png',
         '/static/avatars/FlorAvatar.png',
         '/static/avatars/JoaquinTAvatar.png',
-        '/static/avatars/JoaquinBAvatar.png'
+        '/static/avatars/JoaquinBAvatar.png',
+        '/static/avatars/BrusattiAvatar.png',
+        'static/avatars/SimonAvatar.png'
     ]
 
     return render_template('profile.html', user=user, avatars=avatars)

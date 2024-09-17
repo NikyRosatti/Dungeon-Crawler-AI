@@ -13,7 +13,7 @@
     color: white;
     position: relative;
     overflow: hidden;
-    background: url(/static/media/fondoLogin.png) center center / cover no-repeat;
+    background: url(/static/img/fondoLogin.png) center center / cover no-repeat;
     backdrop-filter: blur(15px); /* Efecto de desenfoque */
     font-family: 'Jaro', sans-serif;
   }
@@ -174,7 +174,7 @@
 /* Estilo para los botones con imagen de fondo */
 .button {
     text-decoration: none;
-    background-image: url('/static/media/texturaBarril.png'); /* Imagen de fondo */
+    background-image: url('/static/img/texturaBarril.png'); /* Imagen de fondo */
     background-size: cover; /* Asegura que la imagen cubra todo el botón */
     background-position: center; /* Centra la imagen de fondo */
     color: white;
@@ -207,7 +207,7 @@
     display: block;
     width: 60px;
     height: 60px;
-    background-image: url('/static/media/logogit.png'); /* Cambia la ruta de la imagen de fondo */
+    background-image: url('/static/img/logogit.png'); /* Cambia la ruta de la imagen de fondo */
     background-size: cover;
     background-position: center;
     border-radius: 50%;

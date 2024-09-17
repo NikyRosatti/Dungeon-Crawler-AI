@@ -78,6 +78,7 @@ def register():
         username = request.form['username']
         password = request.form['password'].encode('utf-8')
         email = request.form['email']
+        avatar = request.form['avatar']
 
         # Comprobar si ya existe un usuario con ese nombre o correo
         existing_user = User.query.filter(or_(User.username == username, User.email == email)).first()
@@ -88,7 +89,7 @@ def register():
 
         hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
 
-        new_user = User(username=username, password=hashed_password, email=email,)
+        new_user = User(username=username, password=hashed_password, email=email, avatar=avatar)
         
         # Añadir el nuevo usuario a la base de datos
         db.session.add(new_user)
@@ -99,8 +100,20 @@ def register():
         
         # Redirigir al home o a la página que prefieras después del registro
         return redirect(url_for('dashboard'))
-
-    return render_template('register.html')
+    
+    avatars = [
+            '/static/avatars/ValenAvatar.png',
+            '/static/avatars/NikyAvatar.png',
+            '/static/avatars/EstebanAvatar.png',
+            '/static/avatars/GonzaAvatar.png',
+            '/static/avatars/FlorAvatar.png',
+            '/static/avatars/JoaquinTAvatar.png',
+            '/static/avatars/JoaquinBAvatar.png',
+            '/static/avatars/BrusattiAvatar.png',
+            '/static/avatars/SimonAvatar.png',
+            '/static/avatars/AgusAvatar.png'
+    ]
+    return render_template('register.html', avatars=avatars)
 
 @app.route('/dashboard')
 @login_required
@@ -130,7 +143,8 @@ def profile():
         '/static/avatars/JoaquinTAvatar.png',
         '/static/avatars/JoaquinBAvatar.png',
         '/static/avatars/BrusattiAvatar.png',
-        'static/avatars/SimonAvatar.png'
+        '/static/avatars/SimonAvatar.png',
+        '/static/avatars/AgusAvatar.png'
     ]
 
     return render_template('profile.html', user=user, avatars=avatars)

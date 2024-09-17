@@ -31,6 +31,7 @@
             <h2>{{ user.username }}</h2>
             <img src="{{ user.avatar or '/static/avatars/default.png' }}" alt="Avatar de {{ user.username }}" width="150" height="150">
             <p>Email: {{ user.email }}</p>
+            <p>Joined: {{ user.joined_at.strftime('%B %d, %Y') }}</p>
                     
             <button class="show-avatar-options">Change avatar</button>
             <form action="/profile" method="POST">

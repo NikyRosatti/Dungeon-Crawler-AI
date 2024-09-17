@@ -15,7 +15,7 @@ from environment import maze
 app = Flask(__name__)
 
 # Configuración de la base de datos (en este caso SQLite)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dataBase.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'mysecretkey'  # Necesario para usar sesiones
 
@@ -72,15 +72,6 @@ def logout():
     session.pop('user_id', None)  # Eliminar la sesión del usuario
     return redirect(url_for('login'))
 
-# Ruta protegida, solo accesible si se ha iniciado sesión
-@app.route('/home')
-@login_required
-def home():
-    if 'user_id' in session:
-        return "Bienvenido al Home!"
-    else:
-        return redirect(url_for('login'))
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -129,70 +120,6 @@ def leaderboard():
     users_sorted = sorted(users, key=lambda user: user['completed_dungeons'], reverse=True)
     
     return render_template('leaderboard.html', users=users_sorted)
-
-@app.route('/mode_creative', methods=['GET','POST'])
-def mode_creative():
-    if request.method == 'POST':
-        try:
-            cantRow = int(request.form.get('rows', 0))
-            print (1)
-            cantColumn = int(request.form.get('columns', 0))
-            print (2)
-            entradaX = int(request.form.get('entradaX', 0))
-            print (3)
-            entradaY = int(request.form.get('entradaY', 0))
-            print (4)
-            salidaX = int(request.form.get('salidaX', 0))
-            print (5)
-            salidaY = int(request.form.get('salidaY', 0))
-            print (6)
-
-            if cantRow < 5 or cantColumn < 5:
-                print (7)
-                return render_template('mode_creative.html', error="Mapa muy pequeño")
-
-            if entradaX >= cantRow or entradaY >= cantColumn or entradaX < 0 or entradaY < 0:
-                print (8)
-                return render_template('mode_creative.html', error="Entrada del maze inválida")
-
-            if salidaX >= cantRow or salidaY >= cantColumn or salidaX < 0 or salidaY < 0:
-                print (9)
-                return render_template('mode_creative.html', error="Salida del maze inválida")
-            print (10)
-            grid = np.zeros((cantRow, cantColumn))
-            grid[entradaX][entradaY] = 2
-            grid[salidaX][salidaY] = 3
-
-            for i in range(cantRow):
-                for j in range(cantColumn):
-                    try:
-                        cell_value = int(request.form.get(f'cell_{i}_{j}', 0))
-                        print (11)
-                        if cell_value in [1, 4]:
-                            print (12)
-                            grid[i][j] = cell_value
-                        else:
-                            print (13)
-                            return render_template('mode_creative.html', error="Número desconocido")
-                    except ValueError:
-                        print (14)
-                        return render_template('mode_creative.html', error="Entrada inválida")
-
-            # Aquí puedes agregar la lógica para verificar el laberinto y guardarlo en la base de datos
-            print (15)
-            json_str = json.dumps(grid.tolist())  # Convertir el array a lista para JSON
-            print (16)
-            new_maze = MazeBd(grid=json_str, entradaX=entradaX, entradaY=entradaY, salidaX=salidaX, salidaY=salidaY)
-            # Si el laberinto es válido, guardar en la base de datos
-            print (17)
-            return render_template('mode_creative.html', success="Mapa creado exitosamente")
-
-        except Exception as e:
-            print (18)
-            return render_template('mode_creative.html', error=f"Ocurrió un error: {str(e)}")
-
-    # Si el método es GET, simplemente devuelve el formulario
-    return render_template('mode_creative.html')
 
 mapa_original = [
     -1, 0, 0, 0, 0, 0, 0,
@@ -285,6 +212,10 @@ def validate_map():
 
     # Validar si el laberinto es resoluble
     if new_maze.is_winneable():
+        json_str = json.dumps(map_grid)  # Convertir el array a lista para JSON
+        new_mazeBd = MazeBd(grid=json_str)
+        db.session.add(new_mazeBd)
+        db.session.commit()
         return jsonify({'valid': True})
     else:
         return jsonify({'valid': False})

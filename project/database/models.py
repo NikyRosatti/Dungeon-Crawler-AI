@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -9,6 +10,7 @@ class User(db.Model):
     password = db.Column(db.String(150), nullable=False)
     completed_dungeons = db.Column(db.Integer, nullable=False, default=0)
     avatar = db.Column(db.String(200), nullable=True)
+    joined_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     
     def __repr__(self):
         return f'<User {self.username}>'

@@ -69,17 +69,8 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('user_id', None)  # Eliminar la sesión del usuario
+    session.pop('user_id', None)
     return redirect(url_for('login'))
-
-# Ruta protegida, solo accesible si se ha iniciado sesión
-@app.route('/home')
-@login_required
-def home():
-    if 'user_id' in session:
-        return "Bienvenido al Home!"
-    else:
-        return redirect(url_for('login'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -116,14 +107,47 @@ def register():
 def dashboard():
     return render_template('dashboard.html')
 
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    user = User.query.get_or_404(session['user_id'])
+
+    if request.method == 'POST':
+        selected_avatar = request.form.get('avatar')
+        if selected_avatar:
+            user.avatar = selected_avatar
+            db.session.commit()
+            flash('Avatar actualizado con éxito!', 'success')
+        else:
+            flash('Por favor, selecciona un avatar.', 'danger')
+        return redirect('/profile')
+
+    avatars = [
+        '/static/avatars/ValenAvatar.png',
+        '/static/avatars/NikyAvatar.png',
+        '/static/avatars/EstebanAvatar.png',
+        '/static/avatars/GonzaAvatar.png',
+        '/static/avatars/FlorAvatar.png',
+        '/static/avatars/JoaquinTAvatar.png',
+        '/static/avatars/JoaquinBAvatar.png',
+        '/static/avatars/BrusattiAvatar.png',
+        'static/avatars/SimonAvatar.png'
+    ]
+
+    return render_template('profile.html', user=user, avatars=avatars)
+
+@app.route('/profile/<int:user_id>')
+def profileusers(user_id):
+    user = User.query.get_or_404(user_id)
+    return render_template('profile.html', user=user)
+
+
 @app.route('/leaderboard')
 def leaderboard():
     users = get_all_users()
     
-    # Asegúrate de que todos los valores sean numéricos y no None
     for user in users:
         if user['completed_dungeons'] is None:
-            user['completed_dungeons'] = 0  # O asigna un valor predeterminado
+            user['completed_dungeons'] = 0
     
     # Ordena la lista de usuarios
     users_sorted = sorted(users, key=lambda user: user['completed_dungeons'], reverse=True)
@@ -177,13 +201,10 @@ def mode_creative():
                     except ValueError:
                         print (14)
                         return render_template('mode_creative.html', error="Entrada inválida")
-
-            # Aquí puedes agregar la lógica para verificar el laberinto y guardarlo en la base de datos
             print (15)
             json_str = json.dumps(grid.tolist())  # Convertir el array a lista para JSON
             print (16)
             new_maze = MazeBd(grid=json_str, entradaX=entradaX, entradaY=entradaY, salidaX=salidaX, salidaY=salidaY)
-            # Si el laberinto es válido, guardar en la base de datos
             print (17)
             return render_template('mode_creative.html', success="Mapa creado exitosamente")
 
@@ -191,7 +212,6 @@ def mode_creative():
             print (18)
             return render_template('mode_creative.html', error=f"Ocurrió un error: {str(e)}")
 
-    # Si el método es GET, simplemente devuelve el formulario
     return render_template('mode_creative.html')
 
 mapa_original = [

@@ -194,31 +194,28 @@ def mode_creative():
     # Si el método es GET, simplemente devuelve el formulario
     return render_template('mode_creative.html')
 
-mapa_original = [
-    -1, 0, 0, 0, 0, 0, 0,
-    1, 1, 1, 0, 1, 1 , 0, 
-    0, 1, 0, 0, 1, 0, 0,
-    0, 1, 0, 0, 1, 0, 1,
-    0, 0, 0, 0, 0, 0, 1,
-    0, 1, 0, 0, 1, 0, 1,
-    0, 0, 0, 1, 1, 0,3,
-]
-
-map_size = 7
 
 def find_player_position():
     return mapa_original.index(-1)
 @app.route('/map')
 def map():
-    return render_template('map.html', mapa_original=mapa_original)
+    return render_template('map.html', mapa_original=cambiarPuerta(mapa_original))
+
+def cambiarPuerta(mapa):
+    print(mapa)
+    indice = mapa.index(2)
+    mapa[indice] = -1
 
 @socketio.on('connect')
 def handle_connect():
-    emit('map', mapa_original)
+    if not mapa_original:  # Verificar si mapa_original está inicializado
+        emit('map', 'No hay un mapa cargado.')
+    else:
+        emit('map', mapa_original)
 
 @socketio.on('move')
 def handle_move(direction):
-    global mapa_original 
+    
     print(f'Movimiento recibido: {direction}')
 
     player_pos = find_player_position()
@@ -255,7 +252,12 @@ def restart_position(position):
 @app.route('/map_creator')
 def map_creator():
     return render_template('map_creator.html')
-    
+  
+  
+  
+mapa_original = []
+map_size = 0
+          
 @app.route('/validate_map', methods=['POST'])
 def validate_map():
     data = request.get_json()
@@ -285,10 +287,21 @@ def validate_map():
 
     # Validar si el laberinto es resoluble
     if new_maze.is_winneable():
-        return jsonify({'valid': True})
+        global mapa_original
+        global map_size
+
+        mapa_original = map_grid  # Guardar el mapa validado en la variable global
+        map_size = size        
+        # Redirigir a la ruta '/map' pasando el mapa validado
+        return jsonify({'valid': True, 'redirect_url': url_for('map')})
     else:
         return jsonify({'valid': False})
+    
+    return 
 
+@app.route('/myDungeons')
+def myDungeons():
+    return render_template('myDungeons.html')
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)

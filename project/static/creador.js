@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             if (data.valid) {
-                alert('OK');
+                window.location.href = data.redirect_url;
             } else {
                 alert('No');
             }

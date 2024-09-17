@@ -156,7 +156,7 @@ body {
 }
 
 .show-avatar-options:hover {
-    background-color: rgba(9, 69, 73, 0.85);
+    background-color: rgba(255, 254, 204, 0.85);
 }
 
 footer {
@@ -181,17 +181,20 @@ footer p {
     width: auto;
     padding: 12px 24px;
     background: rgba(75, 188, 154, 0.8);
-    color: rgb(255, 255, 255);
-    -webkit-text-stroke: 0.5px rgb(0, 0, 0);
+    color: black;
     cursor: pointer;
     font-size: 17px;
     font-family: 'Press Start 2P';
-    background: url(/static/media/texturaBarril.png) center center / cover;
+    background:  #FFD700;
     backdrop-filter: blur(1px);
     transition: transform 0.3s ease;
     border: none;
     border-radius: 10px;
     display: none;
+}
+
+.buttonavatar:hover {
+    background-color: rgba(255, 254, 204, 0.85);
 }
 
 .avatar-options.show-button .buttonavatar {

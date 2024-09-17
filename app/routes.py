@@ -81,6 +81,40 @@ def leaderboard():
 def map():
     return render_template('map.html', mapa_original=mapa_original)
 
+@bp.route('/profile', methods=['GET', 'POST'])
+def profile():
+    user = User.query.get_or_404(session['user_id'])
+
+    if request.method == 'POST':
+        selected_avatar = request.form.get('avatar')
+        if selected_avatar:
+            user.avatar = selected_avatar
+            db.session.commit()
+            flash('Avatar actualizado con éxito!', 'success')
+        else:
+            flash('Por favor, selecciona un avatar.', 'danger')
+        return redirect('/profile')
+
+    avatars = [
+        '/static/img/avatars/ValenAvatar.png',
+        '/static/img/avatars/NikyAvatar.png',
+        '/static/img/avatars/EstebanAvatar.png',
+        '/static/img/avatars/GonzaAvatar.png',
+        '/static/img/avatars/FlorAvatar.png',
+        '/static/img/avatars/JoaquinTAvatar.png',
+        '/static/img/avatars/JoaquinBAvatar.png',
+        '/static/img/avatars/BrusattiAvatar.png',
+        'static/img/avatars/SimonAvatar.png'
+    ]
+
+    return render_template('profile.html', user=user, avatars=avatars)
+
+@bp.route('/profile/<int:user_id>')
+def profileusers(user_id):
+    user = User.query.get_or_404(user_id)
+    return render_template('profile.html', user=user)
+
+
 @socketio.on('connect')
 def handle_connect():
     emit('map', mapa_original)

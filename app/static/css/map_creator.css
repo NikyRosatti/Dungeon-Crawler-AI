@@ -5,7 +5,7 @@ body {
     background-color: #f0f0f0;
     flex-direction: column;
     font-family: Arial, sans-serif;
-    background: url(/static/img/FondoMap.jpg) center center / cover no-repeat;
+    background: url(/static/img/fondoMap.jpg) center center / cover no-repeat;
     background-attachment: fixed; /* Fija el fondo para que no se mueva al hacer scroll */
     background-size: cover; /* Hace que el fondo siempre cubra toda la pantalla */
     justify-content: center; /* Centra verticalmente el contenido */

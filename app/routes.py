@@ -5,7 +5,7 @@ from flask_socketio import emit
 from app import socketio
 import bcrypt
 from functools import wraps
-from app.services.map_service import mapa_original, find_player_position, move_player
+from app.services.map_service import find_player_position, move_player
 from app.environment import maze
 import json
 
@@ -138,28 +138,10 @@ def handle_connect():
 
 @socketio.on('move')
 def handle_move(direction):
-    print(f'Movimiento recibido: {direction}')
+    global mapa_original
+    move_player(direction, mapa_original, map_size)
 
-    player_pos = find_player_position()
-
-    if direction == 'ArrowUp':
-        new_pos = player_pos - map_size if player_pos >= map_size else player_pos
-    elif direction == 'ArrowDown':
-        new_pos = player_pos + map_size if player_pos < len(mapa_original) - map_size else player_pos
-    elif direction == 'ArrowLeft':
-        new_pos = player_pos - 1 if player_pos % map_size != 0 else player_pos
-    elif direction == 'ArrowRight':
-        new_pos = player_pos + 1 if (player_pos + 1) % map_size != 0 else player_pos
-    else:
-        new_pos = player_pos  
-
-    if mapa_original[new_pos] == 0:
-        mapa_original[player_pos] = 0
-        mapa_original[new_pos] = -1  
-
-    if mapa_original[new_pos] == 3:
-        mapa_original[player_pos] = 0
-        mapa_original [new_pos] = -2
+    if -2 in mapa_original:
         emit('finish_map', 'You Win!')
               
     emit('map', mapa_original)
@@ -222,7 +204,4 @@ def validate_map():
         return jsonify({'valid': True, 'redirect_url': url_for('routes.map')})
     else:
         return jsonify({'valid': False})
-
-def find_player_position():
-    return mapa_original.index(-1)
 

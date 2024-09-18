@@ -5,7 +5,7 @@ from flask_socketio import emit
 from app import socketio
 import bcrypt
 from functools import wraps
-from app.services.map_service import find_player_position, move_player
+from app.services.map_service import move_player
 from app.environment import maze
 import json
 
@@ -110,6 +110,7 @@ def profile():
     return render_template('profile.html', user=user, avatars=avatars)
 
 @bp.route('/profile/<int:user_id>')
+@login_required
 def profileusers(user_id):
     user = User.query.get_or_404(user_id)
     return render_template('profile.html', user=user)
@@ -119,13 +120,14 @@ def cambiarPuerta(mapa):
     indice = mapa.index(2)
     mapa[indice] = -1
 
-    
 @bp.route('/myDungeons')
+@login_required
 def myDungeons():
     return render_template('myDungeons.html')
 
 
 @bp.route('/map')
+@login_required
 def map():
     return render_template('map.html', mapa_original=cambiarPuerta(mapa_original))
 
@@ -191,7 +193,7 @@ def validate_map():
     # Validar si el laberinto es resoluble
     if new_maze.is_winneable():
         json_str = json.dumps(grid)  # Convertir el array a lista para JSON
-        new_maze = MazeBd(grid=json_str)
+        new_maze = MazeBd(grid=json_str, user_id = session.get())
         db.session.add(new_maze)
         db.session.commit()
         

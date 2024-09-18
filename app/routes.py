@@ -211,17 +211,13 @@ def validate_map():
     # Validar si el laberinto es resoluble
     if new_maze.is_winneable():
         json_str = json.dumps(map_grid)  # Convertir el array a lista para JSON
-        new_maze = MazeBd(grid=json_str, user_id = session.get('user_id'), maze_size = size)
+        new_maze = MazeBd(grid=json_str, user_id=session.get('user_id'), maze_size=size)
         db.session.add(new_maze)
         db.session.commit()
         
-        global mapa_original
-        global map_size
-
-        mapa_original = map_grid  # Guardar el mapa validado en la variable global
-        map_size = size        
-        # Redirigir a la ruta '/map' pasando el mapa validado
-        return jsonify({'valid': True, 'redirect_url': url_for('routes.map')})
+        maze_id = new_maze.id
+ 
+        return jsonify({'valid': True, 'redirect_url': url_for('routes.map', maze_id=maze_id)})
     else:
         return jsonify({'valid': False})
 

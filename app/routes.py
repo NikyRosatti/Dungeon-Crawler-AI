@@ -194,7 +194,7 @@ def validate_map():
 
     # Validar si el laberinto es resoluble
     if new_maze.is_winneable():
-        json_str = json.dumps(grid)  # Convertir el array a lista para JSON
+        json_str = json.dumps(map_grid)  # Convertir el array a lista para JSON
         new_maze = MazeBd(grid=json_str, user_id = session.get('user_id'))
         db.session.add(new_maze)
         db.session.commit()

@@ -5,7 +5,7 @@ from flask_socketio import emit
 from app import socketio
 import bcrypt
 from functools import wraps
-from app.services.map_service import move_player
+from app.services.map_service import move_player, change_door
 from app.environment import maze
 import json
 
@@ -115,28 +115,23 @@ def profileusers(user_id):
     user = User.query.get_or_404(user_id)
     return render_template('profile.html', user=user)
 
-def cambiarPuerta(mapa):
-    print(mapa)
-    indice = mapa.index(2)
-    mapa[indice] = -1
-
 @bp.route('/myDungeons')
 @login_required
 def myDungeons():
     return render_template('myDungeons.html')
 
-@bp.route('/dungeons/')
+
+@bp.route('/dungeons')
 @login_required
 def my_mazes():
     user_id = session['user_id']
     user_mazes = MazeBd.query.filter_by(user_id = user_id).all()
     return render_template('user_mazes.html', mazes=user_mazes)
 
-
 @bp.route('/map')
 @login_required
 def map():
-    return render_template('map.html', mapa_original=cambiarPuerta(mapa_original))
+    return render_template('map.html', mapa_original=change_door(mapa_original))
 
 @socketio.on('connect')
 def handle_connect():

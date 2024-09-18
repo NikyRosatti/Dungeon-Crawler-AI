@@ -1,3 +1,4 @@
+from datetime import datetime
 from app import db
 
 class User(db.Model):
@@ -12,8 +13,12 @@ class User(db.Model):
     
 class MazeBd(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    grid = db.Column(db.JSON, nullable = False)
+    grid = db.Column(db.JSON, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # FK a User
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # Fecha de creación
+
+    # Relación con el modelo User
+    user = db.relationship('User', backref='mazes', lazy=True)
     
     def __repr__(self):
         return f'<MazeBd {self.grid}>'
-    

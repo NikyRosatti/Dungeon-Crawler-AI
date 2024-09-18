@@ -21,3 +21,8 @@ def move_player(direction, map, map_size):
     elif map[new_pos] == 3:
         map[player_pos] = 0
         map[new_pos] = -2
+
+def cambiarPuerta(mapa):
+    print(mapa)
+    indice = mapa.index(2)
+    mapa[indice] = -1

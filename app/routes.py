@@ -5,7 +5,7 @@ from flask_socketio import emit
 from app import socketio
 import bcrypt
 from functools import wraps
-from app.services.map_service import find_player_position, move_player
+from app.services.map_service import find_player_position, move_player, cambiarPuerta
 from app.environment import maze
 import json
 
@@ -114,12 +114,7 @@ def profileusers(user_id):
     user = User.query.get_or_404(user_id)
     return render_template('profile.html', user=user)
 
-def cambiarPuerta(mapa):
-    print(mapa)
-    indice = mapa.index(2)
-    mapa[indice] = -1
 
-    
 @bp.route('/myDungeons')
 def myDungeons():
     return render_template('myDungeons.html')

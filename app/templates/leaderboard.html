@@ -12,7 +12,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- Sidebar reutilizada del dashboard -->
         <div class="sidebar">
             <div class="logo">
                 <h1>DC-AI</h1>
@@ -21,13 +20,12 @@
                 <li><a href="/dashboard" class="menu-item">Dashboard</a></li>
                 <li><a href="/profile" class="menu-item">Profile</a></li>
                 <li><a href="/dungeons" class="menu-item">My Dungeons</a></li>
-                <li><a href="/leaderboard" class="menu-item active">Leaderboard</a></li> <!-- Se marca como activa -->
+                <li><a href="/leaderboard" class="menu-item active">Leaderboard</a></li> 
                 <li><a href="/settings" class="menu-item">Settings</a></li>
                 <li><a href="/logout" class="menu-item">Logout</a></li>
             </ul>
         </div>
 
-        <!-- Contenido principal -->
         <div class="main-content">
             <h2>Leaderboard</h2>
             <table class="leaderboard-table">
@@ -41,9 +39,9 @@
                 <tbody>
                     {% for user in users %}
                     <tr>
-                        <td>{{ loop.index }}</td> <!-- Para mostrar el ranking, se usa loop.index -->
+                        <td>{{ loop.index }}</td>
                         <td>{{ user.username }}</td>
-                        <td>{{ user.completed_dungeons or 0 }}</td> <!-- Mostrar 0 si el valor es None o vacío -->
+                        <td>{{ user.completed_dungeons or 0 }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>    

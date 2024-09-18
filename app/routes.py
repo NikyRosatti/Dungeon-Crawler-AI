@@ -50,14 +50,15 @@ def register():
         username = request.form['username']
         password = request.form['password'].encode('utf-8')
         email = request.form['email']
-
+        avatar = request.form['avatar']
+        
         existing_user = User.query.filter(or_(User.username == username, User.email == email)).first()
 
         if existing_user:
             return render_template('register.html', error="Usuario ya registrado")
 
         hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
-        new_user = User(username=username, password=hashed_password, email=email)
+        new_user = User(username=username, password=hashed_password, email=email, avatar=avatar)
 
         db.session.add(new_user)
         db.session.commit()
@@ -65,7 +66,19 @@ def register():
         session['user_id'] = new_user.id
         return redirect(url_for('routes.dashboard'))
 
-    return render_template('register.html')
+    avatars = [
+            '/static/img/avatars/ValenAvatar.png',
+            '/static/img/avatars/NikyAvatar.png',
+            '/static/img/avatars/EstebanAvatar.png',
+            '/static/img/avatars/GonzaAvatar.png',
+            '/static/img/avatars/FlorAvatar.png',
+            '/static/img/avatars/JoaquinTAvatar.png',
+            '/static/img/avatars/JoaquinBAvatar.png',
+            '/static/img/avatars/BrusattiAvatar.png',
+            '/static/img/avatars/SimonAvatar.png',
+            '/static/img/avatars/AgusAvatar.png'
+    ]
+    return render_template('register.html', avatars=avatars)
 
 @bp.route('/dashboard')
 @login_required
@@ -104,7 +117,8 @@ def profile():
         '/static/img/avatars/JoaquinTAvatar.png',
         '/static/img/avatars/JoaquinBAvatar.png',
         '/static/img/avatars/BrusattiAvatar.png',
-        'static/img/avatars/SimonAvatar.png'
+        '/static/img/avatars/SimonAvatar.png',
+        '/static/img/avatars/AgusAvatar.png'
     ]
 
     return render_template('profile.html', user=user, avatars=avatars)

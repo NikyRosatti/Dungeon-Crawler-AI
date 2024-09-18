@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/static/css/login.css">
-    <title> DC-AI, Login </title>
+    <title> DC-AI,  Register </title>
   </head>
   <body>
     <div class="container">
@@ -20,9 +20,7 @@
         </div>
         <div class="card">
             <div class="titulo">
-                <h1><strong>
-                    <div> Create Account </div>
-                </strong></h1>
+                <h1><strong>Create Account</strong></h1>
                 {% if error %}
                   <div class="error-message">
                     <p>{{ error }}</p>
@@ -41,11 +39,39 @@
                         <label for="password">Password:</label>
                         <input type="password" id="password" name="password" required>
                     </div>
+                    <button type="button" id="choose-avatar-btn">Choose Avatar</button>
+                    <div class="avatar-selection" id="avatar-selection">
+                      <div class="avatar-grid">
+                          {% for avatar in avatars %}
+                          <label>
+                              <input type="radio" name="avatar" value="{{ avatar }}" required>
+                              <img src="{{ avatar }}" alt="Avatar" class="avatar-img">
+                          </label>
+                          {% endfor %}
+                      </div>
+                      <button type="button" id="select-avatar-btn">Select</button>
+                    </div>
                     <button type="submit">Register</button>
                 </form>
-
+                <div class="register-link">
+                  <p>Already have an account?</p>
+                  <a href="/login">Log in</a>
+              </div>
             </div>
         </div>
     </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const chooseAvatarBtn = document.getElementById('choose-avatar-btn');
+          const avatarSelection = document.getElementById('avatar-selection');
+          const selectAvatarBtn = document.getElementById('select-avatar-btn');
+          chooseAvatarBtn.addEventListener('click', function() {
+              avatarSelection.style.display = avatarSelection.style.display === 'none' ? 'block' : 'none';
+          });
+          selectAvatarBtn.addEventListener('click', function() {
+              avatarSelection.style.display = 'none';
+          });
+      });
+      </script>
 </body>
 </html>

@@ -14,7 +14,7 @@ body {
   position: relative;
   overflow: hidden;
   background: url(/static/img/fondoLogin.png) center center / cover no-repeat;
-  backdrop-filter: blur(15px); /* Efecto de desenfoque */
+  backdrop-filter: blur(15px);
   font-family: 'Jaro', sans-serif;
 }
 
@@ -26,16 +26,15 @@ body {
 }
 
 .main-title {
-  font-size: 4rem; /* Ajusta el tamaño del título según sea necesario */
-  background: linear-gradient(to bottom, #d6e373, #7f931d); /* Degradado de izquierda a derecha */
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-size: 4rem;
+  background: linear-gradient(to bottom, #f6ff00, #f6ff00);
   background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
   text-align: center;
   font-family: 'Press Start 2P';
   margin-bottom: 20px;
-  -webkit-text-stroke: 2px black;
-  text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 0 3px #f6ff00, 0 0 1px #f6ff00, 0 0 10px #ffffff;
 }
 
 .card {
@@ -83,8 +82,8 @@ body {
 .login-form input {
   width: 100%;
   padding: 10px;
-  border: 3px solid #9cd59c;
-  box-shadow: 0 0 5px #00FF00;
+  border: 3px solid #eef196;
+  box-shadow: 0 0 5px #f6ff00;
   border-radius: 5px;
   background: transparent;
   color: white;
@@ -103,21 +102,20 @@ button[type="submit"]::before {
   left: 0;
   right: 0;
   bottom: 0;
-  backdrop-filter: blur(1px); /* Desenfoque del fondo */
-  z-index: -1; /* Para que no cubra el contenido del botón */
+  backdrop-filter: blur(1px);
+  z-index: -1;
 }
 
 button[type="submit"] {
   width: 100%;
   padding: 12px;
-  background: rgba(75, 188, 154, 0.8); /* Color de fondo con transparencia */
-  color: rgb(255, 255, 255);
-  -webkit-text-stroke: 0.5px rgb(0, 0, 0);
+  color: black;
   cursor: pointer;
   font-size: 17px;
   font-family: 'Press Start 2P';
-  background: url(/static/img/texturaBarril.png) center center / cover;
-  backdrop-filter: blur(1px); /* Efecto de desenfoque */
+  box-shadow: 0 0 10px #ffffff;
+  margin-bottom: 20px;
+  backdrop-filter: blur(1px);
   transition: transform 0.3s ease;
 }
 
@@ -192,10 +190,99 @@ button[type="submit"]:hover {
   animation-delay: 1s;
 }
 
-.error-message {
-  background-color: #d4edda; /* Light green background */
-  color: #155724;         /* Dark green text */
-  padding: 10px;
-  border-radius: 5px;
-  margin: 10px 0;
+.avatar-selection {
+  display: none;
+  position: absolute;
+  top: 50%;
+  right: -250px;
+  width: 300px;
+  background-color: rgba(9, 69, 73, 0.75);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.avatar-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+.avatar-selection label {
+  cursor: pointer;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+  display: inline-block;
+  padding: 5px;
+}
+.avatar-selection img {
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+}
+.avatar-selection input:checked + img {
+  border: 5px solid #FFD700;
+  transform: scale(1.1);
+}
+#select-avatar-btn {
+    display: block;
+    width: auto;
+    margin: 0 auto;
+    background-color: #FFD700;
+    color: #000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Press Start 2P';
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.avatar-selection input[type="radio"] {
+  display: none;
+}
+.avatar-selection label {
+  cursor: pointer;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+  display: inline-block;
+  padding: 5px;
+}
+.avatar-selection input[type="radio"]:checked + img {
+  border: 5px solid #FFD700;
+  transform: scale(1.1);
+  box-shadow: 0 0 10px #FFD700;
+}
+.avatar-selection {
+  display: none;
+  position: absolute;
+  top: -30%;
+  right: -400px;
+  width: 300px;
+  background-color: rgba(9, 69, 73, 0.75);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.avatar-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+.avatar-selection img {
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+}
+#choose-avatar-btn {
+  width: 250px;
+  height: 35px;
+  color: black;
+  font-size: 10;
+  font-family: 'Press Start 2P';
+  background: #eef196;
+  box-shadow: 0 0 10px #f6ff00;
+  margin-bottom: 20px;
 }

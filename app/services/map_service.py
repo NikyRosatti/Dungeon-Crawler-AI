@@ -21,3 +21,9 @@ def move_player(direction, map, map_size):
     elif map[new_pos] == 3:
         map[player_pos] = 0
         map[new_pos] = -2
+
+def change_door(map):
+    print(map)
+    if 2 in map:
+        i = map.index(2)
+        map[i] = -1

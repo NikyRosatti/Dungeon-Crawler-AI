@@ -16,6 +16,7 @@ class MazeBd(db.Model):
     grid = db.Column(db.JSON, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # FK a User
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # Fecha de creación
+    maze_size = db.Column(db.Integer,nullable=False)
 
     # Relación con el modelo User
     user = db.relationship('User', backref='mazes', lazy=True)

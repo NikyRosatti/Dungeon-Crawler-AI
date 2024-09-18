@@ -1,17 +1,13 @@
-mapa_original = []
-map_size = 0
+def find_player_position(map):
+    return map.index(-1)
 
-def find_player_position():
-    return mapa_original.index(-1)
-
-def move_player(direction):
-    global mapa_original
-    player_pos = find_player_position()
+def move_player(direction, map, map_size):
+    player_pos = find_player_position(map)
 
     if direction == 'ArrowUp':
         new_pos = player_pos - map_size if player_pos >= map_size else player_pos
     elif direction == 'ArrowDown':
-        new_pos = player_pos + map_size if player_pos < len(mapa_original) - map_size else player_pos
+        new_pos = player_pos + map_size if player_pos < len(map) - map_size else player_pos
     elif direction == 'ArrowLeft':
         new_pos = player_pos - 1 if player_pos % map_size != 0 else player_pos
     elif direction == 'ArrowRight':
@@ -19,9 +15,9 @@ def move_player(direction):
     else:
         new_pos = player_pos
 
-    if mapa_original[new_pos] == 0:
-        mapa_original[player_pos] = 0
-        mapa_original[new_pos] = -1
-    elif mapa_original[new_pos] == 3:
-        mapa_original[player_pos] = 0
-        mapa_original[new_pos] = -2
+    if map[new_pos] == 0:
+        map[player_pos] = 0
+        map[new_pos] = -1
+    elif map[new_pos] == 3:
+        map[player_pos] = 0
+        map[new_pos] = -2

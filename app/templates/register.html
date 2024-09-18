@@ -23,6 +23,11 @@
                 <h1><strong>
                     <div> Create Account </div>
                 </strong></h1>
+                {% if error %}
+                  <div class="error-message">
+                    <p>{{ error }}</p>
+                  </div>
+                {% endif %}
                 <form action="/register" method="post" class="login-form">
                     <div>
                         <label for="username">Username:</label>

@@ -24,6 +24,11 @@
                     <div> Login into an account </div>
                 </strong></h1>
                 <h2><strong>Challenge your mind: log in to explore</strong></h2>
+                {% if error %}
+                  <div class="error-message">
+                    <p>{{ error }}</p>
+                  </div>
+                {% endif %}
                 <form action="/login" method="post" class="login-form">
                     <div>
                         <label for="username_or_email">Username or Email:</label>

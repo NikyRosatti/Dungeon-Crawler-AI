@@ -6,6 +6,8 @@ from app import socketio
 import bcrypt
 from functools import wraps
 from app.services.map_service import mapa_original, find_player_position, move_player
+from app.environment import maze
+import json
 
 bp = Blueprint('routes', __name__)
 
@@ -77,9 +79,7 @@ def leaderboard():
     users_sorted = sorted(users_list, key=lambda u: u['completed_dungeons'], reverse=True)
     return render_template('leaderboard.html', users=users_sorted)
 
-@bp.route('/map')
-def map():
-    return render_template('map.html', mapa_original=mapa_original)
+
 
 @bp.route('/profile', methods=['GET', 'POST'])
 def profile():
@@ -114,15 +114,56 @@ def profileusers(user_id):
     user = User.query.get_or_404(user_id)
     return render_template('profile.html', user=user)
 
+def cambiarPuerta(mapa):
+    print(mapa)
+    indice = mapa.index(2)
+    mapa[indice] = -1
+
+    
+@bp.route('/myDungeons')
+def myDungeons():
+    return render_template('myDungeons.html')
+
+
+@bp.route('/map')
+def map():
+    return render_template('map.html', mapa_original=cambiarPuerta(mapa_original))
 
 @socketio.on('connect')
 def handle_connect():
-    emit('map', mapa_original)
+    if not mapa_original:  # Verificar si mapa_original está inicializado
+        emit('map', 'No hay un mapa cargado.')
+    else:
+        emit('map', mapa_original)
 
 @socketio.on('move')
 def handle_move(direction):
-    move_player(direction)
+    print(f'Movimiento recibido: {direction}')
+
+    player_pos = find_player_position()
+
+    if direction == 'ArrowUp':
+        new_pos = player_pos - map_size if player_pos >= map_size else player_pos
+    elif direction == 'ArrowDown':
+        new_pos = player_pos + map_size if player_pos < len(mapa_original) - map_size else player_pos
+    elif direction == 'ArrowLeft':
+        new_pos = player_pos - 1 if player_pos % map_size != 0 else player_pos
+    elif direction == 'ArrowRight':
+        new_pos = player_pos + 1 if (player_pos + 1) % map_size != 0 else player_pos
+    else:
+        new_pos = player_pos  
+
+    if mapa_original[new_pos] == 0:
+        mapa_original[player_pos] = 0
+        mapa_original[new_pos] = -1  
+
+    if mapa_original[new_pos] == 3:
+        mapa_original[player_pos] = 0
+        mapa_original [new_pos] = -2
+        emit('finish_map', 'You Win!')
+              
     emit('map', mapa_original)
+
 
 @socketio.on('restart_pos')
 def restart_position(position):
@@ -130,3 +171,58 @@ def restart_position(position):
     mapa_original[mapa_original.index(-2)] = 3
     mapa_original[position] = -1
     emit('map', mapa_original)
+
+@bp.route('/map_creator')
+def map_creator():
+    return render_template('map_creator.html')
+
+mapa_original = []
+map_size = 0
+
+@bp.route('/validate_map', methods=['POST'])
+def validate_map():
+    data = request.get_json()
+    map_grid = data.get('map')  # El mapa que enviaste desde el frontend
+    size = int(len(map_grid) ** 0.5)  # Suponiendo que el mapa es cuadrado
+
+    # Buscar el punto de inicio y de salida en el mapa
+    start_point = None
+    exit_point = None
+
+    # Convertir el arreglo plano en una matriz
+    grid = [map_grid[i:i + size] for i in range(0, len(map_grid), size)]
+
+    # Identificar el punto de inicio (2) y de salida (3)
+    for row in range(size):
+        for col in range(size):
+            if grid[row][col] == 2:
+                start_point = (row, col)
+            if grid[row][col] == 3:
+                exit_point = (row, col)
+
+    if start_point is None or exit_point is None:
+        return jsonify({'valid': False, 'error': 'No se encontró el punto de inicio o salida'}), 400
+
+    # Crear la instancia del laberinto
+    new_maze = maze.Maze(grid, size, start_point, exit_point)
+
+    # Validar si el laberinto es resoluble
+    if new_maze.is_winneable():
+        json_str = json.dumps(grid)  # Convertir el array a lista para JSON
+        new_maze = MazeBd(grid=json_str)
+        db.session.add(new_maze)
+        db.session.commit()
+        
+        global mapa_original
+        global map_size
+
+        mapa_original = map_grid  # Guardar el mapa validado en la variable global
+        map_size = size        
+        # Redirigir a la ruta '/map' pasando el mapa validado
+        return jsonify({'valid': True, 'redirect_url': url_for('routes.map')})
+    else:
+        return jsonify({'valid': False})
+
+def find_player_position():
+    return mapa_original.index(-1)
+

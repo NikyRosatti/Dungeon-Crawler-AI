@@ -1,14 +1,5 @@
-mapa_original = [
-    -1, 0, 0, 0, 0, 0, 0,
-    1, 1, 1, 0, 1, 1, 0,
-    0, 1, 0, 0, 1, 0, 0,
-    0, 1, 0, 0, 1, 0, 1,
-    0, 0, 0, 0, 0, 0, 1,
-    0, 1, 0, 0, 1, 0, 1,
-    0, 0, 0, 1, 1, 0, 3,
-]
-
-map_size = 7
+mapa_original = []
+map_size = 0
 
 def find_player_position():
     return mapa_original.index(-1)

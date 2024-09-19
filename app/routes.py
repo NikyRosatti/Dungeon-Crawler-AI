@@ -39,6 +39,8 @@ def login():
 
     return render_template('login.html')
 
+
+@login_required
 @bp.route('/logout')
 def logout():
     session.pop('user_id', None)
@@ -80,11 +82,13 @@ def register():
     ]
     return render_template('register.html', avatars=avatars)
 
+@login_required
 @bp.route('/dashboard')
 @login_required
 def dashboard():
     return render_template('dashboard.html')
 
+@login_required
 @bp.route('/leaderboard')
 def leaderboard():
     users = User.query.all()
@@ -93,7 +97,7 @@ def leaderboard():
     return render_template('leaderboard.html', users=users_sorted)
 
 
-
+@login_required
 @bp.route('/profile', methods=['GET', 'POST'])
 def profile():
     user = User.query.get_or_404(session['user_id'])
@@ -123,17 +127,18 @@ def profile():
 
     return render_template('profile.html', user=user, avatars=avatars)
 
+@login_required
 @bp.route('/profile/<int:user_id>')
 def profileusers(user_id):
     user = User.query.get_or_404(user_id)
     return render_template('profile.html', user=user)
 
-
+@login_required
 @bp.route('/myDungeons')
 def myDungeons():
     return render_template('myDungeons.html')
 
-
+@login_required
 @bp.route('/map')
 def map():
     return render_template('map.html', mapa_original=cambiarPuerta(mapa_original))
@@ -163,6 +168,7 @@ def restart_position(position):
     mapa_original[position] = -1
     emit('map', mapa_original)
 
+@login_required
 @bp.route('/map_creator')
 def map_creator():
     return render_template('map_creator.html')
@@ -170,6 +176,8 @@ def map_creator():
 mapa_original = []
 map_size = 0
 
+
+@login_required
 @bp.route('/validate_map', methods=['POST'])
 def validate_map():
     data = request.get_json()

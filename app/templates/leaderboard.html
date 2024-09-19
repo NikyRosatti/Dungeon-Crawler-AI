@@ -39,9 +39,9 @@
                 <tbody>
                     {% for user in users %}
                     <tr>
-                        <td>{{ loop.index }}</td>
+                        <td>{{ loop.index }}</td> 
                         <td>{{ user.username }}</td>
-                        <td>{{ user.completed_dungeons or 0 }}</td>
+                        <td>{{ user.completed_dungeons or 0 }}</td> 
                     </tr>
                     {% endfor %}
                 </tbody>    

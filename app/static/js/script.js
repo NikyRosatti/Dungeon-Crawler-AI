@@ -1,81 +1,51 @@
 if (window.location.pathname === '/map') {
     const socket = io();
 
-    // Mapa original (0: piso, 2: inicio, 3: fin)
-    socket.on('map', function(mapaOriginal) {
+    // Emitir el evento para iniciar la simulación cuando se conecte al servidor
+    socket.emit('start_simulation');
 
-        // Tamaño del mapa original
-        const n = Math.sqrt(mapaOriginal.length);
-
-        // Crear un nuevo mapa con bordes de pared
-        const mapaConParedes = [];
-
-        // Agregar borde superior
-        mapaConParedes.push(...Array(n + 2).fill(1));
-
-        // Agregar bordes laterales y filas centrales del mapa original
-        for (let i = 0; i < n; i++) {
-            mapaConParedes.push(1); // Borde izquierdo
-            mapaConParedes.push(...mapaOriginal.slice(i * n, (i + 1) * n)); // Mapa original
-            mapaConParedes.push(1); // Borde derecho
-        }
-
-        // Agregar borde inferior
-        mapaConParedes.push(...Array(n + 2).fill(1));
-
-        // Obtener el contenedor de la cuadrícula
+    // Escuchar las actualizaciones del mapa
+    socket.on('map_update', function(mapaConParedes) {
         const grid = document.getElementById('grid');
         grid.innerHTML = ''; // Limpiar el grid antes de generar uno nuevo
 
+        // Tamaño del mapa con bordes
+        const n = Math.sqrt(mapaConParedes.length);
+
         // Establecer el tamaño de la cuadrícula basado en el número de celdas
-        grid.style.gridTemplateColumns = `repeat(${n + 2}, 1fr)`; // +2 para los bordes
-        grid.style.gridTemplateRows = `repeat(${n + 2}, 1fr)`; // +2 para los bordes
+        grid.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
+        grid.style.gridTemplateRows = `repeat(${n}, 1fr)`;
 
         // Generar celdas de la cuadrícula
         mapaConParedes.forEach(value => {
             const cell = document.createElement('div');
             cell.classList.add('cell');
-            
+
             switch (value) {
-                case -2: 
-                    cell.classList.add('winner_agent');
-                    break;
                 case -1:
-                    cell.classList.add('agent');
+                    cell.classList.add('agent');  // Posición del agente
                     break;
                 case 0:
-                    cell.classList.add('floor');
+                    cell.classList.add('floor');  // Piso
                     break;
                 case 1:
-                    cell.classList.add('wall');
+                    cell.classList.add('wall');  // Pared
                     break;
                 case 2:
-                    cell.classList.add('start');
+                    cell.classList.add('start');  // Inicio
                     break;
                 case 3:
-                    cell.classList.add('end');
+                    cell.classList.add('end');    // Final
                     break;
             }
-            
+
             grid.appendChild(cell);
         });
-
     });
-    
+
+    // Escuchar el evento cuando se resuelve el laberinto
     socket.on('finish_map', function(message){
         var sound = document.getElementById("winSound");
         sound.play();
-
-        setTimeout(function(){
-            socket.emit('restart_pos', 0);
-        },1000);
-
-    });
-    
-    document.addEventListener('keydown', function(event) {
-        const key = event.key;
-        if ((key == 'ArrowUp' || key == 'ArrowLeft' || key == 'ArrowDown' || key == 'ArrowRight')) {
-            socket.emit('move', key);
-        }
     });
 }

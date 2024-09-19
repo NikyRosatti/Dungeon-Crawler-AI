@@ -141,7 +141,7 @@ def myDungeons():
 @login_required
 @bp.route('/map')
 def map():
-    return render_template('map.html', mapa_original=cambiarPuerta(mapa_original))
+    return render_template('map.html')
 
 @socketio.on('connect')
 def handle_connect():
@@ -223,20 +223,25 @@ def validate_map():
         return jsonify({'valid': False})
 
 from stable_baselines3 import PPO
+import time
 
-@bp.route('/test', methods = ['GET', 'POST'])
+@socketio.on('start_simulation')
 def test():
     
     grid = [
-        [0, 1, 0, 0],
-        [0, 1, 0, 1],
-        [0, 0, 0, 1],
-        [1, 1, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 1, 1, 1, 1, 1, 1],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 0, 0, 0, 0, 0, 0, 3]
     ]
 
-    size = 4
+    size = 8
     start_point = (0, 0)
-    exit_point = (3, 3)
+    exit_point = (7, 7)
 
     # Crear el entorno
     env = maze.Maze(grid, size, start_point, exit_point)
@@ -251,8 +256,14 @@ def test():
     # Ejecutar el entorno con acciones aleatorias como ejemplo
     for _ in range(1000):
         action, _states = model.predict(obs)  # Elegir una acción aleatoria
-        obs, reward, done, info = env.step(action)
-        env.render()
+        obs, reward, done, truncated, info = env.step(action)
+        
+        current_map_state = env.get_current_map_state()
+        
+        socketio.emit('map_update', current_map_state)
+        
+        time.sleep(0.1)
+        
         if done:
             print("¡Laberinto resuelto!")
             break

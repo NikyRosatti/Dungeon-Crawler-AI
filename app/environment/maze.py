@@ -29,12 +29,16 @@ class Maze(gym.Env):
         # Estado inicial
         self.state = self.start_point
         
-    
+        self.visitadas = set()
+        self.visitadas.add(self.start_point)  # Agregar la celda inicial como visitada
+
+
     def reset(self, start_point = None, seed = None):
         """Reinicia el entorno y devuelve el estado inicial"""
         if seed is not None:
             np.random.seed(seed)
         self.state = start_point if start_point is not None else self.start_point
+        self.visitadas = {self.state}  # Reiniciar las celdas visitadas
         return np.array(self.state, dtype=np.int32)  # Devolver la observación inicial
     
     
@@ -54,26 +58,37 @@ class Maze(gym.Env):
         else:
             raise ValueError(f"Acción inválida: {action}")
 
+        recompensa = -1
+
         # Verificar si las nuevas coordenadas están dentro de los límites
         if 0 <= row_new < self.size and 0 <= col_new < self.size:
             # Verificar si la nueva celda es una pared
             if self.grid[row_new][col_new] != 1:
                 # Actualizar el estado con las nuevas coordenadas
                 self.state = (row_new, col_new)
+            else:
+                recompensa = -5
+        else:
+            recompensa = -5
 
-        # Calcular recompensa: por ejemplo, -1 por cada movimiento y 100 si llega a la salida
+
+        # Si el agente llega a una celda ya visitada, penalizar más
+        if self.state in self.visitadas:
+            recompensa = -10  # Penalización adicional por visitar una celda repetida
+        else:
+            self.visitadas.add(self.state)  # Marcar la nueva celda como visitada
+
+        # Recompensa por llegar al punto de salida
         if self.state == self.exit_point:
             recompensa = 100
-            done = True  # Termina el episodio si llegamos a la salida
+            done = True
         else:
-            recompensa = -1  # Penalización por cada movimiento
             done = False
 
-        # Información adicional (opcional)
+        truncated = False
         info = {}
-
         # Devolver estado actual, recompensa, si el episodio terminó y info adicional
-        return np.array(self.state, dtype=np.int32), recompensa, done, info
+        return np.array(self.state, dtype=np.int32), recompensa, done, truncated, info
 
     
     def render(self, mode='human'):
@@ -137,3 +152,10 @@ class Maze(gym.Env):
 
         # Si salimos del bucle sin encontrar la salida, el laberinto no es resolvible
         return False
+    
+    def get_current_map_state(self):
+        """Devuelve el estado actual del laberinto como una lista 1D."""
+        maze_render = np.copy(self.grid)
+        row, col = self.state
+        maze_render[row, col] = -1  # Representación del agente
+        return maze_render.flatten().tolist()  # Convertir el estado a 1D

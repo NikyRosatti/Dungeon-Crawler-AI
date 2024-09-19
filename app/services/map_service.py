@@ -22,7 +22,9 @@ def move_player(direction, map, map_size):
         map[player_pos] = 0
         map[new_pos] = -2
 
-def cambiarPuerta(mapa):
-    print(mapa)
-    indice = mapa.index(2)
-    mapa[indice] = -1
+def change_door(map):
+    if isinstance(map, list) and 2 in map:
+        i = map.index(2)
+        map[i] = -1
+    else:
+        print("Error: map no es una lista o no contiene el valor 2")

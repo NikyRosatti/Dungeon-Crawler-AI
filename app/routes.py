@@ -5,11 +5,13 @@ from flask_socketio import emit
 from app import socketio
 import bcrypt
 from functools import wraps
-from app.services.map_service import find_player_position, move_player, cambiarPuerta
+from app.services.map_service import move_player, change_door
 from app.environment import maze
 import json
 
 bp = Blueprint('routes', __name__)
+mapa_original = []
+map_size = 0
 
 # Decorador de login
 def login_required(f):
@@ -86,6 +88,7 @@ def dashboard():
     return render_template('dashboard.html')
 
 @bp.route('/leaderboard')
+@login_required
 def leaderboard():
     users = User.query.all()
     users_list = [{'username': user.username, 'completed_dungeons': user.completed_dungeons or 0} for user in users]
@@ -95,6 +98,7 @@ def leaderboard():
 
 
 @bp.route('/profile', methods=['GET', 'POST'])
+@login_required
 def profile():
     user = User.query.get_or_404(session['user_id'])
 
@@ -124,26 +128,48 @@ def profile():
     return render_template('profile.html', user=user, avatars=avatars)
 
 @bp.route('/profile/<int:user_id>')
+@login_required
 def profileusers(user_id):
     user = User.query.get_or_404(user_id)
     return render_template('profile.html', user=user)
 
-
 @bp.route('/myDungeons')
+@login_required
 def myDungeons():
     return render_template('myDungeons.html')
 
 
+@bp.route('/dungeons')
+@login_required
+def my_mazes():
+    user_id = session['user_id']
+    user_mazes = MazeBd.query.filter_by(user_id = user_id).all()
+    return render_template('user_mazes.html', mazes=user_mazes)
+
 @bp.route('/map')
+@login_required
 def map():
-    return render_template('map.html', mapa_original=cambiarPuerta(mapa_original))
+    maze_id = request.args.get('maze_id')
+    global mapa_original
+    global map_size
+    
+    if not maze_id:
+        return "ID de mapa no proporcionado", 400
+    
+    maze = MazeBd.query.filter_by(id=maze_id).first()
+    if not maze:
+        return "Mapa no encontrado", 404
+    
+    mapa_original = json.loads(maze.grid)
+    map_size = maze.maze_size
+    return render_template('map.html', mapa_original=change_door(mapa_original))
 
 @socketio.on('connect')
 def handle_connect():
-    if not mapa_original:  # Verificar si mapa_original está inicializado
-        emit('map', 'No hay un mapa cargado.')
+    if not mapa_original:
+        emit('map', {'message': 'No hay un mapa cargado.'})
     else:
-        emit('map', mapa_original)
+        emit('map', {'mapaOriginal': mapa_original, 'n': map_size})
 
 @socketio.on('move')
 def handle_move(direction):
@@ -153,7 +179,7 @@ def handle_move(direction):
     if -2 in mapa_original:
         emit('finish_map', 'You Win!')
               
-    emit('map', mapa_original)
+    emit('map', {'mapaOriginal': mapa_original, 'n': map_size})
 
 
 @socketio.on('restart_pos')
@@ -161,20 +187,19 @@ def restart_position(position):
     global mapa_original
     mapa_original[mapa_original.index(-2)] = 3
     mapa_original[position] = -1
-    emit('map', mapa_original)
+    emit('map', {'mapaOriginal': mapa_original, 'n': map_size})
 
 @bp.route('/map_creator')
+@login_required
 def map_creator():
     return render_template('map_creator.html')
 
-mapa_original = []
-map_size = 0
-
 @bp.route('/validate_map', methods=['POST'])
+@login_required
 def validate_map():
     data = request.get_json()
     map_grid = data.get('map')  # El mapa que enviaste desde el frontend
-    size = int(len(map_grid) ** 0.5)  # Suponiendo que el mapa es cuadrado
+    size = data.get('size')
 
     # Buscar el punto de inicio y de salida en el mapa
     start_point = None
@@ -199,18 +224,14 @@ def validate_map():
 
     # Validar si el laberinto es resoluble
     if new_maze.is_winneable():
-        json_str = json.dumps(grid)  # Convertir el array a lista para JSON
-        new_maze = MazeBd(grid=json_str)
+        json_str = json.dumps(map_grid)  # Convertir el array a lista para JSON
+        new_maze = MazeBd(grid=json_str, user_id=session.get('user_id'), maze_size=size)
         db.session.add(new_maze)
         db.session.commit()
         
-        global mapa_original
-        global map_size
-
-        mapa_original = map_grid  # Guardar el mapa validado en la variable global
-        map_size = size        
-        # Redirigir a la ruta '/map' pasando el mapa validado
-        return jsonify({'valid': True, 'redirect_url': url_for('routes.map')})
+        maze_id = new_maze.id
+ 
+        return jsonify({'valid': True, 'redirect_url': url_for('routes.map', maze_id=maze_id)})
     else:
         return jsonify({'valid': False})
 

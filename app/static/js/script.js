@@ -2,12 +2,10 @@ if (window.location.pathname === '/map') {
     const socket = io();
 
     // Mapa original (0: piso, 2: inicio, 3: fin)
-    socket.on('map', function(mapaOriginal) {
+    socket.on('map', function(data) {
+        mapaOriginal = data.mapaOriginal
+        n = data.n
 
-        // Tamaño del mapa original
-        const n = Math.sqrt(mapaOriginal.length);
-
-        // Crear un nuevo mapa con bordes de pared
         const mapaConParedes = [];
 
         // Agregar borde superior

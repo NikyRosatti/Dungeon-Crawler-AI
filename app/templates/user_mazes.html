@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <title>User Mazes - DC-AI</title>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h1>DC-AI</h1>
+            </div>
+            <ul class="menu">
+                <li><a href="/dashboard" class="menu-item">Dashboard</a></li>
+                <li><a href="/profile" class="menu-item">Profile</a></li>
+                <li><a href="/dungeons" class="menu-item active">My Dungeons</a></li>
+                <li><a href="/leaderboard" class="menu-item">Leaderboard</a></li>
+                <li><a href="/settings" class="menu-item">Settings</a></li>
+                <li><a href="/logout" class="menu-item">Logout</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h2>My Created Mazes</h2>
+            <div class="mazes-grid">
+                {% for maze in mazes %}
+                    <div class="maze-card">
+                        <div class="maze-grid">{{ maze.grid }}</div>
+                        <div class="maze-info">
+                            <a href="{{ url_for('routes.map' , maze_id=maze.id)}}" class="btn">Play maze</a>
+                            <p>Creado el : {{ maze.created_at.strftime('%Y-%m-%d') }}</p>
+                        </div>                        
+                    </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+
+</body>
+<footer>
+    <p>© 2024 Dungeons Crawler AI. All Rights Reserved.</p>
+</footer>
+</html>

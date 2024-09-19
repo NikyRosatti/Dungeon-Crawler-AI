@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ map: mapToValidate }), // Enviar el mapa a Python
+            body: JSON.stringify({ map: mapToValidate , size: size}), // Enviar el mapa a Python
         })
         .then(response => response.json())
         .then(data => {

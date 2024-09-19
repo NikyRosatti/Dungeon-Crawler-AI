@@ -222,3 +222,40 @@ def validate_map():
     else:
         return jsonify({'valid': False})
 
+from stable_baselines3 import PPO
+
+@bp.route('/test', methods = ['GET', 'POST'])
+def test():
+    
+    grid = [
+        [0, 1, 0, 0],
+        [0, 1, 0, 1],
+        [0, 0, 0, 1],
+        [1, 1, 0, 0]
+    ]
+
+    size = 4
+    start_point = (0, 0)
+    exit_point = (3, 3)
+
+    # Crear el entorno
+    env = maze.Maze(grid, size, start_point, exit_point)
+
+    model = PPO('MlpPolicy', env, verbose=1)
+    
+    model.learn(total_timesteps=10000)
+    
+    # Reiniciar el entorno
+    obs = env.reset()
+
+    # Ejecutar el entorno con acciones aleatorias como ejemplo
+    for _ in range(1000):
+        action, _states = model.predict(obs)  # Elegir una acción aleatoria
+        obs, reward, done, info = env.step(action)
+        env.render()
+        if done:
+            print("¡Laberinto resuelto!")
+            break
+
+    # Cerrar el entorno
+    env.close()

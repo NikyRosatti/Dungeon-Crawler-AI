@@ -1,10 +1,95 @@
-class Maze:
+
+import gymnasium as gym
+from gymnasium import spaces
+import numpy as np
+
+
+class Maze(gym.Env):
+    
     def __init__(self, grid, size, start_point, exit_point):
+        super(Maze, self).__init__()
+        
         self.grid = grid
         self.size = size
-        self.start_point = start_point  # (fila, columna) debería ser una tupla
-        self.exit_point = exit_point    # (fila, columna) debería ser una tupla
+        self.start_point = start_point
+        self.exit_point = exit_point
 
+        # Definir espacio de acción: 4 posibles movimientos (abajo, derecha, arriba, izquierda)
+        self.action_space = spaces.Discrete(4)
+
+        # Definir espacio de observación: posición actual en el laberinto
+        # La observación será la coordenada (fila, columna), representada como una tupla
+        # (puedes adaptar si quieres más información)
+        self.observation_space = spaces.Box(
+            low=np.array([0, 0]), 
+            high=np.array([self.size - 1, self.size - 1]), 
+            dtype=np.int32
+        )
+
+        # Estado inicial
+        self.state = self.start_point
+        
+    
+    def reset(self, start_point = None, seed = None):
+        """Reinicia el entorno y devuelve el estado inicial"""
+        if seed is not None:
+            np.random.seed(seed)
+        self.state = start_point if start_point is not None else self.start_point
+        return np.array(self.state, dtype=np.int32)  # Devolver la observación inicial
+    
+    
+    def step(self, action):
+        """Realiza una acción en el entorno y devuelve el nuevo estado, recompensa, done y info"""
+        row, col = self.state
+
+        # Definir los movimientos basados en la acción (abajo, derecha, arriba, izquierda)
+        if action == 0:  # Abajo
+            row_new, col_new = row + 1, col
+        elif action == 1:  # Derecha
+            row_new, col_new = row, col + 1
+        elif action == 2:  # Arriba
+            row_new, col_new = row - 1, col
+        elif action == 3:  # Izquierda
+            row_new, col_new = row, col - 1
+        else:
+            raise ValueError(f"Acción inválida: {action}")
+
+        # Verificar si las nuevas coordenadas están dentro de los límites
+        if 0 <= row_new < self.size and 0 <= col_new < self.size:
+            # Verificar si la nueva celda es una pared
+            if self.grid[row_new][col_new] != 1:
+                # Actualizar el estado con las nuevas coordenadas
+                self.state = (row_new, col_new)
+
+        # Calcular recompensa: por ejemplo, -1 por cada movimiento y 100 si llega a la salida
+        if self.state == self.exit_point:
+            recompensa = 100
+            done = True  # Termina el episodio si llegamos a la salida
+        else:
+            recompensa = -1  # Penalización por cada movimiento
+            done = False
+
+        # Información adicional (opcional)
+        info = {}
+
+        # Devolver estado actual, recompensa, si el episodio terminó y info adicional
+        return np.array(self.state, dtype=np.int32), recompensa, done, info
+
+    
+    def render(self, mode='human'):
+        """Visualiza el estado actual del laberinto"""
+        maze_render = np.copy(self.grid)
+
+        # Marcar la posición actual
+        row, col = self.state
+        maze_render[row, col] = -1  # Por ejemplo, marcar con un 2 donde está el agente
+
+        print(maze_render)
+    
+    def close(self):
+        """Cierra el entorno (limpieza)"""
+        pass
+        
     def is_winneable(self):
         # Pila del DFS para el camino por recorrer (empezamos desde el punto de inicio)
         camino = [self.start_point]  # Asegúrate de que start_point sea una tupla, por ejemplo (0, 0)

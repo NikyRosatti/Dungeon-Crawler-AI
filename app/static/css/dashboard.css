@@ -14,7 +14,7 @@ body {
     font-family: 'Jaro', sans-serif;
     position: relative;
     background: url(/static/img/fondoLogin.png) center center / cover no-repeat;
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px); 
 }
 
 .container {
@@ -142,7 +142,6 @@ body {
     transition: transform 0.3s ease;
 }
 
-
 .button:hover {
     transform: scale(1.1);
 }
@@ -164,6 +163,7 @@ body {
     -2px 2px 0 #000;
 }
 
+/* Mostrar el texto al pasar el mouse */
 .button:hover .button-text {
     opacity: 1;
 }
@@ -182,9 +182,9 @@ body {
     background-size: cover;
     background-position: center;
     width: 400px;
-    height: 250px;
-    padding: 30px;
-    color: #FFD700;
+    height: 250px; 
+    padding: 30px; 
+    color: #ffffff;
     text-shadow: 3px 3px 0 #000,
     -3px -3px 0 #000,
     3px -3px 0 #000,
@@ -240,14 +240,13 @@ footer {
 .footer-links a {
     color: rgb(255, 255, 255);
     text-decoration: none;
-    font-size: 24px;
+    font-size: 24px; 
 }
 
 footer p {
     margin-right: auto;
     font-size: 20px;
 }
-
 
 .leaderboard-table {
     width: 100%;

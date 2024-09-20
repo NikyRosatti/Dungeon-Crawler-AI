@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+    <h2>Settings</h2>
+
+    {% if success %}
+        <p class="success">{{ success }}</p>
+    {% endif %}
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <div class="actions">
+        <button class="yellow-button option-button" data-target="change-password-form">Change Password</button>
+        <button class="yellow-button option-button" data-target="change-email-form">Change Email</button>
+        <button class="yellow-button option-button" data-target="delete-account-form">Delete Account</button>
+    </div>
+
+    <div class="form-container">
+        <form id="change-password-form" class="contained-form" method="POST" style="display: none;">
+            <h3 class="form-title">Change Password</h3>
+            <label for="current_password">Current Password:</label>
+            <input type="password" name="current_password" required>
+
+            <label for="new_password">New Password:</label>
+            <input type="password" name="new_password" required>
+
+            <label for="confirm_password">Confirm New Password:</label>
+            <input type="password" name="confirm_password" required>
+
+            <button class="yellow-button" type="submit" name="update_password">Update Password</button>
+        </form>
+
+        <form id="change-email-form" class="contained-form" method="POST" style="display: none;">
+            <h3 class="form-title">Change Email</h3>
+            <label for="new_email">New Email:</label>
+            <input type="email" name="new_email" required>
+
+            <label for="confirm_email">Confirm New Email:</label>
+            <input type="email" name="confirm_email" required>
+
+            <button class="yellow-button" type="submit" name="update_email">Update Email</button>
+        </form>
+
+        <form id="delete-account-form" class="contained-form" method="POST" style="display: none;">
+            <h3 class="form-title">Delete Account</h3>
+            <p>Warning: This action cannot be undone.</p>
+            <button class="yellow-button delete-button" type="submit" name="delete_account" onclick="return confirm('Are you sure you want to delete your account?')">Delete Account</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+    const buttons = document.querySelectorAll('.option-button');
+    const forms = document.querySelectorAll('.contained-form');
+
+    buttons.forEach(button => {
+        button.addEventListener('click', function () {
+            const targetFormId = this.getAttribute('data-target');
+            
+            forms.forEach(form => {
+                if (form.id === targetFormId) {
+                    form.style.display = '';
+                } else {
+                    form.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+
+    </script>
+
+{% endblock %}

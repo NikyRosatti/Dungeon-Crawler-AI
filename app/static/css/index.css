@@ -27,16 +27,19 @@
   
   .main-title {
     font-size: 4rem; /* Ajusta el tamaño del título según sea necesario */
-    background: linear-gradient(to bottom, #d6e373, #7f931d); /* Degradado de izquierda a derecha */
+    background: linear-gradient(to bottom, #ffff00, #ffff4d); /* Degradado amarillo neón */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-align: center;
     font-family: 'Press Start 2P';
     margin-bottom: 20px;
-    -webkit-text-stroke: 2px black;
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  }
+    -webkit-text-stroke: 2px black; /* Contorno negro */
+    text-shadow: 
+        0 0 10px rgb(255, 252, 47), /* Resplandor más cercano al texto */
+        0 0 20px rgb(255, 255, 255), /* Resplandor intermedio */
+        0 0 30px rgba(255, 255, 0, 0.4); /* Resplandor más difuso */
+}
   
   .card {
     position: relative;
@@ -174,26 +177,25 @@
 /* Estilo para los botones con imagen de fondo */
 .button {
     text-decoration: none;
-    background-image: url('/static/img/texturaBarril.png'); /* Imagen de fondo */
-    background-size: cover; /* Asegura que la imagen cubra todo el botón */
-    background-position: center; /* Centra la imagen de fondo */
-    color: white;
-    padding: 20px 40px; /* Tamaño más grande para los botones */
-    margin: 15 15px; /* Espacio lateral */
-    display: inline-block;
-    font-family: 'Press Start 2P', sans-serif;
-    font-size: 16px; /* Texto más grande */
-    transition: transform 0.3s ease; /* Animación suave */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra para destacar los botones */
-    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background: #eef196;
+    box-shadow: 0 0 10px #f6ff00;
+    width: 100%;
+    padding: 12px;
+    color: black;
+    cursor: pointer;
+    font-size: 17px;
+    font-family: 'Press Start 2P';
+    box-shadow: 0 0 10px #ffffff;
     margin-bottom: 20px;
+    backdrop-filter: blur(1px); /* Efecto de desenfoque */
+    transition: transform 0.3s ease;
 }
 
 
 /* Efecto hover: cuando el usuario pasa el mouse sobre el botón */
 .button:hover {
     transform: scale(1.1); /* Aumenta el tamaño en hover */
-    background-color: rgba(255, 255, 255, 0.1); /* Le da un efecto de brillo al pasar el mouse */
+    background-color: rgb(239, 255, 22); /* Le da un efecto de brillo al pasar el mouse */
 }
 
 /* Estilos para el botón de GitHub */

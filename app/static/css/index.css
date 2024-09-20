@@ -14,7 +14,7 @@
     position: relative;
     overflow: hidden;
     background: url(/static/img/fondoLogin.png) center center / cover no-repeat;
-    backdrop-filter: blur(15px); /* Efecto de desenfoque */
+    backdrop-filter: blur(15px);
     font-family: 'Jaro', sans-serif;
   }
   
@@ -26,26 +26,26 @@
   }
   
   .main-title {
-    font-size: 4rem; /* Ajusta el tamaño del título según sea necesario */
-    background: linear-gradient(to bottom, #ffff00, #ffff4d); /* Degradado amarillo neón */
+    font-size: 4rem;
+    background: linear-gradient(to bottom, #ffff00, #ffff4d);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-align: center;
     font-family: 'Press Start 2P';
     margin-bottom: 20px;
-    -webkit-text-stroke: 2px black; /* Contorno negro */
+    -webkit-text-stroke: 2px black;
     text-shadow: 
-        0 0 10px rgb(255, 252, 47), /* Resplandor más cercano al texto */
-        0 0 20px rgb(255, 255, 255), /* Resplandor intermedio */
-        0 0 30px rgba(255, 255, 0, 0.4); /* Resplandor más difuso */
+        0 0 10px rgb(255, 252, 47),
+        0 0 20px rgb(255, 255, 255),
+        0 0 30px rgba(255, 255, 0, 0.4);
 }
   
   .card {
     position: relative;
     width: 450px;
     padding: 40px 30px;
-    background: rgba(9, 69, 73, 0.548); /* Color verde agua translúcido */
+    background: rgba(9, 69, 73, 0.548);
     backdrop-filter: blur(15px);
     border-radius: 15px;
     box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
@@ -166,15 +166,13 @@
     animation-delay: 1s;
   }
 
-/* Contenedor de los botones */
 .options {
     display: flex;
     justify-content: center;
-    margin-top: 10px; /* Reducir el margen para subir los botones */
-    gap: 30px; /* Espaciado entre los botones */
+    margin-top: 10px;
+    gap: 30px;
 }
 
-/* Estilo para los botones con imagen de fondo */
 .button {
     text-decoration: none;
     background: #eef196;
@@ -187,18 +185,16 @@
     font-family: 'Press Start 2P';
     box-shadow: 0 0 10px #ffffff;
     margin-bottom: 20px;
-    backdrop-filter: blur(1px); /* Efecto de desenfoque */
+    backdrop-filter: blur(1px);
     transition: transform 0.3s ease;
 }
 
 
-/* Efecto hover: cuando el usuario pasa el mouse sobre el botón */
 .button:hover {
-    transform: scale(1.1); /* Aumenta el tamaño en hover */
-    background-color: rgb(239, 255, 22); /* Le da un efecto de brillo al pasar el mouse */
+    transform: scale(1.1);
+    background-color: rgb(239, 255, 22);
 }
 
-/* Estilos para el botón de GitHub */
 .github-button {
     position: fixed;
     bottom: 70px;
@@ -209,7 +205,7 @@
     display: block;
     width: 60px;
     height: 60px;
-    background-image: url('/static/img/logogit.png'); /* Cambia la ruta de la imagen de fondo */
+    background-image: url('/static/img/logogit.png');
     background-size: cover;
     background-position: center;
     border-radius: 50%;
@@ -217,7 +213,7 @@
 }
 
 .button-github:hover {
-    transform: scale(1.1); /* Efecto hover */
+    transform: scale(1.1);
 }
 
 footer {
@@ -225,28 +221,28 @@ footer {
     bottom: 0;
     right: 0;
     padding: 10px;
-    background-color:rgba(9, 69, 73, 0.75); /* Cambia el color si es necesario */
+    background-color:rgba(9, 69, 73, 0.75);
     color: white;
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    width: 100%; /* Opcional: para que el footer abarque toda la pantalla */
+    width: 100%;
 }
 
 .footer-links {
     display: flex;
-    gap: 15px; /* Espaciado entre los enlaces */
+    gap: 15px;
 }
 
 .footer-links a {
     color: rgb(255, 255, 255);
     text-decoration: none;
-    font-size: 24px; /* Aumenta el tamaño de la fuente */
+    font-size: 24px;
 }
 
 footer p {
-    margin-right: auto; /* Mantiene el texto a la izquierda y los links a la derecha */
-    font-size: 24px; /* Aumenta el tamaño de la fuente */
+    margin-right: auto;
+    font-size: 24px;
 }
 
   

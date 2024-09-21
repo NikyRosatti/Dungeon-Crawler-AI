@@ -7,47 +7,42 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/dashboard.css">
-    <title>DC-AI, Leaderboard</title>
+    <title>User Mazes - DC-AI</title>
 </head>
 <body>
     <div class="container">
-        <div class="sidebar">
+        <!-- Sidebar -->
+        <nav class="sidebar">
             <div class="logo">
                 <h1>DC-AI</h1>
             </div>
             <ul class="menu">
                 <li><a href="/dashboard" class="menu-item">Dashboard</a></li>
                 <li><a href="/profile" class="menu-item">Profile</a></li>
-                <li><a href="/dungeons" class="menu-item">My Dungeons</a></li>
-                <li><a href="/leaderboard" class="menu-item active">Leaderboard</a></li> 
+                <li><a href="/dungeons" class="menu-item active">My Dungeons</a></li>
+                <li><a href="/leaderboard" class="menu-item">Leaderboard</a></li>
                 <li><a href="/settings" class="menu-item">Settings</a></li>
                 <li><a href="/logout" class="menu-item">Logout</a></li>
             </ul>
-        </div>
+        </nav>
 
-        <div class="main-content">
-            <h2>Leaderboard</h2>
-            <table class="leaderboard-table">
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Username</th>
-                        <th>Completed Dungeons</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in users %}
-                    <tr>
-                        <td>{{ loop.index }}</td> 
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.completed_dungeons or 0 }}</td> 
-                    </tr>
-                    {% endfor %}
-                </tbody>    
-            </table>
-        </div>
+        <!-- Main Content -->
+        <main class="main-content">
+            <h2>My Created Mazes</h2>
+            <div class="mazes-grid">
+                {% for maze in mazes %}
+                    <div class="maze-card">
+                        <div class="maze-grid">{{ maze.grid }}</div>
+                        <div class="maze-info">
+                            <a href="{{ url_for('routes.map' , maze_id=maze.id)}}" class="btn">Play maze</a>
+                            <p>Creado el : {{ maze.created_at.strftime('%Y-%m-%d') }}</p>
+                        </div>                        
+                    </div>
+                {% endfor %}
+            </div>
+        </main>
     </div>
+
 </body>
 <footer>
     <p>© 2024 Dungeons Crawler AI. All Rights Reserved.</p>

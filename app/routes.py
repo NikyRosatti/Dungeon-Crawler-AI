@@ -144,6 +144,14 @@ def myDungeons():
     return render_template('myDungeons.html')
 
 
+@bp.route('/dungeons')
+@login_required
+def my_mazes():
+    user_id = session['user_id']
+    user_mazes = MazeBd.query.filter_by(user_id = user_id).all()
+    return render_template('user_mazes.html', mazes=user_mazes)
+
+
 @bp.route('/map')
 @login_required
 def map():

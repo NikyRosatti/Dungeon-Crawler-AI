@@ -37,6 +37,7 @@ body {
   text-shadow: 0 0 3px #f6ff00, 0 0 1px #f6ff00, 0 0 10px #ffffff;
 }
 
+
 .card {
   position: relative;
   width: 450px;
@@ -115,7 +116,7 @@ button[type="submit"] {
   font-family: 'Press Start 2P';
   box-shadow: 0 0 10px #ffffff;
   margin-bottom: 20px;
-  backdrop-filter: blur(1px);
+  backdrop-filter: blur(1px); /* Efecto de desenfoque */
   transition: transform 0.3s ease;
 }
 
@@ -201,12 +202,14 @@ button[type="submit"]:hover {
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
 .avatar-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
 }
+
 .avatar-selection label {
   cursor: pointer;
   border-radius: 50%;
@@ -215,15 +218,18 @@ button[type="submit"]:hover {
   display: inline-block;
   padding: 5px;
 }
+
 .avatar-selection img {
   border-radius: 50%;
   width: 80px;
   height: 80px;
 }
+
 .avatar-selection input:checked + img {
   border: 5px solid #FFD700;
   transform: scale(1.1);
 }
+
 #select-avatar-btn {
     display: block;
     width: auto;
@@ -238,9 +244,11 @@ button[type="submit"]:hover {
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
+
 .avatar-selection input[type="radio"] {
   display: none;
 }
+
 .avatar-selection label {
   cursor: pointer;
   border-radius: 50%;
@@ -249,11 +257,13 @@ button[type="submit"]:hover {
   display: inline-block;
   padding: 5px;
 }
+
 .avatar-selection input[type="radio"]:checked + img {
   border: 5px solid #FFD700;
   transform: scale(1.1);
   box-shadow: 0 0 10px #FFD700;
 }
+
 .avatar-selection {
   display: none;
   position: absolute;
@@ -265,17 +275,20 @@ button[type="submit"]:hover {
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
 .avatar-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
 }
+
 .avatar-selection img {
   border-radius: 50%;
   width: 80px;
   height: 80px;
 }
+
 #choose-avatar-btn {
   width: 250px;
   height: 35px;

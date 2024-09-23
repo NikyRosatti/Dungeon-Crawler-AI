@@ -146,6 +146,57 @@ def my_mazes():
     user_mazes = MazeBd.query.filter_by(user_id = user_id).all()
     return render_template('user_mazes.html', mazes=user_mazes)
 
+@bp.route('/settings', methods=['GET', 'POST'])
+@login_required
+def settings():
+    if request.method == 'POST':
+        if 'update_password' in request.form:
+            current_password = request.form['current_password'].encode('utf-8')
+            new_password = request.form['new_password'].encode('utf-8')
+            confirm_password = request.form['confirm_password'].encode('utf-8')
+
+            user = User.query.get(session['user_id'])
+
+            if not bcrypt.checkpw(current_password, user.password):
+                return render_template('settings.html', error='Incorrect current password.')
+
+            if new_password != confirm_password:
+                return render_template('settings.html', error='New passwords do not match.')
+
+            hashed_new_password = bcrypt.hashpw(new_password, bcrypt.gensalt())
+            user.password = hashed_new_password
+            db.session.commit()
+
+            return render_template('settings.html', success='Password updated successfully.')
+
+        elif 'update_email' in request.form:
+            new_email = request.form['new_email']
+            confirm_email = request.form['confirm_email']
+
+            user = User.query.get(session['user_id'])
+
+            if new_email != confirm_email:
+                return render_template('settings.html', error='Emails do not match.')
+
+            existing_user = User.query.filter_by(email=new_email).first()
+            if existing_user:
+                return render_template('settings.html', error='Email is already in use.')
+
+            user.email = new_email
+            db.session.commit()
+
+            return render_template('settings.html', success='Email updated successfully.')
+
+        elif 'delete_account' in request.form:
+            user = User.query.get(session['user_id'])
+            db.session.delete(user)
+            db.session.commit()
+
+            session.pop('user_id', None)
+            return redirect(url_for('routes.register'))
+
+    return render_template('settings.html')
+
 @bp.route('/map')
 @login_required
 def map():

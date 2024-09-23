@@ -6,8 +6,12 @@ from app import socketio
 import bcrypt
 from functools import wraps
 from app.services.map_service import move_player, change_door
-from app.environment import maze
+from app.environment.maze import Maze
 import json
+from stable_baselines3 import PPO
+from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+import os
+import time
 
 bp = Blueprint('routes', __name__)
 mapa_original = []
@@ -41,7 +45,9 @@ def login():
 
     return render_template('login.html')
 
+
 @bp.route('/logout')
+@login_required
 def logout():
     session.pop('user_id', None)
     return redirect(url_for('routes.login'))
@@ -94,7 +100,6 @@ def leaderboard():
     users_list = [{'username': user.username, 'completed_dungeons': user.completed_dungeons or 0} for user in users]
     users_sorted = sorted(users_list, key=lambda u: u['completed_dungeons'], reverse=True)
     return render_template('leaderboard.html', users=users_sorted)
-
 
 
 @bp.route('/profile', methods=['GET', 'POST'])
@@ -208,6 +213,7 @@ def settings():
 
     return render_template('settings.html')
 
+
 @bp.route('/map')
 @login_required
 def map():
@@ -215,16 +221,29 @@ def map():
     global mapa_original
     global map_size
     
-    if not maze_id:
-        return "ID de mapa no proporcionado", 400
+    # Alternar comentarios en esta parte una vez finalizada esta parte
+    # if not maze_id:
+    #     return "ID de mapa no proporcionado", 400
     
-    maze = MazeBd.query.filter_by(id=maze_id).first()
-    if not maze:
-        return "Mapa no encontrado", 404
-    
-    mapa_original = json.loads(maze.grid)
-    map_size = maze.maze_size
+    # maze = MazeBd.query.filter_by(id=maze_id).first()
+    # if not maze:
+    #     return "Mapa no encontrado", 404
+    grid = [
+        [2, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 0, 1, 0, 0, 1, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0, 1],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 1, 0, 0, 1, 1, 0],
+        [3, 0, 0, 0, 0, 0, 0, 0],
+    ]
+    size = 8
+    m = Maze(grid=grid, size=size)
+    mapa_original = json.dumps(m.grid.tolist())
+    map_size = m.size
     return render_template('map.html', mapa_original=change_door(mapa_original))
+
 
 @socketio.on('connect')
 def handle_connect():
@@ -256,6 +275,7 @@ def restart_position(position):
 def map_creator():
     return render_template('map_creator.html')
 
+
 @bp.route('/validate_map', methods=['POST'])
 @login_required
 def validate_map():
@@ -282,7 +302,7 @@ def validate_map():
         return jsonify({'valid': False, 'error': 'No se encontró el punto de inicio o salida'}), 400
 
     # Crear la instancia del laberinto
-    new_maze = maze.Maze(grid, size, start_point, exit_point)
+    new_maze = Maze(grid, size, start_point, exit_point)
 
     # Validar si el laberinto es resoluble
     if new_maze.is_winneable():
@@ -292,8 +312,138 @@ def validate_map():
         db.session.commit()
         
         maze_id = new_maze.id
- 
+
         return jsonify({'valid': True, 'redirect_url': url_for('routes.map', maze_id=maze_id)})
     else:
         return jsonify({'valid': False})
 
+
+# Crear la función para crear entornos
+def make_env(g, s, sp, ep):
+    return Maze(g, s, sp, ep)
+
+
+@socketio.on("start_simulation")
+def test():
+
+    train()
+    print("Termine de entrenar")
+
+    size = 8
+    grid = [
+        [2, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 0, 1, 0, 0, 1, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0, 1],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 1, 0, 0, 1, 1, 0],
+        [3, 0, 0, 0, 0, 0, 0, 0],
+    ]
+    start_point = (0, 0)
+    exit_point = (7, 0)
+
+    # Vectorizar entornos
+    env = DummyVecEnv([lambda: make_env(grid, size, start_point, exit_point)])
+
+    model_path = "./app/saved_models/ppo_dungeons"
+    model = PPO.load(model_path)
+    print(f"Cargando el archivo {model_path}")
+
+    # Reiniciar el entorno después del entrenamiento
+    obs = env.reset()
+    
+    print(f"Cant minima pasos para resolver el laberinto: {env.envs[0].minimum_reward}")
+
+    # Variable para almacenar la secuencia de movimientos del entorno ganador
+    done = False
+    pasos = 0
+    while not done:
+        action, _ = model.predict(obs)  # Elegir una acción aleatoria
+        obs, reward, done, _ = env.step(action)
+
+        # Imprimir acción, recompensa y estado
+        pasos += 1
+        print(f"Action: {action}, Reward: {reward}, Done: {done}, Paso nro: {pasos}")
+
+        # Acceder a la instancia original del entorno
+        current_map_state = env.envs[0].get_current_map_state()
+
+        socketio.emit("map_update", current_map_state)
+        time.sleep(0.05)
+        if done:
+            print("¡Laberinto resuelto!")
+
+    # Cerrar los entornos
+    env.close()
+
+
+def train():
+    size = 8
+    start_point = (0, 0)
+    exit_point = (7, 0)
+
+    grid = [
+        [2, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 0, 1, 0, 0, 1, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0, 1],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 1, 0, 0, 1, 1, 0],
+        [3, 0, 0, 0, 0, 0, 0, 0],
+    ]
+
+    num_envs = 5
+
+    envs = DummyVecEnv(
+        [lambda: make_env(grid, size, start_point, exit_point) for i in range(num_envs)]
+    )
+
+    # Cargar el modelo previamente entrenado
+    model_path = "./app/saved_models/ppo_dungeons.zip"
+    if os.path.exists(model_path):
+        model = PPO.load(model_path, env=envs)
+        print(f"Model: Cargando el archivo {model_path}")
+    else:
+        print("Model: Creando el modelo")
+        model = PPO(
+            "MlpPolicy",
+            envs,
+            learning_rate=0.001,
+            n_steps=2048,
+            ent_coef=0.08,
+            vf_coef=1,
+            max_grad_norm=0.5,
+            gae_lambda=0.99,
+            n_epochs=10,
+            gamma=0.01,
+            clip_range=0.2,
+            batch_size=64,
+            verbose=2,
+        )
+
+    # Cargar la normalizacion
+    vec_norm_path = "./app/saved_models/vec_normalize.pkl"
+    if os.path.exists(vec_norm_path):
+        envs = VecNormalize.load(vec_norm_path, envs)
+        print(f"Vec: Guardando el archivo {vec_norm_path}")
+    else:
+        print("Vec: Creando el archivo")
+        envs = VecNormalize(envs, norm_obs=True, norm_reward=True)
+
+    # Entrenar el modelo
+    print("Inicio entrenamiento")
+    time.sleep(2)
+    model.learn(total_timesteps=50000, progress_bar=True)
+    print("Fin entrenamiento")
+    time.sleep(2)
+
+    # Guardar el modelo despues del entrenamiento
+    model.save(model_path)
+    print("Modelo guardado con exito")
+    envs.save(vec_norm_path)
+    print("Environments guardados con exito")
+
+    # Cerrar los entornos
+    envs.close()

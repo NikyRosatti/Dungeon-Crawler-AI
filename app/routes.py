@@ -138,13 +138,24 @@ def profileusers(user_id):
 def myDungeons():
     return render_template('myDungeons.html')
 
-
 @bp.route('/dungeons')
 @login_required
 def my_mazes():
     user_id = session['user_id']
-    user_mazes = MazeBd.query.filter_by(user_id = user_id).all()
-    return render_template('user_mazes.html', mazes=user_mazes)
+    user_mazes = MazeBd.query.filter_by(user_id=user_id).all()
+
+    # Convertir los mazes a diccionarios serializables
+    user_mazes_serialized = []
+    for maze in user_mazes:
+        maze_dict = {
+            'id': maze.id,
+            'grid': json.loads(maze.grid),  # Convertir la cadena JSON a lista/matriz
+            'created_at': maze.created_at.strftime('%Y-%m-%d') if hasattr(maze.created_at, 'strftime') else maze.created_at
+        }
+        user_mazes_serialized.append(maze_dict)
+
+    return render_template('user_mazes.html', mazes=json.dumps(user_mazes_serialized))
+
 
 @bp.route('/settings', methods=['GET', 'POST'])
 @login_required

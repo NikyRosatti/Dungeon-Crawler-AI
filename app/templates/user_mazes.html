@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_mazes.css') }}">
     <title>User Mazes - DC-AI</title>
 </head>
 <body>
@@ -30,19 +31,15 @@
         <main class="main-content">
             <h2>My Created Mazes</h2>
             <div class="mazes-grid">
-                {% for maze in mazes %}
-                    <div class="maze-card">
-                        <div class="maze-grid">{{ maze.grid }}</div>
-                        <div class="maze-info">
-                            <a href="{{ url_for('routes.map' , maze_id=maze.id)}}" class="btn">Play maze</a>
-                            <p>Creado el : {{ maze.created_at.strftime('%Y-%m-%d') }}</p>
-                        </div>                        
-                    </div>
-                {% endfor %}
-            </div>
+                    <div id="mazes-grid" data-mazes='{{ mazes|safe }}'></div>                  
+            </div>   
+                <a href="/map_creator" class="add-button">
+                <span> + </span>  
+                </a>
+                 
         </main>
     </div>
-
+    <script src="/static/js/user_mazes.js"></script>
 </body>
 <footer>
     <p>© 2024 Dungeons Crawler AI. All Rights Reserved.</p>

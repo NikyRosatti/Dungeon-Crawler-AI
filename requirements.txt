@@ -1,6 +1,9 @@
-flask==3.0.3
-flask-socketio==5.3.7
-flask-migrate==4.0.7
-sqlalchemy==2.0.34
+Flask==3.0.3
+Flask_Migrate==4.0.7
+Flask_SocketIO==5.3.7
+flask_sqlalchemy==3.1.1
 gymnasium==0.29.1
-bcrypt==4.2.0
+numpy==2.1.1
+python_bcrypt==0.3.2
+SQLAlchemy==2.0.34
+stable_baselines3==2.3.2

@@ -153,10 +153,58 @@ def profileusers(user_id):
     user = User.query.get_or_404(user_id)
     return render_template('profile.html', user=user)
 
-@bp.route('/myDungeons')
+@bp.route('/community')
 @login_required
-def myDungeons():
-    return render_template('myDungeons.html')
+def community():
+    # Obtener los parámetros de la solicitud, como el filtro y la página
+    filter_by = request.args.get('filter', 'created_at_desc')
+    page = request.args.get('page', 1, type=int)
+    per_page = 8
+
+    # Construir la consulta base, uniendo con la tabla User
+    query = MazeBd.query.join(User, MazeBd.user_id == User.id)
+
+    # Aplicar el filtro según el valor recibido
+    if filter_by == 'created_at_desc':
+        query = query.order_by(MazeBd.created_at.desc())
+    elif filter_by == 'created_at_asc':
+        query = query.order_by(MazeBd.created_at.asc())
+    elif filter_by == 'username_asc':
+        query = query.order_by(db.func.lower(User.username).asc())
+    elif filter_by == 'username_desc':
+        query = query.order_by(db.func.lower(User.username).desc())
+    elif filter_by == 'grid_size_desc':
+        query = query.order_by(db.func.length(MazeBd.grid).desc())  # Asumiendo que el grid se guarda como string/JSON
+    elif filter_by == 'grid_size_asc':
+        query = query.order_by(db.func.length(MazeBd.grid).asc())
+
+    # Paginación de los resultados
+    paginated_mazes = query.paginate(page=page, per_page=per_page)
+
+    # Serializar los laberintos
+    mazes_serialized = []
+    for maze in paginated_mazes.items:
+        user = User.query.get(maze.user_id)
+        maze_dict = {
+            'id': maze.id,
+            'grid': json.loads(maze.grid),  # Convertir la cadena JSON a lista/matriz
+            'created_at': maze.created_at.strftime('%Y-%m-%d'),
+            'username': user.username
+        }
+        mazes_serialized.append(maze_dict)
+
+    # Manejo de la paginación
+    pagination = {
+        'page': paginated_mazes.page,
+        'total_pages': paginated_mazes.pages,
+        'has_next': paginated_mazes.has_next,
+        'has_prev': paginated_mazes.has_prev,
+        'next_num': paginated_mazes.next_num,
+        'prev_num': paginated_mazes.prev_num
+    }
+
+    # Devolver la plantilla con los datos
+    return render_template('community.html', mazes=json.dumps(mazes_serialized), pagination=pagination)
 
 @bp.route('/dungeons')
 @login_required
@@ -341,7 +389,6 @@ def make_env(g, s, sp, ep):
 @socketio.on("start_simulation")
 def test():
 
-    train()
     print("Termine de entrenar")
 
     size = 8

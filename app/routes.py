@@ -270,50 +270,56 @@ def test():
     size = 8
     grid = [
         [2, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0],
+        [1, 1, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0],
-        [1, 1, 0, 1, 0, 0, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 1, 1, 0, 0, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 1, 1, 0, 0, 1, 1, 0],
-        [3, 0, 0, 0, 0, 0, 0, 0],
+        [3, 1, 0, 0, 0, 0, 0, 0],
     ]
+
     start_point = (0, 0)
     exit_point = (7, 0)
 
     # Vectorizar entornos
-    env = DummyVecEnv([lambda: make_env(grid, size, start_point, exit_point)])
-
+    envs = DummyVecEnv([lambda: make_env(grid, size, start_point, exit_point)])
+    vec_norm_path = "./app/saved_models/vec_normalize.pkl"
+    envs = VecNormalize.load(vec_norm_path, envs)
     model_path = "./app/saved_models/ppo_dungeons"
-    model = PPO.load(model_path)
+    model = PPO.load(model_path, env=envs)
     print(f"Cargando el archivo {model_path}")
 
     # Reiniciar el entorno después del entrenamiento
-    obs = env.reset()
+    obs = envs.reset()
     
-    print(f"Cant minima pasos para resolver el laberinto: {env.envs[0].minimum_reward}")
+    print(f"Cant minima pasos para resolver el laberinto: {envs.envs[0].minimum_reward}")
 
-    # Variable para almacenar la secuencia de movimientos del entorno ganador
-    done = False
-    pasos = 0
-    while not done:
-        action, _ = model.predict(obs)  # Elegir una acción aleatoria
-        obs, reward, done, _ = env.step(action)
+    i = 0
+    while i < 20:
+        i +=1
+        done = False
+        pasos = 0
+        j = 0
+        while j< 100:
+            j +=1
+            action, _ = model.predict(obs)  # Elegir una acción aleatoria
+            obs, reward, done, _ = envs.step(action)
 
-        # Imprimir acción, recompensa y estado
-        pasos += 1
-        print(f"Action: {action}, Reward: {reward}, Done: {done}, Paso nro: {pasos}")
+            # Imprimir acción, recompensa y estado
+            pasos += 1
+            print(f"Action: {action}, Reward: {reward}, Done: {done}, Paso nro: {pasos}")
 
-        # Acceder a la instancia original del entorno
-        current_map_state = env.envs[0].get_current_map_state()
+            # Acceder a la instancia original del entorno
+            current_map_state = envs.envs[0].get_current_map_state()
 
-        socketio.emit("map_update", current_map_state)
-        time.sleep(0.05)
-        if done:
-            print("¡Laberinto resuelto!")
+            socketio.emit("map_update", current_map_state)
+            time.sleep(0.05)
+            if done:
+                print("¡Laberinto resuelto!")
 
     # Cerrar los entornos
-    env.close()
+    envs.close()
 
 
 def train():
@@ -323,20 +329,30 @@ def train():
 
     grid = [
         [2, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0],
+        [1, 1, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0],
-        [1, 1, 0, 1, 0, 0, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 1, 1, 0, 0, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 1, 1, 0, 0, 1, 1, 0],
-        [3, 0, 0, 0, 0, 0, 0, 0],
+        [3, 1, 0, 0, 0, 0, 0, 0],
     ]
 
-    num_envs = 5
+    num_envs = 16
 
     envs = DummyVecEnv(
         [lambda: make_env(grid, size, start_point, exit_point) for i in range(num_envs)]
     )
+    
+    # Cargar la normalizacion
+    vec_norm_path = "./app/saved_models/vec_normalize.pkl"
+    if os.path.exists(vec_norm_path):
+        envs = VecNormalize.load(vec_norm_path, envs)
+        envs.training = True 
+        print(f"Vec: Cargando el archivo {vec_norm_path}")
+    else:
+        print("Vec: Creando el archivo")
+        envs = VecNormalize(envs, norm_obs=True, norm_reward=True)
 
     # Cargar el modelo previamente entrenado
     model_path = "./app/saved_models/ppo_dungeons.zip"
@@ -350,33 +366,24 @@ def train():
             envs,
             learning_rate=0.001,
             n_steps=2048,
-            ent_coef=0.08,
-            vf_coef=1,
+            ent_coef=0.1,
+            vf_coef=0.5,
             max_grad_norm=0.5,
             gae_lambda=0.99,
             n_epochs=10,
-            gamma=0.01,
+            gamma=0.999,
             clip_range=0.2,
-            batch_size=64,
-            verbose=2,
+            batch_size=256,
+            verbose=1,
         )
 
-    # Cargar la normalizacion
-    vec_norm_path = "./app/saved_models/vec_normalize.pkl"
-    if os.path.exists(vec_norm_path):
-        envs = VecNormalize.load(vec_norm_path, envs)
-        print(f"Vec: Guardando el archivo {vec_norm_path}")
-    else:
-        print("Vec: Creando el archivo")
-        envs = VecNormalize(envs, norm_obs=True, norm_reward=True)
 
     # Entrenar el modelo
     print("Inicio entrenamiento")
-    time.sleep(2)
-    model.learn(total_timesteps=50000, progress_bar=True)
+    print("Antes del entrenamiento:", envs.obs_rms.mean, envs.obs_rms.var)
+    model.learn(total_timesteps=500000, progress_bar=True)
+    print("Después del entrenamiento:", envs.obs_rms.mean, envs.obs_rms.var)
     print("Fin entrenamiento")
-    time.sleep(2)
-
     # Guardar el modelo despues del entrenamiento
     model.save(model_path)
     print("Modelo guardado con exito")

@@ -255,21 +255,6 @@ class Maze(gym.Env):
         """
         return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
-    def _normalize(self, value):
-        """
-        Normaliza un valor entero entre 0 y 1.
-
-        El rango de normalización es [min_reward, max_reward].
-
-        Parámetros:
-            value (int): El valor entero a normalizar.
-
-        Devuelve:
-            float: El valor normalizado entre 0 y 1.
-        """
-        min_value = self.minimum_reward
-        max_value = self.maximum_reward
-        return (value - min_value) / (max_value - min_value)
 
     def reset(self, start_point=None, seed=None):
         """
@@ -322,7 +307,7 @@ class Maze(gym.Env):
                 self.state = (row_new, col_new)
                 return (
                     np.array(self.state, dtype=np.int32),
-                    self._normalize(self.maximum_reward),
+                    reward,
                     True,
                     False,
                     {},
@@ -331,21 +316,19 @@ class Maze(gym.Env):
             if self.grid[row_new][col_new] != 1:
                 # Actualizar el estado con las nuevas coordenadas
                 self.state = (row_new, col_new)
-                reward = 10
+                # Si el agente llega a una celda ya visitada, penalizar más
+                if self.state in self.visitadas:
+                    reward -= 35
+                else:
+                    self.visitadas.add(self.state)  # Marcar la nueva celda como visitada
+                    reward -= 20
             else:
-                reward -= 5
+                reward -= 50
         else:
             # El paso se salio de la matriz
-            reward -= 5
+            reward -= 60
 
-        # Si el agente llega a una celda ya visitada, penalizar más
-        if self.state in self.visitadas:
-            reward -= 4
-        else:
-            self.visitadas.add(self.state)  # Marcar la nueva celda como visitada
-            reward = 20
-
-        reward = self._normalize(reward)
+        
 
         done = False
         truncated = False

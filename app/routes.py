@@ -305,8 +305,8 @@ def map():
     m = Maze(grid=grid, size=size)
     mapa_original = json.dumps(m.grid.tolist())
     map_size = m.size
-    return render_template('map.html', mapa_original=change_door(mapa_original))
-
+    avatar = User.query.get( session['user_id']).avatar
+    return render_template('map.html', mapa_original=change_door(mapa_original), avatar = avatar)
 
 @socketio.on('connect')
 def handle_connect():

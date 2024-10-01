@@ -59,6 +59,21 @@ def register():
         password = request.form['password'].encode('utf-8')
         email = request.form['email']
         avatar = request.form['avatar']
+
+        if not avatar:
+            avatars = [
+            '/static/img/avatars/ValenAvatar.png',
+            '/static/img/avatars/NikyAvatar.png',
+            '/static/img/avatars/EstebanAvatar.png',
+            '/static/img/avatars/GonzaAvatar.png',
+            '/static/img/avatars/FlorAvatar.png',
+            '/static/img/avatars/JoaquinTAvatar.png',
+            '/static/img/avatars/JoaquinBAvatar.png',
+            '/static/img/avatars/BrusattiAvatar.png',
+            '/static/img/avatars/SimonAvatar.png',
+            '/static/img/avatars/AgusAvatar.png'
+            ]
+            return render_template('register.html', error="Debes seleccionar un avatar", avatars=avatars)
         
         existing_user = User.query.filter(or_(User.username == username, User.email == email)).first()
 
@@ -191,10 +206,6 @@ def community():
     # Devolver la plantilla con los datos
     return render_template('community.html', mazes=json.dumps(mazes_serialized), pagination=pagination)
 
-    
-
-
-
 @bp.route('/dungeons')
 @login_required
 def my_mazes():
@@ -297,7 +308,6 @@ def map():
     avatar = User.query.get( session['user_id']).avatar
     return render_template('map.html', mapa_original=change_door(mapa_original), avatar = avatar)
 
-
 @socketio.on('connect')
 def handle_connect():
     if not mapa_original:
@@ -379,7 +389,6 @@ def make_env(g, s, sp, ep):
 @socketio.on("start_simulation")
 def test():
 
-    
     print("Termine de entrenar")
 
     size = 8

@@ -21,7 +21,7 @@
         <div class="card">
             <div class="titulo">
                 <h1><strong>Create Account</strong></h1>
-                <form action="/register" method="post" class="login-form">
+                <form action="/register" method="post" class="login-form" id="register-form">
                     <div>
                         <label for="username">Username:</label>
                         <input type="text" id="username" name="username" required>
@@ -35,7 +35,7 @@
                         <input type="password" id="password" name="password" required>
                     </div>
                     <button type="button" id="choose-avatar-btn">Choose Avatar</button>
-                    <div class="avatar-selection" id="avatar-selection">
+                    <div class="avatar-selection" id="avatar-selection" style="display: none;">
                         <div class="avatar-grid">
                             {% for avatar in avatars %}
                             <label>
@@ -45,13 +45,16 @@
                             {% endfor %}
                         </div>
                         <button type="button" id="select-avatar-btn">Select</button>
-                    </div>                    
+                    </div>   
+                    <div id="avatar-error" class="error-message" style="display: none;">
+                        Please, choose an avatar before register.
+                    </div>                 
                     <button type="submit">Register</button>
                 </form>
                 <div class="register-link">
-                  <p>Already have an account?</p>
-                  <a href="/login">Log in</a>
-              </div>
+                    <p>Already have an account?</p>
+                    <a href="/login">Log in</a>
+                </div>
             </div>
         </div>
     </div>
@@ -61,6 +64,8 @@
         const chooseAvatarBtn = document.getElementById('choose-avatar-btn');
         const avatarSelection = document.getElementById('avatar-selection');
         const selectAvatarBtn = document.getElementById('select-avatar-btn');
+        const registerForm = document.getElementById('register-form');
+        const avatarError = document.getElementById('avatar-error');
 
         chooseAvatarBtn.addEventListener('click', function() {
             avatarSelection.style.display = avatarSelection.style.display === 'none' ? 'block' : 'none';
@@ -68,6 +73,16 @@
 
         selectAvatarBtn.addEventListener('click', function() {
             avatarSelection.style.display = 'none';
+        });
+
+        registerForm.addEventListener('submit', function(event) {
+            const selectedAvatar = document.querySelector('input[name="avatar"]:checked');
+            if (!selectedAvatar) {
+                event.preventDefault();
+                avatarError.style.display = 'block';
+            } else {
+                avatarError.style.display = 'none';
+            }
         });
     });
     </script>

@@ -269,42 +269,29 @@ def settings():
 @bp.route('/map')
 @login_required
 def map():
-    maze_id = request.args.get('maze_id')
+    maze_id = int(request.args.get('maze_id', 0))
+
     global mapa_original
     global map_size
+    global start
     
-    # Alternar comentarios en esta parte una vez finalizada esta parte
-    # if not maze_id:
-    #     return "ID de mapa no proporcionado", 400
     
-    # maze = MazeBd.query.filter_by(id=maze_id).first()
-    # if not maze:
-    #     return "Mapa no encontrado", 404
-    grid = [
-        [2, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [1, 1, 0, 1, 0, 0, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 1, 1, 0, 0, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 1, 1, 0, 0, 1, 1, 0],
-        [3, 0, 0, 0, 0, 0, 0, 0],
-    ]
-    size = 8
-    m = Maze(grid=grid, size=size)
-    mapa_original = json.dumps(m.grid.tolist())
-    map_size = m.size
-    avatar = User.query.get( session['user_id']).avatar
-    return render_template('map.html', mapa_original=change_door(mapa_original), avatar = avatar)
+    maze = MazeBd.query.filter_by(id=maze_id).first()
 
+    mapa_original = json.loads(maze.grid) # Asigna el grid a mapa_original
+    start = mapa_original.index(2)
+    map_size = maze.maze_size  # Calcula el tamaño del mapa
+    
+    avatar = User.query.get(session['user_id']).avatar
+    return render_template('map.html', mapa_original=change_door(mapa_original), avatar=avatar)
 
 @socketio.on('connect')
 def handle_connect():
-    if not mapa_original:
-        emit('map', {'message': 'No hay un mapa cargado.'})
+    if not mapa_original:  # Verificar si mapa_original está inicializado
+        emit('map', 'No hay un mapa cargado.')
     else:
-        emit('map', {'mapaOriginal': mapa_original, 'n': map_size})
-
+        emit('map', mapa_original)
+        
 @socketio.on('move')
 def handle_move(direction):
     global mapa_original
@@ -312,16 +299,16 @@ def handle_move(direction):
 
     if -2 in mapa_original:
         emit('finish_map', 'You Win!')
-              
-    emit('map', {'mapaOriginal': mapa_original, 'n': map_size})
 
-
+    emit('map', mapa_original)
+    
+    
 @socketio.on('restart_pos')
 def restart_position(position):
     global mapa_original
     mapa_original[mapa_original.index(-2)] = 3
-    mapa_original[position] = -1
-    emit('map', {'mapaOriginal': mapa_original, 'n': map_size})
+    mapa_original[start] = -1
+    emit('map', mapa_original)
 
 @bp.route('/map_creator')
 @login_required
@@ -376,7 +363,7 @@ def make_env(g, s, sp, ep):
     return Maze(g, s, sp, ep)
 
 
-@socketio.on("start_simulation")
+
 def test():
 
     

@@ -62,6 +62,9 @@ body {
                 url(/static/img/dirt.jpg) center center / cover no-repeat;
 }
 
+.end2 {
+    
+}
 .quick_buttons{
     display: flex;
 }

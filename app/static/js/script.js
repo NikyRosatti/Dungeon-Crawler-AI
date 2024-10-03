@@ -2,17 +2,18 @@ if (window.location.pathname === '/map') {
     const socket = io();
 
     // Emitir el evento para iniciar la simulación cuando se conecte al servidor
-    socket.emit('start_simulation');
+
 
     // Escuchar las actualizaciones del mapa
-    socket.on('map_update', function(mapaOriginal) {
+    socket.on('map', function(mapaOriginal) {
         const grid = document.getElementById('grid');
         grid.innerHTML = ''; // Limpiar el grid antes de generar uno nuevo
 
         const n = Math.sqrt(mapaOriginal.length); // Suponiendo que el grid es cuadrado
         const mapaConParedes = [];
-
+    
         // Agregar borde superior
+        
         mapaConParedes.push(...Array(n + 2).fill(1));
 
         // Agregar bordes laterales y filas centrales del mapa original
@@ -29,13 +30,19 @@ if (window.location.pathname === '/map') {
         const gridSize = n + 2;
         grid.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
         grid.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
-
+        
         // Generar celdas de la cuadrícula con bordes
         mapaConParedes.forEach(value => {
             const cell = document.createElement('div');
             cell.classList.add('cell');
 
             switch (value) {
+                case -2:
+                    cell.classList.add('end'); 
+                    cell.style.backgroundImage = `url(${avatarUrl}), url(/static/img/salida.png),url(/static/img/dirt.jpg)`;
+                    cell.style.backgroundSize = '73%, cover'; // Ajustar tamaño de fondo
+                    cell.style.backgroundPosition = 'center bottom, center center'; // Posicionar ambas imágenes
+                    cell.style.backgroundRepeat = 'no-repeat, no-repeat'; // Sin repetir ambas imágenes
                 case -1:
                     cell.classList.add('agent');  // Posición del agente
                     // Establecer la imagen de fondo del agente con el avatar del usuario
@@ -66,5 +73,15 @@ if (window.location.pathname === '/map') {
     socket.on('finish_map', function(message){
         var sound = document.getElementById("winSound");
         sound.play();
+        setTimeout(function(){
+            socket.emit('restart_pos', 0);
+        },1000);
+    });
+    
+    document.addEventListener('keydown', function(event) {
+        const key = event.key;
+        if ((key == 'ArrowUp' || key == 'ArrowLeft' || key == 'ArrowDown' || key == 'ArrowRight')) {
+            socket.emit('move', key);
+        }
     });
 }

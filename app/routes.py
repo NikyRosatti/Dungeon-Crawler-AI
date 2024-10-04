@@ -283,7 +283,95 @@ def map():
     map_size = maze.maze_size  # Calcula el tamaño del mapa
     
     avatar = User.query.get(session['user_id']).avatar
-    return render_template('map.html', mapa_original=change_door(mapa_original), avatar=avatar)
+    return render_template('map.html', mapa_original=change_door(mapa_original), avatar=avatar, maze_id = maze_id)
+
+
+def train(maze_id):
+    
+    maze = MazeBd.query.filter_by(id=maze_id).first()
+
+    grid1 = json.loads(maze.grid) # Asigna el grid a mapa_original
+    size = maze.maze_size  # Calcula el tamaño del mapa
+
+    
+    grid = [grid1[i:i + size] for i in range(0, len(grid1), size)]
+    num_envs = 5
+
+
+    start_point = None
+    exit_point = None
+
+    # Identificar el punto de inicio (2) y de salida (3)
+    for row in range(size):
+        for col in range(size):
+            if grid[row][col] == 2:
+                start_point = (row, col)
+            if grid[row][col] == 3:
+                exit_point = (row, col)
+    
+   
+    envs = DummyVecEnv(
+        [lambda: make_env(grid, size, start_point, exit_point) for i in range(num_envs)]
+    )
+
+    # Cargar el modelo previamente entrenado
+    model_path = "./app/saved_models/ppo_dungeons.zip"
+    if os.path.exists(model_path):
+        model = PPO.load(model_path, env=envs)
+        print(f"Model: Cargando el archivo {model_path}")
+    else:
+        print("Model: Creando el modelo")
+        model = PPO(
+            "MlpPolicy",
+            envs,
+            learning_rate=0.001,
+            n_steps=2048,
+            ent_coef=0.08,
+            vf_coef=1,
+            max_grad_norm=0.5,
+            gae_lambda=0.99,
+            n_epochs=10,
+            gamma=0.01,
+            clip_range=0.2,
+            batch_size=64,
+            verbose=2,
+        )
+
+    # Cargar la normalizacion
+    vec_norm_path = "./app/saved_models/vec_normalize.pkl"
+    if os.path.exists(vec_norm_path):
+        envs = VecNormalize.load(vec_norm_path, envs)
+        print(f"Vec: Guardando el archivo {vec_norm_path}")
+    else:
+        print("Vec: Creando el archivo")
+        envs = VecNormalize(envs, norm_obs=True, norm_reward=True)
+
+    # Entrenar el modelo
+    print("Inicio entrenamiento")
+    time.sleep(2)
+    model.learn(total_timesteps=10000, progress_bar=True)
+    print("Fin entrenamiento")
+    time.sleep(2)
+
+    # Guardar el modelo despues del entrenamiento
+    model.save(model_path)
+    print("Modelo guardado con exito")
+    envs.save(vec_norm_path)
+    print("Environments guardados con exito")
+
+    # Cerrar los entornos
+    envs.close()
+
+@socketio.on('start_training')
+def handle_training(data):
+    maze_id = data.get('maze_id')
+    if maze_id is not None:
+        emit('training_status', {'status': 'started'})
+        train(maze_id)
+        emit('training_status', {'status': 'finished'})
+    else:
+        emit('training_status', {'status': 'error', 'message': 'Maze ID is missing'})
+
 
 @socketio.on('connect')
 def handle_connect():
@@ -363,7 +451,7 @@ def make_env(g, s, sp, ep):
     return Maze(g, s, sp, ep)
 
 
-
+@socketio.on('start_simulation')
 def test():
 
     
@@ -409,7 +497,7 @@ def test():
         # Acceder a la instancia original del entorno
         current_map_state = env.envs[0].get_current_map_state()
 
-        socketio.emit("map_update", current_map_state)
+        socketio.emit("map", current_map_state)
         time.sleep(0.05)
         if done:
             print("¡Laberinto resuelto!")
@@ -418,7 +506,7 @@ def test():
     env.close()
 
 
-def train():
+def train2():
     size = 8
     start_point = (0, 0)
     exit_point = (7, 0)

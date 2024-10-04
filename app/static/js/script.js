@@ -85,3 +85,20 @@ if (window.location.pathname === '/map') {
         }
     });
 }
+
+document.getElementById('trainBtn').addEventListener('click', function() {
+    // Obtener el maze_id del atributo data-maze-id del cuerpo
+    const socket = io();
+    const mazeId = document.body.getAttribute('data-maze-id');
+    socket.emit('start_training', { maze_id: mazeId });
+
+    // Escuchar el progreso del entrenamiento
+    socket.on('training_status', function(data) {
+        console.log("Estado del entrenamiento:", data.status);
+        if (data.status === 'finished') {
+            console.log("Entrenamiento completado.");
+        } else if (data.status === 'error') {
+            console.error("Error:", data.message);
+        }
+    });
+});

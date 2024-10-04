@@ -266,13 +266,13 @@ def test():
 
     grid = [
         [2, 0, 0, 0, 0, 0, 0, 0],
-        [0, 1, 0, 0, 0, 0, 0, 0],
-        [0, 1, 0, 0, 0, 0, 0, 0],
-        [0, 1, 0, 0, 0, 0, 0, 0],
-        [0, 1, 0, 0, 0, 0, 0, 0],
-        [1, 1, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0],
-        [3, 1, 0, 0, 0, 0, 0, 0],
+        [1, 1, 0, 1, 0, 0, 1, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0, 1],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 1, 0, 0, 1, 1, 0],
+        [3, 0, 0, 0, 0, 0, 0, 0],
     ]
 
     # train ahora devuelve un VecNormalize. Usar esa clase es lo mismo que usar la clase Maze, solo que hacer un metodo
@@ -283,7 +283,7 @@ def test():
     # Carpeta principal de modelos de PPO guardados
     models_dir = "./app/saved_models/ppo"
     # El nombre del .zip a cargar
-    n_steps_model = "150000-1727904248"
+    n_steps_model = "290000-Dungeon5"
     # Concatena la extension .zip
     model_to_load = f"{n_steps_model}" + ".zip"
     # Path completo: la carpeta y el archivo .zip
@@ -295,7 +295,7 @@ def test():
     model = PPO.load(model_path, env=envs)
     print(f"Cargando el archivo {model_path}")
 
-    print(f"Cant minima pasos para resolver el laberinto: {envs.minimum_steps}")
+    print(f"Cant minima pasos para resolver el laberinto: {envs.envs[0].minimum_steps}")
     episodes = 20
     max_steps = 100
     for ep in range(episodes):
@@ -305,20 +305,18 @@ def test():
         for pasos in range(0, max_steps + 1):
             action, _ = model.predict(obs)
             obs, reward, done, _ = envs.step(action)
-
             # Imprimir acción, recompensa y estado
             print(
                 f"Observation: {obs}, Action: {action}, Reward: {reward}, Done: {done}, Paso nro: {pasos}"
             )
 
-            current_map_state = envs.render()
+            current_map_state = envs.envs[0].get_current_map_state()
+            print(f"Estado actual del mapa: {current_map_state}")
             socketio.emit("map_update", current_map_state)
-            time.sleep(0.01)
-            if done:
+            time.sleep(0.1)
+            if done.any():
                 print("¡Laberinto resuelto!")
                 break
-            if pasos == max_steps:
-                print(f"{max_steps} pasos alcanzados. Proximo episodio")
 
 
 def train(grid):
@@ -344,7 +342,7 @@ def train(grid):
     # envs.reset()
 
     # print(f"Model: Cargando el archivo {models_dir}")
-    # model = PPO.load(f"{models_dir}/10000", env=env)
+    model = PPO.load(f"{models_dir}/290000-Dungeon4.zip", env=envs)
 
     # Entrenar y guardar los modelos
     print("Inicio entrenamiento")
@@ -353,7 +351,7 @@ def train(grid):
         model.learn(
             total_timesteps=TIMESTEPS, reset_num_timesteps=False, progress_bar=True
         )
-        model.save(f"{models_dir}/{TIMESTEPS*i}-{int(time.time())}")
+        model.save(f"{models_dir}/{TIMESTEPS*i}-Dungeon5")
     print("Fin entrenamiento")
 
     # env.reset()

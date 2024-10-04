@@ -47,9 +47,9 @@ class Maze(gym.Env):
         # high = Limites superiores de posiciones
         # dtype = El tipo que pertenece a las observaciones
         self.observation_space = spaces.Box(
-            low=np.array([0, 0]),
-            high=np.array([self.size() - 1, self.size() - 1]),
-            dtype=np.int32,
+            low=np.array([0, 0, -np.inf]),  # Limites mínimos para las tres dimensiones
+            high=np.array([self.size() - 1, self.size() - 1, np.inf]),  # Limites máximos para las tres dimensiones
+            dtype=np.int32
         )
 
         # Estado inicial
@@ -111,18 +111,24 @@ class Maze(gym.Env):
     def increment_position(self, row, col, action):
         row_new, col_new = row, col
         if action == DOWN:  # Abajo
-            row_new = row + 1
+            row_new += 1
         elif action == RIGHT:  # Derecha
-            col_new = col + 1
+            col_new += 1
         elif action == UP:  # Arriba
-            row_new = row - 1
+            row_new -= 1
         elif action == LEFT:  # Izquierda
-            col_new = col - 1
+            col_new -= 1
         else:
             raise ValueError(f"Acción inválida: {action}")
+
+        # Si la nueva posición se sale de los límites, no permitir el movimiento
+        if row_new < 0 or row_new >= self.size() or col_new < 0 or col_new >= self.size():
+            return (row, col)  # Mantener la posición actual
+        if self.grid[row_new, col_new] == WALL:
+            return (row, col)  # Mantener la posición actual
         return (row_new, col_new)
 
-    def render(self, mode="human"):
+    def get_current_map_state(self):
         maze_render = np.copy(self.grid)
         row, col = self.current_state
         maze_render[row, col] = AGENT  # Representación del agente

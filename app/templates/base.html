@@ -8,7 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <title>{% block title %}DC-AI{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block styles %}{% endblock %}
 </head>
 <body>
 
@@ -19,12 +20,13 @@
                 <h1>DC-AI</h1>
             </div>
             <ul class="menu">
-                <li><a href="{{ url_for('dashboard') }}" class="menu-item{% if request.path =="/dashboard" %} active{% endif %}">Dashboard</a></li>
-                <li><a href="" class="menu-item">Profile</a></li>
-                <li><a href="" class="menu-item">My Dungeons</a></li>
-                <li><a href="{{ url_for('leaderboard') }}" class="menu-item{% if request.path == "/leaderboard" %} active{% endif %}">Leaderboard</a></li>
-                <li><a href="" class="menu-item">Settings</a></li>
-                <li><a href="{{ url_for('logout') }}" class="menu-item">Logout</a></li>
+                <li><a href="{{ url_for('routes.dashboard') }}" class="menu-item{% if request.path =="/dashboard" %} active{% endif %}">Dashboard</a></li>
+                <li><a href="{{ url_for('routes.profile') }}" class="menu-item{% if request.path =="/profile" %} active{% endif %}">Profile</a></li>
+                <li><a href="{{ url_for('routes.my_mazes') }}" class="menu-item{% if request.path =="/dungeons" %} active{% endif %}">My Dungeons</a></li>
+                <li><a href="{{ url_for('routes.community') }}" class="menu-item{% if request.path =="/community" %} active{% endif %}">Community Maps</a></li>
+                <li><a href="{{ url_for('routes.leaderboard') }}" class="menu-item{% if request.path == "/leaderboard" %} active{% endif %}">Leaderboard</a></li>
+                <li><a href="{{ url_for('routes.settings') }}" class="menu-item{% if request.path =="/settings" %} active{% endif %}">Settings</a></li>
+                <li><a href="{{ url_for('routes.logout') }}" class="menu-item">Logout</a></li>
             </ul>
         </div>
 

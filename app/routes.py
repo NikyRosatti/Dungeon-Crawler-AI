@@ -285,9 +285,10 @@ def map():
     avatar = User.query.get(session['user_id']).avatar
     return render_template('map.html', mapa_original=change_door(mapa_original), avatar=avatar, maze_id = maze_id)
 
-
+@socketio.on('start_simulation')
 def train(maze_id):
     
+    print(maze_id)
     maze = MazeBd.query.filter_by(id=maze_id).first()
 
     grid1 = json.loads(maze.grid) # Asigna el grid a mapa_original
@@ -364,6 +365,16 @@ def train(maze_id):
 
 @socketio.on('start_training')
 def handle_training(data):
+    maze_id = data.get('maze_id')
+    if maze_id is not None:
+        emit('training_status', {'status': 'started'})
+        train(maze_id)
+        emit('training_status', {'status': 'finished'})
+    else:
+        emit('training_status', {'status': 'error', 'message': 'Maze ID is missing'})
+
+@socketio.on('testTraining')
+def handle_test(data):
     maze_id = data.get('maze_id')
     if maze_id is not None:
         emit('training_status', {'status': 'started'})
@@ -451,25 +462,33 @@ def make_env(g, s, sp, ep):
     return Maze(g, s, sp, ep)
 
 
-@socketio.on('start_simulation')
-def test():
+@socketio.on('testTraining')
+def test(data):
+
+    maze_id = data.get('maze_id')
+    
+    maze_id = int(maze_id)
 
     
-    print("Termine de entrenar")
+    maze = MazeBd.query.filter_by(id=maze_id).first()
 
-    size = 8
-    grid = [
-        [2, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [1, 1, 0, 1, 0, 0, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 1, 1, 0, 0, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 1, 1, 0, 0, 1, 1, 0],
-        [3, 0, 0, 0, 0, 0, 0, 0],
-    ]
-    start_point = (0, 0)
-    exit_point = (7, 0)
+    grid1 = json.loads(maze.grid) # Asigna el grid a mapa_original
+    size = maze.maze_size  # Calcula el tamaño del mapa
+
+    
+    grid = [grid1[i:i + size] for i in range(0, len(grid1), size)]
+
+    start_point = None
+    exit_point = None
+
+    # Identificar el punto de inicio (2) y de salida (3)
+    for row in range(size):
+        for col in range(size):
+            if grid[row][col] == 2:
+                start_point = (row, col)
+            if grid[row][col] == 3:
+                exit_point = (row, col)
+    
 
     # Vectorizar entornos
     env = DummyVecEnv([lambda: make_env(grid, size, start_point, exit_point)])

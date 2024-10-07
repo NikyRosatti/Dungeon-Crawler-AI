@@ -59,6 +59,21 @@ def register():
         password = request.form['password'].encode('utf-8')
         email = request.form['email']
         avatar = request.form['avatar']
+
+        if not avatar:
+            avatars = [
+            '/static/img/avatars/ValenAvatar.png',
+            '/static/img/avatars/NikyAvatar.png',
+            '/static/img/avatars/EstebanAvatar.png',
+            '/static/img/avatars/GonzaAvatar.png',
+            '/static/img/avatars/FlorAvatar.png',
+            '/static/img/avatars/JoaquinTAvatar.png',
+            '/static/img/avatars/JoaquinBAvatar.png',
+            '/static/img/avatars/BrusattiAvatar.png',
+            '/static/img/avatars/SimonAvatar.png',
+            '/static/img/avatars/AgusAvatar.png'
+            ]
+            return render_template('register.html', error="Debes seleccionar un avatar", avatars=avatars)
         
         existing_user = User.query.filter(or_(User.username == username, User.email == email)).first()
 
@@ -190,10 +205,6 @@ def community():
 
     # Devolver la plantilla con los datos
     return render_template('community.html', mazes=json.dumps(mazes_serialized), pagination=pagination)
-
-    
-
-
 
 @bp.route('/dungeons')
 @login_required
@@ -383,7 +394,6 @@ def handle_test(data):
     else:
         emit('training_status', {'status': 'error', 'message': 'Maze ID is missing'})
 
-
 @socketio.on('connect')
 def handle_connect():
     if not mapa_original:  # Verificar si mapa_original está inicializado
@@ -465,11 +475,9 @@ def make_env(g, s, sp, ep):
 @socketio.on('testTraining')
 def test(data):
 
-    maze_id = data.get('maze_id')
-    
+    maze_id = data.get('maze_id')    
     maze_id = int(maze_id)
 
-    
     maze = MazeBd.query.filter_by(id=maze_id).first()
 
     grid1 = json.loads(maze.grid) # Asigna el grid a mapa_original

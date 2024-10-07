@@ -1,5 +1,4 @@
 # Dungeon Crawler AI
-
 Subject <i>Proyecto.</i>
 
 <i>Universidad Nacional de Río Cuarto, Córdoba, Argentina.</i>
@@ -9,11 +8,9 @@ In this repo we built a gym environment to train an AI by using Reinforcement Le
 Is a web application that lets you build a maze, where an agent have to learn how to escape from there by dodging some obstacles.
 
 # Prerequisites
-
 We created this app by using Python, so its an obvious must-have!
 
 ## Installation
-
 Make sure you have Python 3.8 or higher installed on your machine. You can verify your Python version by running the following command:
 
 ```bash
@@ -23,29 +20,34 @@ python --version
 You also need pip, which is Python's package installer. If you don't have it installed, follow the instructions below:
 
 ### Installing pip
+On Linux / WSL.
 ```bash
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python get-pip.py
+sudo apt install python3-pip
 ```
 
 ### Setting Up a Virtual Environment
 It is recommended to use a virtual environment to manage dependencies. To create and activate a virtual environment, use the following commands:
 
+#### Debian / Ubuntu / WSL
+On Debian/Ubuntu systems, you need to install the python3-venv package using the following command.
 ```bash
-# Create virtual environment
+sudo apt install python3.10-venv
+```
+
+#### Create virtual environment
+```bash
 python -m venv venv
 ```
 
-#### Windows
-Activate the virtual environment on Windows by doing:
-```shell
-venv\Scripts\activate
-```
-
-#### Linux and macOS
-Activate the virtual environment on Linux or macOS by doing:
+#### Activate the virtual environment
+Activate the virtual environment on <b>Linux or macOS</b> by doing:
 ```bash
 source venv/bin/activate
+```
+
+Activate the virtual environment on <b>Windows</b> by doing:
+```shell
+venv\Scripts\activate
 ```
 
 ### Installing Dependances
@@ -55,7 +57,6 @@ pip install -r requirements.txt
 ```
 
 # Usage
-
 Once everything is set properly...
 
 ### Running the app

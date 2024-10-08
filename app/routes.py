@@ -295,20 +295,17 @@ def map():
     
     avatar = User.query.get(session['user_id']).avatar
     return render_template('map.html', mapa_original=change_door(mapa_original), avatar=avatar, maze_id = maze_id)
-
 @socketio.on('start_simulation')
 def train(maze_id):
     
     print(maze_id)
     maze = MazeBd.query.filter_by(id=maze_id).first()
 
-    grid1 = json.loads(maze.grid) # Asigna el grid a mapa_original
+    grid1 = json.loads(maze.grid)  # Asigna el grid a mapa_original
     size = maze.maze_size  # Calcula el tamaño del mapa
-
     
     grid = [grid1[i:i + size] for i in range(0, len(grid1), size)]
     num_envs = 5
-
 
     start_point = None
     exit_point = None
@@ -321,58 +318,59 @@ def train(maze_id):
             if grid[row][col] == 3:
                 exit_point = (row, col)
     
-   
     envs = DummyVecEnv(
         [lambda: make_env(grid, size, start_point, exit_point) for i in range(num_envs)]
     )
 
-    # Cargar el modelo previamente entrenado
+    # Eliminar modelo previo si deseas empezar desde cero
     model_path = "./app/saved_models/ppo_dungeons.zip"
     if os.path.exists(model_path):
-        model = PPO.load(model_path, env=envs)
-        print(f"Model: Cargando el archivo {model_path}")
-    else:
-        print("Model: Creando el modelo")
-        model = PPO(
-            "MlpPolicy",
-            envs,
-            learning_rate=0.001,
-            n_steps=2048,
-            ent_coef=0.08,
-            vf_coef=1,
-            max_grad_norm=0.5,
-            gae_lambda=0.99,
-            n_epochs=10,
-            gamma=0.01,
-            clip_range=0.2,
-            batch_size=64,
-            verbose=2,
-        )
+        os.remove(model_path)
+        print(f"Model: Archivo existente {model_path} eliminado para crear uno nuevo")
 
-    # Cargar la normalizacion
+    # Crear un nuevo modelo
+    print("Model: Creando el modelo nuevo")
+    model = PPO(
+        "MlpPolicy",
+        envs,
+        learning_rate=0.001,
+        n_steps=2048,
+        ent_coef=0.08,
+        vf_coef=1,
+        max_grad_norm=0.5,
+        gae_lambda=0.99,
+        n_epochs=10,
+        gamma=0.01,
+        clip_range=0.2,
+        batch_size=64,
+        verbose=2,
+    )
+
+    # Cargar o crear la normalización
     vec_norm_path = "./app/saved_models/vec_normalize.pkl"
     if os.path.exists(vec_norm_path):
         envs = VecNormalize.load(vec_norm_path, envs)
-        print(f"Vec: Guardando el archivo {vec_norm_path}")
+        print(f"Vec: Cargando el archivo {vec_norm_path}")
     else:
-        print("Vec: Creando el archivo")
+        print("Vec: Creando el archivo de normalización")
         envs = VecNormalize(envs, norm_obs=True, norm_reward=True)
 
     # Entrenar el modelo
     print("Inicio entrenamiento")
     time.sleep(2)
-    model.learn(total_timesteps=10000, progress_bar=True)
+    model.learn(total_timesteps=50000, progress_bar=True)
     print("Fin entrenamiento")
     time.sleep(2)
 
-    # Guardar el modelo despues del entrenamiento
+    # Guardar el modelo y la normalización después del entrenamiento
     model.save(model_path)
-    print("Modelo guardado con exito")
+    print("Modelo guardado con éxito")
     envs.save(vec_norm_path)
-    print("Environments guardados con exito")
+    print("Entornos guardados con éxito")
 
     # Cerrar los entornos
     envs.close()
+
 
 @socketio.on('start_training')
 def handle_training(data):
@@ -472,12 +470,19 @@ def make_env(g, s, sp, ep):
     return Maze(g, s, sp, ep)
 
 
+
+running_tests = {}
 @socketio.on('testTraining')
 def test(data):
+
+    global running_tests
 
     maze_id = data.get('maze_id')    
     maze_id = int(maze_id)
 
+
+    running_tests[maze_id] = True
+    
     maze = MazeBd.query.filter_by(id=maze_id).first()
 
     grid1 = json.loads(maze.grid) # Asigna el grid a mapa_original
@@ -501,7 +506,7 @@ def test(data):
     # Vectorizar entornos
     env = DummyVecEnv([lambda: make_env(grid, size, start_point, exit_point)])
 
-    model_path = "./app/saved_models/ppo_dungeons"
+    model_path = "./app/saved_models/ppo_dungeons.zip"
     model = PPO.load(model_path)
     print(f"Cargando el archivo {model_path}")
 
@@ -514,6 +519,12 @@ def test(data):
     done = False
     pasos = 0
     while not done:
+        
+        if not running_tests.get(maze_id):  # Si se ha solicitado detener la prueba
+            print(f"Prueba detenida para maze_id {maze_id}")
+            socketio.emit('training_status', {'status': 'stopped'})
+            break
+        
         action, _ = model.predict(obs)  # Elegir una acción aleatoria
         obs, reward, done, _ = env.step(action)
 
@@ -528,9 +539,24 @@ def test(data):
         time.sleep(0.05)
         if done:
             print("¡Laberinto resuelto!")
+            socketio.emit('training_status', {'status': 'finished'})
 
     # Cerrar los entornos
     env.close()
+    
+    running_tests.pop(maze_id, None)
+
+@socketio.on('stopTraining')
+def stop_test(data):
+    maze_id = data.get('maze_id')    
+    maze_id = int(maze_id)
+
+    global running_tests
+    if maze_id in running_tests:
+        running_tests[maze_id] = False  # Señalar que se debe detener el test
+        print(f"Solicitud para detener el test {maze_id}")
+    else:
+        socketio.emit('training_status', {'status': 'error', 'message': 'No hay test en ejecución para este maze_id'})
 
 
 def train2():

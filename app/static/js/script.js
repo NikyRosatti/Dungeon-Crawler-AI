@@ -114,8 +114,22 @@ document.getElementById('testTrainBtn').addEventListener('click', function() {
         console.log("Estado del entrenamiento:", data.status);
         if (data.status === 'finished') {
             console.log("Entrenamiento completado.");
+        } else if (data.status === 'stopped') {
+            console.log("Entrenamiento detenido.");
         } else if (data.status === 'error') {
             console.error("Error:", data.message);
         }
     });
+});
+
+document.getElementById('stopTrainBtn').addEventListener('click', function() {
+    const socket = io();
+    const mazeId = document.body.getAttribute('data-maze-id');
+    socket.emit('stopTraining', { maze_id: mazeId });
+});
+
+window.addEventListener('beforeunload', function() {
+    const socket = io();
+    const mazeId = document.body.getAttribute('data-maze-id');
+    socket.emit('stopTraining', { maze_id: mazeId });
 });

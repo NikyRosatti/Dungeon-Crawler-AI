@@ -172,9 +172,9 @@ def map():
         [2, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0],
         [1, 1, 0, 1, 0, 0, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 1, 1, 0, 0, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 1, 1, 0, 0, 1],
+        [0, 1, 0, 0, 0, 0, 0, 0],
         [0, 1, 1, 0, 0, 1, 1, 0],
         [3, 0, 0, 0, 0, 0, 0, 0],
     ]
@@ -269,9 +269,9 @@ def test():
         [2, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0],
         [1, 1, 0, 1, 0, 0, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 1, 1, 0, 0, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 1, 1, 0, 0, 1],
+        [0, 1, 0, 0, 0, 0, 0, 0],
         [0, 1, 1, 0, 0, 1, 1, 0],
         [3, 0, 0, 0, 0, 0, 0, 0],
     ]
@@ -284,7 +284,7 @@ def test():
     # Carpeta principal de modelos de PPO guardados
     models_dir = "./app/saved_models/ppo"
     # El nombre del .zip a cargar
-    n_steps_model = "290000-Dungeon2"
+    n_steps_model = "290000-Dungeon1"
     # Concatena la extension .zip
     model_to_load = f"{n_steps_model}" + ".zip"
     # Path completo: la carpeta y el archivo .zip
@@ -336,13 +336,13 @@ def train(grid):
     # Envuelto en un entorno vectorizado
     envs = DummyVecEnv([lambda: make_env(grid) for _ in range(5)])
     # Normalizar el entorno
-    envs = VecNormalize(envs, norm_obs=True, norm_reward=True)
+    envs = VecNormalize(envs, norm_obs=True, norm_reward=True, clip_obs = 10.0)
 
     print("Model: Creando el modelo")
     model = PPO("MlpPolicy", env=envs,
             learning_rate=0.0003,
             n_steps=2048,
-            ent_coef=0.05,
+            ent_coef=0.01,
             vf_coef=0.5,
             max_grad_norm=0.5,
             gae_lambda=0.99,
@@ -354,7 +354,7 @@ def train(grid):
             tensorboard_log=logdir)
 
     # print(f"Model: Cargando el archivo {models_dir}")
-    model = PPO.load(f"{models_dir}/290000-Dungeon.zip", env=envs)
+    #model = PPO.load(f"{models_dir}/290000-Dungeon.zip", env=envs)
 
     # Entrenar y guardar los modelos
     print("Inicio entrenamiento")
@@ -363,7 +363,7 @@ def train(grid):
         model.learn(
             total_timesteps=TIMESTEPS, reset_num_timesteps=False, progress_bar=True
         )
-        model.save(f"{models_dir}/{TIMESTEPS*i}-Dungeon2")
+        model.save(f"{models_dir}/{TIMESTEPS*i}-Dungeon1")
     print("Fin entrenamiento")
 
     # env.reset()

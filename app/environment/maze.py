@@ -93,7 +93,7 @@ class Maze(gym.Env):
     def update_state_and_reward(self, row, col, action):
         new_row, new_col = self.increment_position(row, col, action)
         new_state = (new_row, new_col)
-        if 5 < self.total_steps_performed + 1 - self.minimum_steps:
+        if 0 < self.total_steps_performed - self.minimum_steps:
             self.reward -= 15
         if 0 <= new_row < self.size() and 0 <= new_col < self.size():
             # esta en los limites bien

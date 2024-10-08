@@ -11,6 +11,7 @@ import json
 from stable_baselines3 import PPO
 from app.environment.utils import is_winneable, generate_random_map, find_points
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+from stable_baselines3.common.monitor import Monitor
 import os
 import time
 
@@ -283,7 +284,7 @@ def test():
     # Carpeta principal de modelos de PPO guardados
     models_dir = "./app/saved_models/ppo"
     # El nombre del .zip a cargar
-    n_steps_model = "290000-Dungeon5"
+    n_steps_model = "290000-Dungeon2"
     # Concatena la extension .zip
     model_to_load = f"{n_steps_model}" + ".zip"
     # Path completo: la carpeta y el archivo .zip
@@ -318,6 +319,10 @@ def test():
                 print("¡Laberinto resuelto!")
                 break
 
+def make_env(grid):
+    env = Maze(grid)
+    env =Monitor(env)
+    return env
 
 def train(grid):
     models_dir = "./app/saved_models/ppo"
@@ -328,21 +333,28 @@ def train(grid):
 
     if not os.path.exists(logdir):
         os.makedirs(logdir)
-    num_envs = 5
     # Envuelto en un entorno vectorizado
-    envs = DummyVecEnv([lambda: Maze(grid) for _ in range(num_envs)])
+    envs = DummyVecEnv([lambda: make_env(grid) for _ in range(5)])
     # Normalizar el entorno
     envs = VecNormalize(envs, norm_obs=True, norm_reward=True)
 
     print("Model: Creando el modelo")
-    model = PPO("MlpPolicy", env=envs, verbose=2, tensorboard_log=logdir)
-
-    # env = Maze(grid)
-
-    # envs.reset()
+    model = PPO("MlpPolicy", env=envs,
+            learning_rate=0.0003,
+            n_steps=2048,
+            ent_coef=0.05,
+            vf_coef=0.5,
+            max_grad_norm=0.5,
+            gae_lambda=0.99,
+            n_epochs=10,
+            gamma=0.999,
+            clip_range=0.2,
+            batch_size=256,
+            verbose=2, 
+            tensorboard_log=logdir)
 
     # print(f"Model: Cargando el archivo {models_dir}")
-    model = PPO.load(f"{models_dir}/290000-Dungeon4.zip", env=envs)
+    model = PPO.load(f"{models_dir}/290000-Dungeon.zip", env=envs)
 
     # Entrenar y guardar los modelos
     print("Inicio entrenamiento")
@@ -351,7 +363,7 @@ def train(grid):
         model.learn(
             total_timesteps=TIMESTEPS, reset_num_timesteps=False, progress_bar=True
         )
-        model.save(f"{models_dir}/{TIMESTEPS*i}-Dungeon5")
+        model.save(f"{models_dir}/{TIMESTEPS*i}-Dungeon2")
     print("Fin entrenamiento")
 
     # env.reset()

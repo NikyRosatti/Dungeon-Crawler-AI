@@ -54,7 +54,7 @@ class Maze(gym.Env):
 
         # Estado inicial
         self.current_state = self.start_point
-
+        self.reward = 0
         self.total_steps_performed = 0
         self.prev_actions = deque(maxlen=N_MAX_STEPS)
 
@@ -66,6 +66,7 @@ class Maze(gym.Env):
             np.random.seed(seed)
         self.current_state = self.start_point
         self.total_steps_performed = 0
+        self.reward = 0
         self.prev_actions = deque(maxlen=N_MAX_STEPS)
         for _ in range(N_MAX_STEPS):
             self.prev_actions.append(-1)
@@ -80,33 +81,45 @@ class Maze(gym.Env):
     def step(self, action):
         self.total_steps_performed += 1
         row, col = self.current_state
-        new_state, reward, done = self.update_state_and_reward(row, col, action)
+        new_state, self.reward, done = self.update_state_and_reward(row, col, action)
         self.current_state = new_state
         self.prev_actions.append(action)
         # truncation=False as the time limit is handled by the `TimeLimit` wrapper added during `make`
         obs1 = np.array(self.current_state)
         obs2 = np.array([self.minimum_steps - self.total_steps_performed])
         total_obs = np.concatenate([obs1, obs2])
-        return np.array(total_obs, dtype=np.int32), reward, done, False, {}
+        return np.array(total_obs, dtype=np.int32), self.reward, done, False, {}
 
     def update_state_and_reward(self, row, col, action):
         new_row, new_col = self.increment_position(row, col, action)
         new_state = (new_row, new_col)
+        if 5 < self.total_steps_performed + 1 - self.minimum_steps:
+            self.reward -= 15
         if 0 <= new_row < self.size() and 0 <= new_col < self.size():
+            # esta en los limites bien
+            # reviso en new_cell_value sobre que cosa esta parado
             new_cell_value = self.grid[new_row, new_col]
-        elif self.grid[new_row, new_col] == WALL:
-            new_cell_value = WALL
-            new_state = (row, col)
+            if new_cell_value == WALL:
+                # si esta sobre una pared no me muevo de donde empece
+                new_state = (row, col)
+                self.reward -= 15
+            if new_cell_value== MINE:
+                # si esta sobre una mina no me muevo de donde empece
+                # opcional, total aca ya pierde y termina
+                new_state = (row, col)
+                self.reward -= 25
+            if (new_cell_value == EXIT_DOOR):
+                self.reward += 10000
+            if (new_cell_value == FLOOR):
+                self.reward += 1
         else:
+            # se salio de los limites de la grilla
             new_cell_value = -1
+            self.reward -= 25
             new_state = (row, col)
-
-        # Termina si pisa una mina o llega a la meta
         done = new_cell_value in [MINE, EXIT_DOOR]
-        # Recompensa de 1 si llega a la meta, 0 en otro caso
-        reward = 1 if (new_cell_value == EXIT_DOOR) else 0
 
-        return new_state, reward, done
+        return new_state, self.reward, done
 
     def increment_position(self, row, col, action):
         row_new, col_new = row, col

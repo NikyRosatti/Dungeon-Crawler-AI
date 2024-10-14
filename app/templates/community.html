@@ -1,81 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+{% extends 'base.html' %}
+
+{% block title %}Community Mazes - DC-AI{% endblock %}
+
+{% block styles %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/user_mazes.css') }}">
-    <title>User Mazes - DC-AI</title>
-</head>
-<body>
-    <div class="container">
-        <!-- Sidebar -->
-        <nav class="sidebar">
-            <div class="logo">
-                <h1>DC-AI</h1>
-            </div>
-            <ul class="menu">
-                <li><a href="/dashboard" class="menu-item">Dashboard</a></li>
-                <li><a href="/profile" class="menu-item">Profile</a></li>
-                <li><a href="/dungeons" class="menu-item">My Dungeons</a></li>
-                <li><a href="/community" class="menu-item active">Community Maps</a></li>
-                <li><a href="/leaderboard" class="menu-item">Leaderboard</a></li>
-                <li><a href="/settings" class="menu-item">Settings</a></li>
-                <li><a href="/logout" class="menu-item">Logout</a></li>
-            </ul>
-        </nav>
+{% endblock %}
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <h2>Community Mazes</h2>
-            
-            <!-- Barra de filtros -->
-            <div class="filter-bar"> 
-                <form method="GET" action="{{ url_for('routes.community') }}">
-                    <label for="filter">Ordenar por:</label>
-                    <select name="filter" id="filter">
-                        <option value="created_at_desc" {% if request.args.get('filter') == 'created_at_desc' %}selected{% endif %}>Fecha (Mayor a Menor)</option>
-                        <option value="created_at_asc" {% if request.args.get('filter') == 'created_at_asc' %}selected{% endif %}>Fecha (Menor a Mayor)</option>
-                        <option value="username_asc" {% if request.args.get('filter') == 'username_asc' %}selected{% endif %}>Nombre del Creador (A-Z)</option>
-                        <option value="username_desc" {% if request.args.get('filter') == 'username_desc' %}selected{% endif %}>Nombre del Creador (Z-A)</option>
-                        <option value="grid_size_desc" {% if request.args.get('filter') == 'grid_size_desc' %}selected{% endif %}>Tamaño de la Grilla (Mayor a Menor)</option>
-                        <option value="grid_size_asc" {% if request.args.get('filter') == 'grid_size_asc' %}selected{% endif %}>Tamaño de la Grilla (Menor a Mayor)</option>
-                    </select>
-                    <button type="submit" class="filter-btn">Aplicar Filtro</button>
-                </form>
-            </div>
+{% block content %}
+    <h2>Community Mazes</h2>
 
-            <!-- Grilla de laberintos -->
-            <div class="mazes-grid">
-                <div id="mazes-grid" data-mazes='{{ mazes|safe }}'></div>                  
-            </div>   
-
-            <!-- Paginación -->
-            <div class="pagination">
-                {% if pagination.has_prev %}
-                    <a href="{{ url_for('routes.community', page=pagination.prev_num) }}" class="prev-page">Anterior</a>
-                {% endif %}
-            
-                <span>Página {{ pagination.page }} de {{ pagination.total_pages }}</span>
-            
-                {% if pagination.has_next %}
-                    <a href="{{ url_for('routes.community', page=pagination.next_num) }}" class="next-page">Siguiente</a>
-                {% endif %}
-            </div>
-
-            <!-- Botón para agregar nuevo mapa -->
-            <a href="/map_creator" class="add-button">
-                <span> + </span>  
-            </a>
-                 
-        </main>
+    <!-- Barra de filtros -->
+    <div class="filter-bar"> 
+        <form method="GET" action="{{ url_for('routes.community') }}">
+            <label for="filter">Ordenar por:</label>
+            <select name="filter" id="filter">
+                <option value="created_at_desc" {% if request.args.get('filter') == 'created_at_desc' %}selected{% endif %}>Fecha (Mayor a Menor)</option>
+                <option value="created_at_asc" {% if request.args.get('filter') == 'created_at_asc' %}selected{% endif %}>Fecha (Menor a Mayor)</option>
+                <option value="username_asc" {% if request.args.get('filter') == 'username_asc' %}selected{% endif %}>Nombre del Creador (A-Z)</option>
+                <option value="username_desc" {% if request.args.get('filter') == 'username_desc' %}selected{% endif %}>Nombre del Creador (Z-A)</option>
+                <option value="grid_size_desc" {% if request.args.get('filter') == 'grid_size_desc' %}selected{% endif %}>Tamaño de la Grilla (Mayor a Menor)</option>
+                <option value="grid_size_asc" {% if request.args.get('filter') == 'grid_size_asc' %}selected{% endif %}>Tamaño de la Grilla (Menor a Mayor)</option>
+            </select>
+            <button type="submit" class="filter-btn">Aplicar Filtro</button>
+        </form>
     </div>
-    <script src="/static/js/community.js"></script>
-</body>
-<footer>
-    <p>© 2024 Dungeons Crawler AI. All Rights Reserved.</p>
-</footer>
-</html>
+
+    <!-- Grilla de laberintos -->
+    <div class="mazes-grid">
+        <div id="mazes-grid" data-mazes='{{ mazes|safe }}'></div>                  
+    </div>   
+
+    <!-- Paginación -->
+    <div class="pagination">
+        {% if pagination.has_prev %}
+            <a href="{{ url_for('routes.community', page=pagination.prev_num) }}" class="prev-page">Anterior</a>
+        {% endif %}
+    
+        <span>Página {{ pagination.page }} de {{ pagination.total_pages }}</span>
+    
+        {% if pagination.has_next %}
+            <a href="{{ url_for('routes.community', page=pagination.next_num) }}" class="next-page">Siguiente</a>
+        {% endif %}
+    </div>
+
+    <!-- Botón para agregar nuevo mapa -->
+    <a href="{{ url_for('routes.map_creator') }}" class="add-button">
+        <span> + </span>  
+    </a>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/community.js') }}"></script>
+{% endblock %}

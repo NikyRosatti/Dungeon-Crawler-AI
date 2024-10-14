@@ -5,7 +5,9 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-
+    flex-direction: column;
+    font-family: 'Handjet';
+    font-size: 36px;
     background: url(/static/img/fondoMap.jpg) center center / cover no-repeat;
 }
 
@@ -50,7 +52,7 @@ body {
 }
 
 .agent {        
-    background: url(/static/img/agent2.png) no-repeat center bottom / 55%,
+    background: url(/static/img/agent2.png) no-repeat center bottom / 80%,
                 url(/static/img/dirt.jpg) center center / cover no-repeat;
 }
 
@@ -58,4 +60,49 @@ body {
     background: url(/static/img/agent2.png) no-repeat center bottom / 55%,
                 url(/static/img/salida.png) no-repeat center bottom / 60%,
                 url(/static/img/dirt.jpg) center center / cover no-repeat;
+}
+
+.end2 {
+    
+}
+.quick_buttons{
+    display: flex;
+}
+
+.quick_buttons a{
+    background-color:#768371b2;
+    color: rgb(255, 255, 255);
+    border: none;
+    padding: 20px 40px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    margin: 10px;
+    width: 150px;
+    text-align: center;
+}
+
+.btn {
+    background-color: #76837157;
+    color: rgb(255, 255, 255);
+    font-family: 'Handjet', sans-serif;
+    font-size: 30px;
+    border: none;
+    padding: 20px 30px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    width: 120px;
+    display: inline-block; /* Asegura que los enlaces y botones se comporten de manera similar */
+}
+
+.btn:hover {
+    background-color: #8fa683; /* Cambia el color al pasar el mouse */
+}
+
+.btn.active {
+    background-color:  #f3ff8b;
+    border: 2px solid #fff;
 }

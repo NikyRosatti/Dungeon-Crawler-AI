@@ -61,6 +61,21 @@ def register():
         password = request.form['password'].encode('utf-8')
         email = request.form['email']
         avatar = request.form['avatar']
+
+        if not avatar:
+            avatars = [
+            '/static/img/avatars/ValenAvatar.png',
+            '/static/img/avatars/NikyAvatar.png',
+            '/static/img/avatars/EstebanAvatar.png',
+            '/static/img/avatars/GonzaAvatar.png',
+            '/static/img/avatars/FlorAvatar.png',
+            '/static/img/avatars/JoaquinTAvatar.png',
+            '/static/img/avatars/JoaquinBAvatar.png',
+            '/static/img/avatars/BrusattiAvatar.png',
+            '/static/img/avatars/SimonAvatar.png',
+            '/static/img/avatars/AgusAvatar.png'
+            ]
+            return render_template('register.html', error="Debes seleccionar un avatar", avatars=avatars)
         
         existing_user = User.query.filter(or_(User.username == username, User.email == email)).first()
 
@@ -140,57 +155,252 @@ def profileusers(user_id):
     user = User.query.get_or_404(user_id)
     return render_template('profile.html', user=user)
 
-@bp.route('/myDungeons')
+@bp.route('/community')
 @login_required
-def myDungeons():
-    return render_template('myDungeons.html')
+def community():
+    # Obtener los parámetros de la solicitud, como el filtro y la página
+    filter_by = request.args.get('filter', 'created_at_desc')
+    page = request.args.get('page', 1, type=int)
+    per_page = 8
 
+    # Construir la consulta base, uniendo con la tabla User
+    query = MazeBd.query.join(User, MazeBd.user_id == User.id)
+
+    # Aplicar el filtro según el valor recibido
+    if filter_by == 'created_at_desc':
+        query = query.order_by(MazeBd.created_at.desc())
+    elif filter_by == 'created_at_asc':
+        query = query.order_by(MazeBd.created_at.asc())
+    elif filter_by == 'username_asc':
+        query = query.order_by(db.func.lower(User.username).asc())
+    elif filter_by == 'username_desc':
+        query = query.order_by(db.func.lower(User.username).desc())
+    elif filter_by == 'grid_size_desc':
+        query = query.order_by(db.func.length(MazeBd.grid).desc())  # Asumiendo que el grid se guarda como string/JSON
+    elif filter_by == 'grid_size_asc':
+        query = query.order_by(db.func.length(MazeBd.grid).asc())
+
+    # Paginación de los resultados
+    paginated_mazes = query.paginate(page=page, per_page=per_page)
+
+    # Serializar los laberintos
+    mazes_serialized = []
+    for maze in paginated_mazes.items:
+        user = User.query.get(maze.user_id)
+        maze_dict = {
+            'id': maze.id,
+            'grid': json.loads(maze.grid),  # Convertir la cadena JSON a lista/matriz
+            'created_at': maze.created_at.strftime('%Y-%m-%d'),
+            'username': user.username
+        }
+        mazes_serialized.append(maze_dict)
+
+    # Manejo de la paginación
+    pagination = {
+        'page': paginated_mazes.page,
+        'total_pages': paginated_mazes.pages,
+        'has_next': paginated_mazes.has_next,
+        'has_prev': paginated_mazes.has_prev,
+        'next_num': paginated_mazes.next_num,
+        'prev_num': paginated_mazes.prev_num
+    }
+
+    # Devolver la plantilla con los datos
+    return render_template('community.html', mazes=json.dumps(mazes_serialized), pagination=pagination)
 
 @bp.route('/dungeons')
 @login_required
 def my_mazes():
     user_id = session['user_id']
-    user_mazes = MazeBd.query.filter_by(user_id = user_id).all()
-    return render_template('user_mazes.html', mazes=user_mazes)
+    user_mazes = MazeBd.query.filter_by(user_id=user_id).all()
+
+    # Convertir los mazes a diccionarios serializables
+    user_mazes_serialized = []
+    for maze in user_mazes:
+        maze_dict = {
+            'id': maze.id,
+            'grid': json.loads(maze.grid),  # Convertir la cadena JSON a lista/matriz
+            'created_at': maze.created_at.strftime('%Y-%m-%d') if hasattr(maze.created_at, 'strftime') else maze.created_at
+        }
+        user_mazes_serialized.append(maze_dict)
+
+    return render_template('user_mazes.html', mazes=json.dumps(user_mazes_serialized))
+
+
+@bp.route('/settings', methods=['GET', 'POST'])
+@login_required
+def settings():
+    if request.method == 'POST':
+        if 'update_password' in request.form:
+            current_password = request.form['current_password'].encode('utf-8')
+            new_password = request.form['new_password'].encode('utf-8')
+            confirm_password = request.form['confirm_password'].encode('utf-8')
+
+            user = User.query.get(session['user_id'])
+
+            if not bcrypt.checkpw(current_password, user.password):
+                return render_template('settings.html', error='Incorrect current password.')
+
+            if new_password != confirm_password:
+                return render_template('settings.html', error='New passwords do not match.')
+
+            hashed_new_password = bcrypt.hashpw(new_password, bcrypt.gensalt())
+            user.password = hashed_new_password
+            db.session.commit()
+
+            return render_template('settings.html', success='Password updated successfully.')
+
+        elif 'update_email' in request.form:
+            new_email = request.form['new_email']
+            confirm_email = request.form['confirm_email']
+
+            user = User.query.get(session['user_id'])
+
+            if new_email != confirm_email:
+                return render_template('settings.html', error='Emails do not match.')
+
+            existing_user = User.query.filter_by(email=new_email).first()
+            if existing_user:
+                return render_template('settings.html', error='Email is already in use.')
+
+            user.email = new_email
+            db.session.commit()
+
+            return render_template('settings.html', success='Email updated successfully.')
+
+        elif 'delete_account' in request.form:
+            user = User.query.get(session['user_id'])
+            db.session.delete(user)
+            db.session.commit()
+
+            session.pop('user_id', None)
+            return redirect(url_for('routes.register'))
+
+    return render_template('settings.html')
 
 
 @bp.route("/map")
 @login_required
 def map():
-    maze_id = request.args.get("maze_id")
+    maze_id = int(request.args.get('maze_id', 0))
+
     global mapa_original
     global map_size
+    global start
+    
+    maze = MazeBd.query.filter_by(id=maze_id).first()
 
-    # Alternar comentarios en esta parte una vez finalizada esta parte
-    # if not maze_id:
-    #     return "ID de mapa no proporcionado", 400
+    mapa_original = json.loads(maze.grid) # Asigna el grid a mapa_original
+    start = mapa_original.index(2)
+    map_size = maze.maze_size  # Calcula el tamaño del mapa
+    
+    avatar = User.query.get(session['user_id']).avatar
+    return render_template('map.html', mapa_original=change_door(mapa_original), avatar=avatar, maze_id = maze_id)
 
-    # maze = MazeBd.query.filter_by(id=maze_id).first()
-    # if not maze:
-    #     return "Mapa no encontrado", 404
-    grid = [
-        [2, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [1, 1, 0, 1, 0, 0, 1, 0],
-        [0, 1, 0, 0, 0, 0, 0, 0],
-        [0, 1, 0, 1, 1, 0, 0, 1],
-        [0, 1, 0, 0, 0, 0, 0, 0],
-        [0, 1, 1, 0, 0, 1, 1, 0],
-        [3, 0, 0, 0, 0, 0, 0, 0],
-    ]
-    m = Maze(grid=grid)
-    mapa_original = json.dumps(m.grid.tolist())
-    map_size = m.size()
-    return render_template("map.html", mapa_original=change_door(mapa_original))
+@socketio.on('start_simulation')
+def train(maze_id):
+    
+    print(maze_id)
+    maze = MazeBd.query.filter_by(id=maze_id).first()
 
+    grid1 = json.loads(maze.grid)  # Asigna el grid a mapa_original
+    size = maze.maze_size  # Calcula el tamaño del mapa
+    
+    grid = [grid1[i:i + size] for i in range(0, len(grid1), size)]
+    num_envs = 5
+
+    start_point = None
+    exit_point = None
+
+    # Identificar el punto de inicio (2) y de salida (3)
+    for row in range(size):
+        for col in range(size):
+            if grid[row][col] == 2:
+                start_point = (row, col)
+            if grid[row][col] == 3:
+                exit_point = (row, col)
+    
+    envs = DummyVecEnv(
+        [lambda: make_env(grid, size, start_point, exit_point) for i in range(num_envs)]
+    )
+
+    # Eliminar modelo previo si deseas empezar desde cero
+    model_path = "./app/saved_models/ppo_dungeons.zip"
+    if os.path.exists(model_path):
+        os.remove(model_path)
+        print(f"Model: Archivo existente {model_path} eliminado para crear uno nuevo")
+
+    # Crear un nuevo modelo
+    print("Model: Creando el modelo nuevo")
+    model = PPO(
+        "MlpPolicy",
+        envs,
+        learning_rate=0.001,
+        n_steps=2048,
+        ent_coef=0.08,
+        vf_coef=1,
+        max_grad_norm=0.5,
+        gae_lambda=0.99,
+        n_epochs=10,
+        gamma=0.01,
+        clip_range=0.2,
+        batch_size=64,
+        verbose=2,
+    )
+
+    # Cargar o crear la normalización
+    vec_norm_path = "./app/saved_models/vec_normalize.pkl"
+    if os.path.exists(vec_norm_path):
+        envs = VecNormalize.load(vec_norm_path, envs)
+        print(f"Vec: Cargando el archivo {vec_norm_path}")
+    else:
+        print("Vec: Creando el archivo de normalización")
+        envs = VecNormalize(envs, norm_obs=True, norm_reward=True)
+
+    # Entrenar el modelo
+    print("Inicio entrenamiento")
+    time.sleep(2)
+    model.learn(total_timesteps=50000, progress_bar=True)
+    print("Fin entrenamiento")
+    time.sleep(2)
+
+    # Guardar el modelo y la normalización después del entrenamiento
+    model.save(model_path)
+    print("Modelo guardado con éxito")
+    envs.save(vec_norm_path)
+    print("Entornos guardados con éxito")
+
+    # Cerrar los entornos
+    envs.close()
+
+
+@socketio.on('start_training')
+def handle_training(data):
+    maze_id = data.get('maze_id')
+    if maze_id is not None:
+        emit('training_status', {'status': 'started'})
+        train(maze_id)
+        emit('training_status', {'status': 'finished'})
+    else:
+        emit('training_status', {'status': 'error', 'message': 'Maze ID is missing'})
+
+@socketio.on('testTraining')
+def handle_test(data):
+    maze_id = data.get('maze_id')
+    if maze_id is not None:
+        emit('training_status', {'status': 'started'})
+        train(maze_id)
+        emit('training_status', {'status': 'finished'})
+    else:
+        emit('training_status', {'status': 'error', 'message': 'Maze ID is missing'})
 
 @socketio.on('connect')
 def handle_connect():
-    if not mapa_original:
-        emit('map', {'message': 'No hay un mapa cargado.'})
+    if not mapa_original:  # Verificar si mapa_original está inicializado
+        emit('map', 'No hay un mapa cargado.')
     else:
-        emit('map', {'mapaOriginal': mapa_original, 'n': map_size})
-
+        emit('map', mapa_original)
+        
 @socketio.on('move')
 def handle_move(direction):
     global mapa_original
@@ -198,16 +408,16 @@ def handle_move(direction):
 
     if -2 in mapa_original:
         emit('finish_map', 'You Win!')
-              
-    emit('map', {'mapaOriginal': mapa_original, 'n': map_size})
 
-
+    emit('map', mapa_original)
+    
+    
 @socketio.on('restart_pos')
 def restart_position(position):
     global mapa_original
     mapa_original[mapa_original.index(-2)] = 3
-    mapa_original[position] = -1
-    emit('map', {'mapaOriginal': mapa_original, 'n': map_size})
+    mapa_original[start] = -1
+    emit('map', mapa_original)
 
 @bp.route('/map_creator')
 @login_required
@@ -261,110 +471,114 @@ def validate_map():
     else:
         return jsonify({"valid": False})
 
+running_tests = {}
+@socketio.on('testTraining')
+def test(data):
 
-@socketio.on("start_simulation")
-def test():
+    global running_tests
 
-    grid = [
-        [2, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [1, 1, 0, 1, 0, 0, 1, 0],
-        [0, 1, 0, 0, 0, 0, 0, 0],
-        [0, 1, 0, 1, 1, 0, 0, 1],
-        [0, 1, 0, 0, 0, 0, 0, 0],
-        [0, 1, 1, 0, 0, 1, 1, 0],
-        [3, 0, 0, 0, 0, 0, 0, 0],
-    ]
+    maze_id = data.get('maze_id')    
+    maze_id = int(maze_id)
 
-    # train ahora devuelve un VecNormalize. Usar esa clase es lo mismo que usar la clase Maze, solo que hacer un metodo
-    # de la clase Maze sobre VecNormalize lo va a hacer sobre todos los Maze que tenga cargados y normalizados...
-    envs = train(grid)
-    print("Termine de entrenar")
 
-    # Carpeta principal de modelos de PPO guardados
-    models_dir = "./app/saved_models/ppo"
-    # El nombre del .zip a cargar
-    n_steps_model = "290000-Dungeon1"
-    # Concatena la extension .zip
-    model_to_load = f"{n_steps_model}" + ".zip"
-    # Path completo: la carpeta y el archivo .zip
-    model_path = f"{models_dir}/{model_to_load}"
-    # Si no existe el modelo a cargar, tira la excepcion
-    if not os.path.exists(model_path):
-        raise FileExistsError(f"El modelo {model_path} elegido no existe!")
-    # Carga el modelo guardado
-    model = PPO.load(model_path, env=envs)
+    running_tests[maze_id] = True
+    
+    maze = MazeBd.query.filter_by(id=maze_id).first()
+
+    grid1 = json.loads(maze.grid) # Asigna el grid a mapa_original
+    size = maze.maze_size  # Calcula el tamaño del mapa
+
+    
+    grid = [grid1[i:i + size] for i in range(0, len(grid1), size)]
+
+    # start_point = None
+    # exit_point = None
+
+    # # Identificar el punto de inicio (2) y de salida (3)
+    # for row in range(size):
+    #     for col in range(size):
+    #         if grid[row][col] == 2:
+    #             start_point = (row, col)
+    #         if grid[row][col] == 3:
+    #             exit_point = (row, col)
+
+    # Vectorizar entornos
+    env = DummyVecEnv([lambda: make_env(grid)])
+
+    model_path = "./app/saved_models/ppo_dungeons.zip"
+    model = PPO.load(model_path)
     print(f"Cargando el archivo {model_path}")
 
-    print(f"Cant minima pasos para resolver el laberinto: {envs.envs[0].minimum_steps}")
+    print(f"Cant minima pasos para resolver el laberinto: {env.envs[0].minimum_steps}")
     episodes = 20
     max_steps = 100
     for ep in range(episodes):
-        obs = envs.reset()
+        obs = env.reset()
         done = False
         print(f"Episodio nro: {ep}")
         for pasos in range(0, max_steps + 1):
             action, _ = model.predict(obs)
-            obs, reward, done, _ = envs.step(action)
+            obs, reward, done, _ = env.step(action)
             # Imprimir acción, recompensa y estado
             print(
                 f"Observation: {obs}, Action: {action}, Reward: {reward}, Done: {done}, Paso nro: {pasos}"
             )
 
-            current_map_state = envs.envs[0].get_current_map_state()
-            print(f"Estado actual del mapa: {current_map_state}")
-            socketio.emit("map_update", current_map_state)
-            time.sleep(0.1)
-            if done.any():
-                print("¡Laberinto resuelto!")
-                break
+    # Variable para almacenar la secuencia de movimientos del entorno ganador
+    done = False
+    pasos = 0
+    while not done:
+        if not running_tests.get(maze_id):  # Si se ha solicitado detener la prueba
+            print(f"Prueba detenida para maze_id {maze_id}")
+            socketio.emit('training_status', {'status': 'stopped'})
+            break
+        
+        action, _ = model.predict(obs)  # Elegir una acción aleatoria
+        obs, reward, done, _ = env.step(action)
 
 def make_env(grid):
     env = Maze(grid)
-    env =Monitor(env)
+    env = Monitor(env)
     return env
 
-def train(grid):
-    models_dir = "./app/saved_models/ppo"
-    logdir = "./app/saved_models/logs"
+# def train(grid):
+#     models_dir = "./app/saved_models/ppo"
+#     logdir = "./app/saved_models/logs"
 
-    if not os.path.exists(models_dir):
-        os.makedirs(models_dir)
 
-    if not os.path.exists(logdir):
-        os.makedirs(logdir)
-    # Envuelto en un entorno vectorizado
-    envs = DummyVecEnv([lambda: make_env(grid) for _ in range(5)])
-    # Normalizar el entorno
-    envs = VecNormalize(envs, norm_obs=True, norm_reward=True, clip_obs = 10.0)
+#     if not os.path.exists(models_dir):
+#         os.makedirs(models_dir)
 
-    print("Model: Creando el modelo")
-    model = PPO("MlpPolicy", env=envs,
-            learning_rate=0.0003,
-            n_steps=2048,
-            ent_coef=0.01,
-            vf_coef=0.5,
-            max_grad_norm=0.5,
-            gae_lambda=0.99,
-            n_epochs=10,
-            gamma=0.999,
-            clip_range=0.2,
-            batch_size=256,
-            verbose=2, 
-            tensorboard_log=logdir)
+#     if not os.path.exists(logdir):
+#         os.makedirs(logdir)
+#     # Envuelto en un entorno vectorizado
+#     envs = DummyVecEnv([lambda: make_env(grid) for _ in range(5)])
+#     # Normalizar el entorno
+#     envs = VecNormalize(envs, norm_obs=True, norm_reward=True, clip_obs = 10.0)
 
-    # print(f"Model: Cargando el archivo {models_dir}")
-    #model = PPO.load(f"{models_dir}/290000-Dungeon.zip", env=envs)
+#     print("Model: Creando el modelo")
+#     model = PPO("MlpPolicy", env=envs,
+#             learning_rate=0.0003,
 
-    # Entrenar y guardar los modelos
-    print("Inicio entrenamiento")
-    TIMESTEPS = 10000
-    for i in range(1, 30):
-        model.learn(
-            total_timesteps=TIMESTEPS, reset_num_timesteps=False, progress_bar=True
-        )
-        model.save(f"{models_dir}/{TIMESTEPS*i}-Dungeon1")
-    print("Fin entrenamiento")
+#         socketio.emit("map", current_map_state)
+#         time.sleep(0.05)
+#         if done:
+#             print("¡Laberinto resuelto!")
+#             socketio.emit('training_status', {'status': 'finished'})
 
-    # env.reset()
-    return envs
+#     # Cerrar los entornos
+#     env.close()
+    
+#     running_tests.pop(maze_id, None)
+
+# @socketio.on('stopTraining')
+# def stop_test(data):
+#     maze_id = data.get('maze_id')    
+#     maze_id = int(maze_id)
+
+#     global running_tests
+#     if maze_id in running_tests:
+#         running_tests[maze_id] = False  # Señalar que se debe detener el test
+#         print(f"Solicitud para detener el test {maze_id}")
+#     else:
+#         socketio.emit('training_status', {'status': 'error', 'message': 'No hay test en ejecución para este maze_id'})

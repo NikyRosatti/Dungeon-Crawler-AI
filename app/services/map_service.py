@@ -1,5 +1,8 @@
 def find_player_position(map):
-    return map.index(-1)
+    try:
+        return map.index(-1)  # Buscar la posición del jugador (-1)
+    except ValueError:
+        return map.index(2)  # Si no hay -1, devolver la posición de 2
 
 
 def move_player(direction, map, map_size):

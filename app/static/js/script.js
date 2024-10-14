@@ -2,28 +2,54 @@ if (window.location.pathname === '/map') {
     const socket = io();
 
     // Emitir el evento para iniciar la simulación cuando se conecte al servidor
-    socket.emit('start_simulation');
+
 
     // Escuchar las actualizaciones del mapa
-    socket.on('map_update', function(mapaConParedes) {
+    socket.on('map', function(mapaOriginal) {
         const grid = document.getElementById('grid');
         grid.innerHTML = ''; // Limpiar el grid antes de generar uno nuevo
 
-        // Tamaño del mapa con bordes
-        const n = Math.sqrt(mapaConParedes.length);
+        const n = Math.sqrt(mapaOriginal.length); // Suponiendo que el grid es cuadrado
+        const mapaConParedes = [];
+    
+        // Agregar borde superior
+        
+        mapaConParedes.push(...Array(n + 2).fill(1));
 
-        // Establecer el tamaño de la cuadrícula basado en el número de celdas
-        grid.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
-        grid.style.gridTemplateRows = `repeat(${n}, 1fr)`;
+        // Agregar bordes laterales y filas centrales del mapa original
+        for (let i = 0; i < n; i++) {
+            mapaConParedes.push(1); // Borde izquierdo
+            mapaConParedes.push(...mapaOriginal.slice(i * n, (i + 1) * n)); // Mapa original
+            mapaConParedes.push(1); // Borde derecho
+        }
 
-        // Generar celdas de la cuadrícula
+        // Agregar borde inferior
+        mapaConParedes.push(...Array(n + 2).fill(1));
+
+        // Establecer el tamaño de la cuadrícula basado en el número de celdas con bordes
+        const gridSize = n + 2;
+        grid.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+        grid.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
+        
+        // Generar celdas de la cuadrícula con bordes
         mapaConParedes.forEach(value => {
             const cell = document.createElement('div');
             cell.classList.add('cell');
 
             switch (value) {
+                case -2:
+                    cell.classList.add('end'); 
+                    cell.style.backgroundImage = `url(${avatarUrl}), url(/static/img/salida.png),url(/static/img/dirt.jpg)`;
+                    cell.style.backgroundSize = '73%, cover'; // Ajustar tamaño de fondo
+                    cell.style.backgroundPosition = 'center bottom, center center'; // Posicionar ambas imágenes
+                    cell.style.backgroundRepeat = 'no-repeat, no-repeat'; // Sin repetir ambas imágenes
                 case -1:
                     cell.classList.add('agent');  // Posición del agente
+                    // Establecer la imagen de fondo del agente con el avatar del usuario
+                    cell.style.backgroundImage = `url(${avatarUrl}), url(/static/img/dirt.jpg)`;
+                    cell.style.backgroundSize = '73%, cover'; // Ajustar tamaño de fondo
+                    cell.style.backgroundPosition = 'center bottom, center center'; // Posicionar ambas imágenes
+                    cell.style.backgroundRepeat = 'no-repeat, no-repeat'; // Sin repetir ambas imágenes
                     break;
                 case 0:
                     cell.classList.add('floor');  // Piso
@@ -47,5 +73,63 @@ if (window.location.pathname === '/map') {
     socket.on('finish_map', function(message){
         var sound = document.getElementById("winSound");
         sound.play();
+        setTimeout(function(){
+            socket.emit('restart_pos', 0);
+        },1000);
+    });
+    
+    document.addEventListener('keydown', function(event) {
+        const key = event.key;
+        if ((key == 'ArrowUp' || key == 'ArrowLeft' || key == 'ArrowDown' || key == 'ArrowRight')) {
+            socket.emit('move', key);
+        }
     });
 }
+
+document.getElementById('trainBtn').addEventListener('click', function() {
+    // Obtener el maze_id del atributo data-maze-id del cuerpo
+    const socket = io();
+    const mazeId = document.body.getAttribute('data-maze-id');
+    socket.emit('start_training', { maze_id: mazeId });
+
+    // Escuchar el progreso del entrenamiento
+    socket.on('training_status', function(data) {
+        console.log("Estado del entrenamiento:", data.status);
+        if (data.status === 'finished') {
+            console.log("Entrenamiento completado.");
+        } else if (data.status === 'error') {
+            console.error("Error:", data.message);
+        }
+    });
+});
+
+document.getElementById('testTrainBtn').addEventListener('click', function() {
+    // Obtener el maze_id del atributo data-maze-id del cuerpo
+    const socket = io();
+    const mazeId = document.body.getAttribute('data-maze-id');
+    socket.emit('testTraining', { maze_id: mazeId });
+
+    // Escuchar el progreso del entrenamiento
+    socket.on('training_status', function(data) {
+        console.log("Estado del entrenamiento:", data.status);
+        if (data.status === 'finished') {
+            console.log("Entrenamiento completado.");
+        } else if (data.status === 'stopped') {
+            console.log("Entrenamiento detenido.");
+        } else if (data.status === 'error') {
+            console.error("Error:", data.message);
+        }
+    });
+});
+
+document.getElementById('stopTrainBtn').addEventListener('click', function() {
+    const socket = io();
+    const mazeId = document.body.getAttribute('data-maze-id');
+    socket.emit('stopTraining', { maze_id: mazeId });
+});
+
+window.addEventListener('beforeunload', function() {
+    const socket = io();
+    const mazeId = document.body.getAttribute('data-maze-id');
+    socket.emit('stopTraining', { maze_id: mazeId });
+});

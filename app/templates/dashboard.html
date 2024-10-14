@@ -1,35 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/dashboard.css">
-    <title>DC-AI, Dashboard</title>
-</head>
-<body>
-    <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="logo">
-                <h1>DC-AI</h1>
-            </div>
-            <ul class="menu">
-                <li><a href="/dashboard" class="menu-item active">Dashboard</a></li>
-                <li><a href="/profile" class="menu-item">Profile</a></li>
-                <li><a href="/dungeons" class="menu-item">My Dungeons</a></li>
-                <li><a href="/community" class="menu-item ">Community Maps</a></li>               
-                <li><a href="/leaderboard" class="menu-item">Leaderboard</a></li>
-                <li><a href="/settings" class="menu-item">Settings</a></li>
-                <li><a href="/logout" class="menu-item">Logout</a></li>
-            </ul>
-        </div>
+{% extends 'base.html' %}
 
-        <!-- Main Content -->
-        <div class="main-content">
+{% block title %}Dashboard{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
             <div class="actions">
                 <div class="button-container">
                     <a href="/map_creator" class="button">
@@ -66,10 +42,4 @@
                     <p>0</p>
                 </div>
             </div>
-        </div>
-    </div>
-</body>
-<footer>
-    <p>© 2024 Dungeons Crawler AI. All Rights Reserved.</p>
-</footer>
-</html>
+{% endblock %}

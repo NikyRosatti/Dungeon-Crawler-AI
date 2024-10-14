@@ -1,48 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_mazes.css') }}">
-    <title>User Mazes - DC-AI</title>
-</head>
-<body>
-    <div class="container">
-        <!-- Sidebar -->
-        <nav class="sidebar">
-            <div class="logo">
-                <h1>DC-AI</h1>
-            </div>
-            <ul class="menu">
-                <li><a href="/dashboard" class="menu-item">Dashboard</a></li>
-                <li><a href="/profile" class="menu-item">Profile</a></li>
-                <li><a href="/dungeons" class="menu-item active">My Dungeons</a></li>
-                <li><a href="/community" class="menu-item">Community Maps</a></li>
-                <li><a href="/leaderboard" class="menu-item">Leaderboard</a></li>
-                <li><a href="/settings" class="menu-item">Settings</a></li>
-                <li><a href="/logout" class="menu-item">Logout</a></li>
-            </ul>
-        </nav>
+{% extends 'base.html' %}
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <h2>My Created Mazes</h2>
-            <div class="mazes-grid">
-                    <div id="mazes-grid" data-mazes='{{ mazes|safe }}'></div>                  
-            </div>   
-                <a href="/map_creator" class="add-button">
-                <span> + </span>  
-                </a>
-                 
-        </main>
-    </div>
-    <script src="/static/js/user_mazes.js"></script>
-</body>
-<footer>
-    <p>© 2024 Dungeons Crawler AI. All Rights Reserved.</p>
-</footer>
-</html>
+{% block title %}User Mazes - DC-AI{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_mazes.css') }}">
+{% endblock %}
+
+{% block content %}
+    <h2>My Created Mazes</h2>
+    <div class="mazes-grid">
+        <div id="mazes-grid" data-mazes='{{ mazes|safe }}'></div>                  
+    </div>   
+    <a href="{{ url_for('routes.map_creator') }}" class="add-button">
+        <span> + </span>  
+    </a>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/user_mazes.js') }}"></script>
+{% endblock %}
+

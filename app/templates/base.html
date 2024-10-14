@@ -8,8 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <title>{% block title %}DC-AI{% endblock %}</title>
+    {% block styles %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    {% block styles %}{% endblock %}
+    {% endblock %}
 </head>
 <body>
 

@@ -1,33 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/profile.css">
-    <title>DC-AI, Profile</title>
-</head>
-<body>
-    <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="logo">
-                <h1>DC-AI</h1>
-            </div>
-            <ul class="menu">
-                <li><a href="/dashboard" class="menu-item">Dashboard</a></li>
-                <li><a href="/profile" class="menu-item active">Profile</a></li>
-                <li><a href="/dungeons" class="menu-item">My Dungeons</a></li>
-                <li><a href="/community" class="menu-item">Community Maps</a></li>               
-                <li><a href="/leaderboard" class="menu-item">Leaderboard</a></li>
-                <li><a href="/settings" class="menu-item">Settings</a></li>
-                <li><a href="/logout" class="menu-item">Logout</a></li>
-            </ul>
-        </div>
-        <!-- Main Content -->
+{% extends 'base.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block content %}
         <div class="profile">
             <h2>{{ user.username }}</h2>
             <img src="{{ user.avatar or '/static/avatars/default.png' }}" alt="Avatar de {{ user.username }}" width="150" height="150">
@@ -47,10 +27,7 @@
                 <button id="changeavatarbutton" class="buttonavatar" type="submit">Guardar</button>
             </form>
         </div>
-    </div>
-    <footer>
-        <p>© 2024 Dungeons Crawler AI. All Rights Reserved.</p>
-    </footer>
+
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const changeAvatarButton = document.querySelector('.show-avatar-options');
@@ -64,5 +41,4 @@
         }
     });
     </script>
-</body>
-</html>
+{% endblock %}

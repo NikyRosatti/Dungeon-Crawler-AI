@@ -366,7 +366,7 @@ def train(maze_id):
     num_envs = 5
 
     envs = DummyVecEnv([lambda: make_env(grid) for i in range(num_envs)])
-
+    envs = VecNormalize(envs, norm_obs=True, norm_reward=True)
     # Eliminar modelo previo si deseas empezar desde cero
     model_path = "./app/saved_models/ppo_dungeons.zip"
     if os.path.exists(model_path):
@@ -403,7 +403,7 @@ def train(maze_id):
     # Entrenar el modelo
     print("Inicio entrenamiento")
     time.sleep(2)
-    model.learn(total_timesteps=50000, progress_bar=True)
+    model.learn(total_timesteps=200000, progress_bar=True)
     print("Fin entrenamiento")
     time.sleep(2)
 

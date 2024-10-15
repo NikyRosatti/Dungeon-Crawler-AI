@@ -58,7 +58,7 @@ def login():
             session["user_id"] = user.id
             return redirect(url_for("routes.dashboard"))
         else:
-            return render_template("login.html", error="Credenciales incorrectas")
+            return render_template("login.html", error="Incorrect credentials."), 400
 
     return render_template("login.html")
 

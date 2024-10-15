@@ -44,10 +44,10 @@ class Maze(gym.Env):
         # high = Limites superiores de posiciones
         # dtype = El tipo que pertenece a las observaciones
         self.observation_space = spaces.Box(
-            low=np.array([0, 0, -np.inf]),  # Limites mínimos para las tres dimensiones
+            low=np.array([0, 0, -np.inf, 0, 0, 0, 0]),  # Limites mínimos
             high=np.array(
-                [self.size() - 1, self.size() - 1, np.inf]
-            ),  # Limites máximos para las tres dimensiones
+                [self.size() - 1, self.size() - 1, np.inf, 4, 4, 4, 4]
+            ),  # Limites máximos
             dtype=np.int32,
         )
 
@@ -69,8 +69,23 @@ class Maze(gym.Env):
         obs1 = np.array(self.current_state)
         # Observacion2: cantidad minima de pasos del Maze, de tipo int32
         obs2 = np.array([self.minimum_steps - self.total_steps_performed])
+
+        y_pos, x_pos = self.current_state
+        left_pos = 1 if x_pos == 0 else self.grid[x_pos - 1, y_pos]
+        right_pos = 1 if x_pos == self.size() - 1 else self.grid[x_pos + 1, y_pos]
+        top_pos = 1 if y_pos == 0 else self.grid[x_pos, y_pos - 1]
+        bottom_pos = 1 if y_pos == self.size() - 1 else self.grid[x_pos, y_pos + 1]
+        # Observacion3: lo que hay a la izquierda del agente
+        obs3 = np.array([left_pos])
+        # Observacion4: lo que hay a la derecha del agente
+        obs4 = np.array([right_pos])
+        # Observacion5: lo que hay arriba del agente
+        obs5 = np.array([top_pos])
+        # Observacion6: lo que hay abajo del agente
+        obs6 = np.array([bottom_pos])
+
         # Devolver la observacion: estado actual y cantidad minima de pasos del Maze
-        total_obs = np.concatenate([obs1, obs2])
+        total_obs = np.concatenate([obs1, obs2, obs3, obs4, obs5, obs6])
         return np.array(total_obs, dtype=np.int32), {}
 
     def step(self, action):
@@ -81,7 +96,22 @@ class Maze(gym.Env):
         # truncation=False as the time limit is handled by the `TimeLimit` wrapper added during `make`
         obs1 = np.array(self.current_state)
         obs2 = np.array([self.minimum_steps - self.total_steps_performed])
-        total_obs = np.concatenate([obs1, obs2])
+
+        x_pos, y_pos = self.current_state
+        left_pos = 1 if x_pos == 0 else self.grid[x_pos - 1, y_pos]
+        right_pos = 1 if x_pos == self.size() - 1 else self.grid[x_pos + 1, y_pos]
+        top_pos = 1 if y_pos == 0 else self.grid[x_pos, y_pos - 1]
+        bottom_pos = 1 if y_pos == self.size() - 1 else self.grid[x_pos, y_pos + 1]
+        # Observacion3: lo que hay a la izquierda del agente
+        obs3 = np.array([left_pos])
+        # Observacion4: lo que hay a la derecha del agente
+        obs4 = np.array([right_pos])
+        # Observacion5: lo que hay arriba del agente
+        obs5 = np.array([top_pos])
+        # Observacion6: lo que hay abajo del agente
+        obs6 = np.array([bottom_pos])
+
+        total_obs = np.concatenate([obs1, obs2, obs3, obs4, obs5, obs6])
         return np.array(total_obs, dtype=np.int32), self.reward, done, False, {}
 
     def update_state_and_reward(self, row, col, action):

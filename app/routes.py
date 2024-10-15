@@ -544,7 +544,7 @@ def test(data):
     print(f"Cargando el archivo {model_path}")
 
     obs = env.reset()
-
+    print(f"Obs despues del reset: {obs}")
     print(f"Cant minima pasos para resolver el laberinto: {env.envs[0].minimum_steps}")
     # Variable para almacenar la secuencia de movimientos del entorno ganador
     done = False
@@ -556,6 +556,7 @@ def test(data):
             break
 
         action, _ = model.predict(obs)  # Elegir una acción aleatoria
+        print(f"Obs despues del predict: {obs}")
         obs, reward, done, _ = env.step(action)
 
         pasos += 1
@@ -563,7 +564,7 @@ def test(data):
         current_map_state = env.envs[0].get_current_map_state()
 
         socketio.emit("map", current_map_state)
-        time.sleep(0.05)
+        time.sleep(0.5)
         if done:
             print("Laberinto resuelto")
             socketio.emit("training_status", {"status": "finished"})

@@ -111,7 +111,7 @@ def register():
         db.session.commit()
 
         session["user_id"] = new_user.id
-        return redirect(url_for("routes.dashboard"))
+        return redirect(url_for("routes.dashboard")), 200
 
     avatars = [
         "/static/img/avatars/ValenAvatar.png",

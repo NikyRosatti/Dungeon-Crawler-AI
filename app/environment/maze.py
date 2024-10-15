@@ -70,11 +70,11 @@ class Maze(gym.Env):
         # Observacion2: cantidad minima de pasos del Maze, de tipo int32
         obs2 = np.array([self.minimum_steps - self.total_steps_performed])
 
-        y_pos, x_pos = self.current_state
-        left_pos = 1 if x_pos == 0 else self.grid[x_pos - 1, y_pos]
-        right_pos = 1 if x_pos == self.size() - 1 else self.grid[x_pos + 1, y_pos]
-        top_pos = 1 if y_pos == 0 else self.grid[x_pos, y_pos - 1]
-        bottom_pos = 1 if y_pos == self.size() - 1 else self.grid[x_pos, y_pos + 1]
+        x_pos, y_pos = self.current_state
+        top_pos = 1 if x_pos == 0 else self.grid[x_pos - 1, y_pos]
+        bottom_pos = 1 if x_pos == self.size() - 1 else self.grid[x_pos + 1, y_pos]
+        left_pos = 1 if y_pos == 0 else self.grid[x_pos, y_pos - 1]
+        right_pos = 1 if y_pos == self.size() - 1 else self.grid[x_pos, y_pos + 1]
         # Observacion3: lo que hay a la izquierda del agente
         obs3 = np.array([left_pos])
         # Observacion4: lo que hay a la derecha del agente
@@ -118,7 +118,7 @@ class Maze(gym.Env):
         new_row, new_col = self.increment_position(row, col, action)
         new_state = (new_row, new_col)
         if 0 < self.total_steps_performed - self.minimum_steps:
-            self.reward -= 15
+            self.reward -= 50
         if 0 <= new_row < self.size() and 0 <= new_col < self.size():
             # esta en los limites bien
             # reviso en new_cell_value sobre que cosa esta parado
@@ -126,7 +126,7 @@ class Maze(gym.Env):
             if new_cell_value == WALL:
                 # si esta sobre una pared no me muevo de donde empece
                 new_state = (row, col)
-                self.reward -= 15
+                self.reward -= 200
             if new_cell_value == MINE:
                 # si esta sobre una mina no me muevo de donde empece
                 # opcional, total aca ya pierde y termina
@@ -135,11 +135,11 @@ class Maze(gym.Env):
             if new_cell_value == EXIT_DOOR:
                 self.reward += 10000
             if new_cell_value == FLOOR:
-                self.reward += 1
+                self.reward -= 10
         else:
             # se salio de los limites de la grilla
             new_cell_value = -1
-            self.reward -= 25
+            self.reward -= 200
             new_state = (row, col)
         done = new_cell_value in [MINE, EXIT_DOOR]
 

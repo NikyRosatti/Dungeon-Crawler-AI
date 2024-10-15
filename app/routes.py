@@ -370,26 +370,28 @@ def train(maze_id):
     # Eliminar modelo previo si deseas empezar desde cero
     model_path = "./app/saved_models/ppo_dungeons.zip"
     if os.path.exists(model_path):
-        os.remove(model_path)
-        print(f"Model: Archivo existente {model_path} eliminado para crear uno nuevo")
-
+        model = PPO.load(model_path, env = envs)
+        
+    #    os.remove(model_path)
+    #    print(f"Model: Archivo existente {model_path} eliminado para crear uno nuevo")
+    else:
     # Crear un nuevo modelo
-    print("Model: Creando el modelo nuevo")
-    model = PPO(
-        "MlpPolicy",
-        envs,
-        learning_rate=0.001,
-        n_steps=2048,
-        ent_coef=0.08,
-        vf_coef=1,
-        max_grad_norm=0.5,
-        gae_lambda=0.99,
-        n_epochs=10,
-        gamma=0.01,
-        clip_range=0.2,
-        batch_size=64,
-        verbose=0,
-    )
+        print("Model: Creando el modelo nuevo")
+        model = PPO(
+            "MlpPolicy",
+            envs,
+            learning_rate=0.001,
+            n_steps=2048,
+            ent_coef=0.08,
+            vf_coef=1,
+            max_grad_norm=0.5,
+            gae_lambda=0.99,
+            n_epochs=10,
+            gamma=0.01,
+            clip_range=0.2,
+            batch_size=64,
+            verbose=0,
+        )
 
     # Cargar o crear la normalización
     vec_norm_path = "./app/saved_models/vec_normalize.pkl"
@@ -564,7 +566,7 @@ def test(data):
         current_map_state = env.envs[0].get_current_map_state()
 
         socketio.emit("map", current_map_state)
-        time.sleep(0.5)
+        time.sleep(0.05)
         if done:
             print("Laberinto resuelto")
             socketio.emit("training_status", {"status": "finished"})

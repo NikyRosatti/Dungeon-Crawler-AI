@@ -92,7 +92,7 @@ def register():
                 "/static/img/avatars/AgusAvatar.png",
             ]
             return render_template(
-                "register.html", error="Debes seleccionar un avatar", avatars=avatars
+                "register.html", error="Please, choose an avatar before register.", avatars=avatars
             ), 400  #Error 400, bad request
 
         existing_user = User.query.filter(

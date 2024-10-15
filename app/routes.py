@@ -93,14 +93,14 @@ def register():
             ]
             return render_template(
                 "register.html", error="Debes seleccionar un avatar", avatars=avatars
-            )
+            ), 400  #Error 400, bad request
 
         existing_user = User.query.filter(
             or_(User.username == username, User.email == email)
         ).first()
 
         if existing_user:
-            return render_template("register.html", error="Usuario ya registrado")
+            return render_template("register.html", error="Usuario ya registrado"), 400 #Error 400, bad request
 
         hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
         new_user = User(

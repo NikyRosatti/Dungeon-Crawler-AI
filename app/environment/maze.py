@@ -32,15 +32,12 @@ class Maze(gym.Env):
         self.nrow, self.ncol = np.shape(self.grid)
         self.start_point, self.exit_point = find_points(grid, start_point, exit_point)
 
-        # Distribución inicial del estado (empieza en el 2)
-        self.initial_state_distribution = (self.grid == 2).astype("float64").ravel()
-        self.initial_state_distribution /= self.initial_state_distribution.sum()
-
         # Cantidad minima de pasos para superar el laberinto
         self.minimum_steps = len(get_min_steps(self.grid)) - 1
 
         # Definir espacio de acción: 4 posibles movimientos (abajo, derecha, arriba, izquierda)
         self.action_space = spaces.Discrete(4)
+
         # Definir espacio de observación: posición actual en el laberinto
         # La observación será la coordenada (fila, columna), representada como una tupla
         # low = Limites inferiores de posiciones
@@ -48,15 +45,16 @@ class Maze(gym.Env):
         # dtype = El tipo que pertenece a las observaciones
         self.observation_space = spaces.Box(
             low=np.array([0, 0, -np.inf]),  # Limites mínimos para las tres dimensiones
-            high=np.array([self.size() - 1, self.size() - 1, np.inf]),  # Limites máximos para las tres dimensiones
-            dtype=np.int32
+            high=np.array(
+                [self.size() - 1, self.size() - 1, np.inf]
+            ),  # Limites máximos para las tres dimensiones
+            dtype=np.int32,
         )
 
         # Estado inicial
         self.current_state = self.start_point
         self.reward = 0
         self.total_steps_performed = 0
-        self.prev_actions = deque(maxlen=N_MAX_STEPS)
 
     def size(self):
         return self.nrow if self.nrow == self.ncol else np.shape(self.grid)
@@ -67,9 +65,6 @@ class Maze(gym.Env):
         self.current_state = self.start_point
         self.total_steps_performed = 0
         self.reward = 0
-        self.prev_actions = deque(maxlen=N_MAX_STEPS)
-        for _ in range(N_MAX_STEPS):
-            self.prev_actions.append(-1)
         # Observacion1: estado actual, de tipo int32 los dos elementos de la tupla
         obs1 = np.array(self.current_state)
         # Observacion2: cantidad minima de pasos del Maze, de tipo int32
@@ -83,7 +78,6 @@ class Maze(gym.Env):
         row, col = self.current_state
         new_state, self.reward, done = self.update_state_and_reward(row, col, action)
         self.current_state = new_state
-        self.prev_actions.append(action)
         # truncation=False as the time limit is handled by the `TimeLimit` wrapper added during `make`
         obs1 = np.array(self.current_state)
         obs2 = np.array([self.minimum_steps - self.total_steps_performed])
@@ -103,14 +97,14 @@ class Maze(gym.Env):
                 # si esta sobre una pared no me muevo de donde empece
                 new_state = (row, col)
                 self.reward -= 15
-            if new_cell_value== MINE:
+            if new_cell_value == MINE:
                 # si esta sobre una mina no me muevo de donde empece
                 # opcional, total aca ya pierde y termina
                 new_state = (row, col)
                 self.reward -= 25
-            if (new_cell_value == EXIT_DOOR):
+            if new_cell_value == EXIT_DOOR:
                 self.reward += 10000
-            if (new_cell_value == FLOOR):
+            if new_cell_value == FLOOR:
                 self.reward += 1
         else:
             # se salio de los limites de la grilla
@@ -135,7 +129,12 @@ class Maze(gym.Env):
             raise ValueError(f"Acción inválida: {action}")
 
         # Si la nueva posición se sale de los límites, no permitir el movimiento
-        if row_new < 0 or row_new >= self.size() or col_new < 0 or col_new >= self.size():
+        if (
+            row_new < 0
+            or row_new >= self.size()
+            or col_new < 0
+            or col_new >= self.size()
+        ):
             return (row, col)  # Mantener la posición actual
         if self.grid[row_new, col_new] == WALL:
             return (row, col)  # Mantener la posición actual
@@ -146,6 +145,3 @@ class Maze(gym.Env):
         row, col = self.current_state
         maze_render[row, col] = AGENT  # Representación del agente
         return maze_render.flatten().tolist()  # Convertir el estado a 1D
-
-    def close(self):
-        pass

@@ -3,7 +3,7 @@ import numpy as np
 from gymnasium.utils import seeding
 
 
-def find_points(grid, start_point = None, exit_point = None):
+def find_points(grid, start_point=None, exit_point=None):
     """
     Método privado para buscar los puntos en la grilla.
 
@@ -17,6 +17,7 @@ def find_points(grid, start_point = None, exit_point = None):
     Devuelve:
         tuple: Dos tuplas que representan el punto de inicio y el punto de salida respectivamente.
     """
+
     def find_coordinates(matrix, value):
         """
         Dada una matriz y un valor, devuelve la posicion de ese valor en la matriz
@@ -24,8 +25,12 @@ def find_points(grid, start_point = None, exit_point = None):
         for i, row in enumerate(matrix):
             for j, elem in enumerate(row):
                 if elem == value:
-                    return (i, j)  # Devuelve una tupla con las coordenadas (fila, columna)
+                    return (
+                        i,
+                        j,
+                    )  # Devuelve una tupla con las coordenadas (fila, columna)
         return None
+
     if start_point is None:
         start_point = find_coordinates(grid, 2)
     if exit_point is None:
@@ -39,7 +44,7 @@ def get_min_steps(grid, start_point=None, exit_point=None):
 
     start_point, exit_point = find_points(grid, start_point, exit_point)
     start_point = tuple(start_point)  # Convertir a tupla
-    exit_point = tuple(exit_point)      # Convertir a tupla
+    exit_point = tuple(exit_point)  # Convertir a tupla
     filas, columnas = np.shape(grid)
 
     lista_abierta = []

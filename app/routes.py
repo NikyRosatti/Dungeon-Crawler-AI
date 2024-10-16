@@ -28,6 +28,20 @@ bp = Blueprint("routes", __name__)
 mapa_original = []
 map_size = 0
 
+AVATARS = [
+    "/static/img/avatars/ValenAvatar.png",
+    "/static/img/avatars/NikyAvatar.png",
+    "/static/img/avatars/EstebanAvatar.png",
+    "/static/img/avatars/GonzaAvatar.png",
+    "/static/img/avatars/FlorAvatar.png",
+    "/static/img/avatars/JoaquinTAvatar.png",
+    "/static/img/avatars/JoaquinBAvatar.png",
+    "/static/img/avatars/BrusattiAvatar.png",
+    "/static/img/avatars/SimonAvatar.png",
+    "/static/img/avatars/AgusAvatar.png",
+]
+
+
 
 # Decorador de login
 def login_required(f):
@@ -79,20 +93,8 @@ def register():
         avatar = request.form["avatar"]
 
         if not avatar:
-            avatars = [
-                "/static/img/avatars/ValenAvatar.png",
-                "/static/img/avatars/NikyAvatar.png",
-                "/static/img/avatars/EstebanAvatar.png",
-                "/static/img/avatars/GonzaAvatar.png",
-                "/static/img/avatars/FlorAvatar.png",
-                "/static/img/avatars/JoaquinTAvatar.png",
-                "/static/img/avatars/JoaquinBAvatar.png",
-                "/static/img/avatars/BrusattiAvatar.png",
-                "/static/img/avatars/SimonAvatar.png",
-                "/static/img/avatars/AgusAvatar.png",
-            ]
             return render_template(
-                "register.html", error="Debes seleccionar un avatar", avatars=avatars
+                "register.html", error="Debes seleccionar un avatar", avatars=AVATARS
             )
 
         existing_user = User.query.filter(
@@ -112,20 +114,8 @@ def register():
 
         session["user_id"] = new_user.id
         return redirect(url_for("routes.dashboard"))
-
-    avatars = [
-        "/static/img/avatars/ValenAvatar.png",
-        "/static/img/avatars/NikyAvatar.png",
-        "/static/img/avatars/EstebanAvatar.png",
-        "/static/img/avatars/GonzaAvatar.png",
-        "/static/img/avatars/FlorAvatar.png",
-        "/static/img/avatars/JoaquinTAvatar.png",
-        "/static/img/avatars/JoaquinBAvatar.png",
-        "/static/img/avatars/BrusattiAvatar.png",
-        "/static/img/avatars/SimonAvatar.png",
-        "/static/img/avatars/AgusAvatar.png",
-    ]
-    return render_template("register.html", avatars=avatars)
+    
+    return render_template("register.html", avatars=AVATARS)
 
 
 @bp.route("/dashboard")
@@ -163,20 +153,7 @@ def profile():
             flash("Por favor, selecciona un avatar.", "danger")
         return redirect("/profile")
 
-    avatars = [
-        "/static/img/avatars/ValenAvatar.png",
-        "/static/img/avatars/NikyAvatar.png",
-        "/static/img/avatars/EstebanAvatar.png",
-        "/static/img/avatars/GonzaAvatar.png",
-        "/static/img/avatars/FlorAvatar.png",
-        "/static/img/avatars/JoaquinTAvatar.png",
-        "/static/img/avatars/JoaquinBAvatar.png",
-        "/static/img/avatars/BrusattiAvatar.png",
-        "/static/img/avatars/SimonAvatar.png",
-        "/static/img/avatars/AgusAvatar.png",
-    ]
-
-    return render_template("profile.html", user=user, avatars=avatars)
+    return render_template("profile.html", user=user, avatars=AVATARS)
 
 
 @bp.route("/profile/<int:user_id>")

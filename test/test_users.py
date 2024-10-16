@@ -65,3 +65,12 @@ def test_login_fail(test_client, add_user):
 
     assert response.status_code == 400
     assert b'Incorrect credentials' in response.data
+    
+def test_login_user_not_exist(test_client):
+    response = test_client.post('/login', data={
+        'username': 'usuario',
+        'password': 'password'
+    })
+
+    assert response.status_code == 400
+    assert b'User does not exist.' in response.data

@@ -3,6 +3,8 @@ import pytest
 import warnings
 from app import create_app, db
 from config import TestConfig
+from app.models import User
+import bcrypt
 
 @pytest.fixture(scope='module')
 def test_client():
@@ -24,3 +26,12 @@ def suppress_warnings():
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", category=DeprecationWarning)
         yield
+
+@pytest.fixture
+def add_user(test_client):
+    existing_user = User.query.filter_by(email='usuario@test.com').first()
+
+    if not existing_user:
+        user = User(username='usuario_test', password=bcrypt.hashpw(b'password', bcrypt.gensalt()), email='usuario@test.com', avatar='/static/img/avatars/NikyAvatar.png')
+        db.session.add(user)
+        db.session.commit()

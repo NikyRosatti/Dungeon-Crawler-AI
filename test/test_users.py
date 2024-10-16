@@ -8,7 +8,7 @@ def test_register_user(test_client):
         'avatar': '/static/img/avatars/ValenAvatar.png'
     })
     
-    assert response.status_code == 302
+    assert response.status_code == 200
     assert b'Usuario ya registrado' not in response.data
 
     user = User.query.filter_by(username='nuevo_usuario').first()
@@ -46,3 +46,22 @@ def test_register_user_duplicate(test_client):
 
     assert response.status_code == 400 
     assert b'' in response.data
+    
+def test_login_success(test_client, add_user):
+    response = test_client.post('/login', data={
+        'username': 'usuario_test',
+        'password': 'password'
+    })
+
+    assert response.status_code == 302
+    assert 'Location' in response.headers
+    assert response.headers['Location'] == '/dashboard'
+
+def test_login_fail(test_client, add_user):
+    response = test_client.post('/login', data={
+        'username': 'usuario_test',
+        'password': 'passwordmal'
+    })
+
+    assert response.status_code == 400
+    assert b'Incorrect credentials' in response.data

@@ -54,14 +54,17 @@ def login():
         user = User.query.filter(
             or_(User.username == username, User.email == username)
         ).first()
-        if user and bcrypt.checkpw(password, user.password):
+
+        if not user:
+            return render_template("login.html", error="User does not exist."), 400
+        
+        if bcrypt.checkpw(password, user.password):
             session["user_id"] = user.id
             return redirect(url_for("routes.dashboard"))
         else:
             return render_template("login.html", error="Incorrect credentials."), 400
 
     return render_template("login.html")
-
 
 @bp.route("/logout")
 @login_required

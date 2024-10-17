@@ -327,7 +327,7 @@ def settings():
             db.session.delete(user)
             db.session.commit()
 
-            session.pop("user_id", None)
+            session.clear()
             return redirect(url_for("routes.register"))
 
     return render_template("settings.html")

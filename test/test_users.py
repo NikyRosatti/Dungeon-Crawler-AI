@@ -55,6 +55,8 @@ def test_login_success(test_client, add_user):
     })
 
     assert response.status_code == 302
+    with test_client.session_transaction() as sess:
+        assert 'user_id' in sess
     assert 'Location' in response.headers
     assert response.headers['Location'] == '/dashboard'
 
@@ -89,6 +91,8 @@ def test_logout(test_client):
     response = test_client.get('/logout')
     
     assert response.status_code == 302
+    with test_client.session_transaction() as sess:
+        assert 'user_id' not in sess
     assert 'Location' in response.headers
     assert response.headers['Location'] == '/login'
     

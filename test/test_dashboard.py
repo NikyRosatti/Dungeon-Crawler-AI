@@ -1,4 +1,3 @@
-from app import db
 from app.models import User
 
 def test_redirect_map_creator(add_user, login_user):
@@ -20,7 +19,7 @@ def test_dashboard_loads_correctly(login_user):
     assert b'Start New Dungeon' in response.data
     assert b'Choose Dungeon' in response.data
     assert b'Embark on a new adventure!' in response.data
-    assert b'Train the AI with a random dungeon' in response.data
+    assert b'Train the AI with your own dungeons' in response.data
 
 def test_access_dashboard_without_login(login_user):
     response = login_user.get('/dashboard')
@@ -49,7 +48,7 @@ def test_dashboard_signs_content(login_user):
     
     assert response.status_code == 200
     assert b'Embark on a new adventure!' in response.data
-    assert b'Train the AI with a random dungeon' in response.data
+    assert b'Train the AI with your own dungeons' in response.data
 
 def test_dashboard_css_loaded(login_user):
     response = login_user.get('/dashboard')

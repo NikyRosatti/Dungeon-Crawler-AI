@@ -1,7 +1,7 @@
 from app.models import User
 
 
-def test_redirect_dashboard(add_user, login_user):
+def test_redirect_dashboard(login_user):
     
     response = login_user.get('/dashboard')
     

@@ -36,7 +36,7 @@ def add_user(test_client):
         db.session.commit()
         
 @pytest.fixture
-def login_user(test_client):
+def login_user(test_client, add_user):
     response = test_client.post('/login', data={
         'username': 'usuario_test',
         'password': 'password'

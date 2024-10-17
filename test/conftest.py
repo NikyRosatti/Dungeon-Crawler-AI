@@ -34,3 +34,12 @@ def add_user(test_client):
         user = User(username='usuario_test', password=bcrypt.hashpw(b'password', bcrypt.gensalt()), email='usuario@test.com', avatar='/static/img/avatars/NikyAvatar.png')
         db.session.add(user)
         db.session.commit()
+        
+@pytest.fixture
+def login_user(test_client):
+    response = test_client.post('/login', data={
+        'username': 'usuario_test',
+        'password': 'password'
+    })
+    assert response.status_code == 302
+    return test_client

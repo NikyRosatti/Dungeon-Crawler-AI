@@ -1,45 +1,51 @@
 from app.models import User
 
 
-def test_redirect_dashboard(test_client, add_user):
-    response = test_client.post('/login', data={
-        'username': 'usuario_test',
-        'password': 'password'
-    })
+def test_redirect_dashboard(add_user, login_user):
     
-    assert 'Location' in response.headers
-    assert response.headers['Location'] == '/dashboard'
+    response = login_user.get('/dashboard')
     
-    response = test_client.get('/dashboard')
     assert response.status_code == 200
 
-def test_redirect_dungeons(test_client):
-    response = test_client.post('/login', data={
-        'username': 'usuario_test',
-        'password': 'password'
-    })
+def test_redirect_profile(login_user):
     
-    assert 'Location' in response.headers
-    assert response.headers['Location'] == '/dashboard'
+    response = login_user.get('/profile')
     
-    response = test_client.get('/dungeons')
     assert response.status_code == 200
 
-def test_redirect_profile(test_client):
-    test_client.post('/login', data={
-        'username': 'usuario_test',
-        'password': 'password'
-    })
+
+def test_redirect_dungeons(login_user):
     
-    assert 'Location' in response.headers
-    assert response.headers['Location'] == '/dashboard'
-    
-    user = User.query.filter_by(username = 'usuario_test').first()
-    
-    response = test_client.get('/profile', data={
-        'user_id': user.id
-    })
+    response = login_user.get('/dungeons')
     
     assert response.status_code == 200
+
+
+def test_redirect_community(login_user):
+    
+    response = login_user.get('/community')
+    
+    assert response.status_code == 200
+
+def test_redirect_leaderboard(login_user):
+    
+    response = login_user.get('/leaderboard')
+    
+    assert response.status_code == 200
+
+def test_redirect_settings(login_user):
+    
+    response = login_user.get('/settings')
+    
+    assert response.status_code == 200
+
+def test_logout(login_user):
+    
+    response = login_user.get('/logout')
+    
+    assert response.status_code == 302
     assert 'Location' in response.headers
-    assert response.headers['Location'] == '/profile'
+    assert response.headers['Location'] == '/login'
+    
+    with login_user.session_transaction() as session:
+        assert 'user_id' not in session

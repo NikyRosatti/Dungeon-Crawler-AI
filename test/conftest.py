@@ -1,4 +1,3 @@
-# tests/conftest.py
 import pytest
 import warnings
 from app import create_app, db

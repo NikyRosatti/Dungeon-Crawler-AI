@@ -70,6 +70,7 @@ def login():
 @login_required
 def logout():
     session.pop("user_id", None)
+    session.clear()
     return redirect(url_for("routes.login"))
 
 
@@ -114,7 +115,7 @@ def register():
         db.session.commit()
 
         session["user_id"] = new_user.id
-        return redirect(url_for("routes.dashboard")), 200
+        return render_template("dashboard.html"), 200
 
     avatars = [
         "/static/img/avatars/ValenAvatar.png",

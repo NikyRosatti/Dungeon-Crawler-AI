@@ -2,7 +2,6 @@ import numpy as np
 import gymnasium as gym
 from gymnasium import spaces
 from app.environment.utils import get_min_steps, find_points
-from collections import deque
 
 # Movimientos posibles: izquierda, abajo, derecha, arriba
 LEFT = 0
@@ -53,8 +52,9 @@ class Maze(gym.Env):
 
         # Estado inicial
         self.current_state = self.start_point
-        self.reward = 0
         self.total_steps_performed = 0
+        self.reward = 0
+        self.done = False
 
     def size(self):
         return self.nrow if self.nrow == self.ncol else np.shape(self.grid)
@@ -65,6 +65,7 @@ class Maze(gym.Env):
         self.current_state = self.start_point
         self.total_steps_performed = 0
         self.reward = 0
+        self.done = False
         # Observacion1: estado actual, de tipo int32 los dos elementos de la tupla
         obs1 = np.array(self.current_state)
         # Observacion2: cantidad minima de pasos del Maze, de tipo int32
@@ -91,17 +92,19 @@ class Maze(gym.Env):
     def step(self, action):
         self.total_steps_performed += 1
         row, col = self.current_state
-        new_state, self.reward, done = self.update_state_and_reward(row, col, action)
+        new_state, self.reward, self.done = self.update_state_and_reward(
+            row, col, action
+        )
         self.current_state = new_state
         # truncation=False as the time limit is handled by the `TimeLimit` wrapper added during `make`
         obs1 = np.array(self.current_state)
         obs2 = np.array([self.minimum_steps - self.total_steps_performed])
 
         x_pos, y_pos = self.current_state
-        left_pos = 1 if x_pos == 0 else self.grid[x_pos - 1, y_pos]
-        right_pos = 1 if x_pos == self.size() - 1 else self.grid[x_pos + 1, y_pos]
-        top_pos = 1 if y_pos == 0 else self.grid[x_pos, y_pos - 1]
-        bottom_pos = 1 if y_pos == self.size() - 1 else self.grid[x_pos, y_pos + 1]
+        top_pos = 1 if x_pos == 0 else self.grid[x_pos - 1, y_pos]
+        bottom_pos = 1 if x_pos == self.size() - 1 else self.grid[x_pos + 1, y_pos]
+        left_pos = 1 if y_pos == 0 else self.grid[x_pos, y_pos - 1]
+        right_pos = 1 if y_pos == self.size() - 1 else self.grid[x_pos, y_pos + 1]
         # Observacion3: lo que hay a la izquierda del agente
         obs3 = np.array([left_pos])
         # Observacion4: lo que hay a la derecha del agente
@@ -112,41 +115,36 @@ class Maze(gym.Env):
         obs6 = np.array([bottom_pos])
 
         total_obs = np.concatenate([obs1, obs2, obs3, obs4, obs5, obs6])
-        return np.array(total_obs, dtype=np.int32), self.reward, done, False, {}
+        return np.array(total_obs, dtype=np.int32), self.reward, self.done, False, {}
 
     def update_state_and_reward(self, row, col, action):
         new_row, new_col = self.increment_position(row, col, action)
         new_state = (new_row, new_col)
-        if 0 < self.total_steps_performed - self.minimum_steps:
-            self.reward -= 50
-        if 0 <= new_row < self.size() and 0 <= new_col < self.size():
-            # esta en los limites bien
-            # reviso en new_cell_value sobre que cosa esta parado
-            new_cell_value = self.grid[new_row, new_col]
-            if new_cell_value == WALL:
-                # si esta sobre una pared no me muevo de donde empece
-                new_state = (row, col)
-                self.reward -= 200
-            if new_cell_value == MINE:
-                # si esta sobre una mina no me muevo de donde empece
-                # opcional, total aca ya pierde y termina
-                new_state = (row, col)
-                self.reward -= 25
-            if new_cell_value == EXIT_DOOR:
-                self.reward += 10000
-            if new_cell_value == FLOOR:
-                self.reward -= 10
-        else:
-            # se salio de los limites de la grilla
-            new_cell_value = -1
-            self.reward -= 200
-            new_state = (row, col)
-        done = new_cell_value in [MINE, EXIT_DOOR]
 
-        return new_state, self.reward, done
+        if self.minimum_steps <= self.total_steps_performed:
+            self.reward -= 50
+
+        new_cell_value = self.grid[new_row, new_col]
+
+        if new_cell_value == WALL:
+            self.reward -= 200
+            print("step sobre la pared")
+        if new_cell_value == MINE:
+            self.reward -= 25
+        if new_cell_value == EXIT_DOOR:
+            self.reward += 10000
+            print("step sobre la exit door")
+        if new_cell_value == FLOOR:
+            self.reward -= 10
+            print("step sobre floor")
+
+        self.done = new_cell_value in [MINE, EXIT_DOOR]
+
+        return new_state, self.reward, self.done
 
     def increment_position(self, row, col, action):
         row_new, col_new = row, col
+
         if action == DOWN:  # Abajo
             row_new += 1
         elif action == RIGHT:  # Derecha
@@ -164,9 +162,10 @@ class Maze(gym.Env):
             or row_new >= self.size()
             or col_new < 0
             or col_new >= self.size()
+            or self.grid[row_new, col_new] == WALL
         ):
-            return (row, col)  # Mantener la posición actual
-        if self.grid[row_new, col_new] == WALL:
+            self.reward -= 200
+            print("step fuera de grilla o contra pared")
             return (row, col)  # Mantener la posición actual
         return (row_new, col_new)
 

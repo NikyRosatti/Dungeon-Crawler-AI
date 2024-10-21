@@ -18,7 +18,12 @@ from app.services.map_service import move_player, change_door
 from app.environment.maze import Maze
 import json
 from stable_baselines3 import PPO
-from app.environment.utils import is_winneable, generate_random_map, find_points
+from app.environment.utils import (
+    is_winneable,
+    find_points,
+    action_to_string,
+    obs_to_string,
+)
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 from stable_baselines3.common.monitor import Monitor
 import os
@@ -370,12 +375,12 @@ def train(maze_id):
     # Eliminar modelo previo si deseas empezar desde cero
     model_path = "./app/saved_models/ppo_dungeons.zip"
     if os.path.exists(model_path):
-        model = PPO.load(model_path, env = envs)
-        
+        model = PPO.load(model_path, env=envs)
+
     #    os.remove(model_path)
     #    print(f"Model: Archivo existente {model_path} eliminado para crear uno nuevo")
     else:
-    # Crear un nuevo modelo
+        # Crear un nuevo modelo
         print("Model: Creando el modelo nuevo")
         model = PPO(
             "MlpPolicy",
@@ -407,7 +412,6 @@ def train(maze_id):
     time.sleep(2)
     model.learn(total_timesteps=50000, progress_bar=True)
     print("Fin entrenamiento")
-    time.sleep(2)
 
     # Guardar el modelo y la normalización después del entrenamiento
     model.save(model_path)
@@ -546,9 +550,10 @@ def test(data):
     print(f"Cargando el archivo {model_path}")
 
     obs = env.reset()
-    print(f"Obs despues del reset: {obs}")
-    print(f"Cant minima pasos para resolver el laberinto: {env.envs[0].minimum_steps}")
-    # Variable para almacenar la secuencia de movimientos del entorno ganador
+    print(f"Obs despues del reset: {obs_to_string(obs)}")
+    print(
+        f"Cant minima pasos para resolver el laberinto: {env.envs[0].unwrapped.minimum_steps}"
+    )
     done = False
     pasos = 0
     while not done:
@@ -557,16 +562,18 @@ def test(data):
             socketio.emit("training_status", {"status": "stopped"})
             break
 
-        action, _ = model.predict(obs)  # Elegir una acción aleatoria
-        print(f"Obs despues del predict: {obs}")
+        action, _ = model.predict(obs)
+        print(f"{pasos}.1. Action segun el predict: {action_to_string(action)}")
+
         obs, reward, done, _ = env.step(action)
-
         pasos += 1
-        print(f"Action: {action}, Reward: {reward}, Done: {done}, Paso nro: {pasos}")
-        current_map_state = env.envs[0].get_current_map_state()
+        print(f"{pasos}.2. Obs despues del step: {obs_to_string(obs)}")
+        print(f"{pasos}.3. Reward: {reward}, Done: {done}")
 
+        current_map_state = env.envs[0].unwrapped.get_current_map_state()
         socketio.emit("map", current_map_state)
         time.sleep(0.05)
+
         if done:
             print("Laberinto resuelto")
             socketio.emit("training_status", {"status": "finished"})
@@ -591,6 +598,7 @@ def stop_test(data):
                 "message": "No hay test en ejecución para este maze_id",
             },
         )
+
 
 def make_env(grid):
     env = Maze(grid)

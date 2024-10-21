@@ -25,10 +25,8 @@ def find_points(grid, start_point=None, exit_point=None):
         for i, row in enumerate(matrix):
             for j, elem in enumerate(row):
                 if elem == value:
-                    return (
-                        i,
-                        j,
-                    )  # Devuelve una tupla con las coordenadas (fila, columna)
+                    # Devuelve una tupla con las coordenadas (fila, columna)
+                    return (i, j)
         return None
 
     if start_point is None:
@@ -139,3 +137,48 @@ def generate_random_map(size=8, p=0.8, seed=None):
         board[-1][-1] = 3
         valid = is_winneable(board)
     return board
+
+
+def action_to_string(action):
+    if action == 0:
+        return "LEFT"
+    if action == 1:
+        return "DOWN"
+    if action == 2:
+        return "RIGHT"
+    if action == 3:
+        return "UP"
+    return "UNKNOWN"
+
+
+def object_to_string(obj):
+    if obj == -1:
+        return "AGENT"
+    if obj == 0:
+        return "FLOOR"
+    if obj == 1:
+        return "WALL"
+    if obj == 2:
+        return "INITIAL_DOOR"
+    if obj == 3:
+        return "EXIT_DOOR"
+    if obj == 4:
+        return "MINE"
+    return "UNKNOWN_OBJ"
+
+
+def obs_to_string(obs):
+    obs = obs[0]
+    x_Agent = obs[0]
+    y_Agent = obs[1]
+    minSteps_StepsPerf = obs[2]
+    left_Agent = obs[3]
+    right_Agent = obs[4]
+    top_Agent = obs[5]
+    bottom_Agent = obs[6]
+    s = (
+        f"[X_Agent: {x_Agent}, Y_Agent: {y_Agent}, MinSteps-StepsPerf: {minSteps_StepsPerf}"
+        + f", Left: {object_to_string(left_Agent)}, Right: {object_to_string(right_Agent)}"
+        + f", Top: {object_to_string(top_Agent)}, Bottom: {object_to_string(bottom_Agent)}]"
+    )
+    return s

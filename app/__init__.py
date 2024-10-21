@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 
 
 db = SQLAlchemy()
-socketio = SocketIO()
+socketio = SocketIO(async_mode='threading')
 
 def create_app(config_class):
     app = Flask(__name__)

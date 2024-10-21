@@ -128,15 +128,15 @@ class Maze(gym.Env):
 
         if new_cell_value == WALL:
             self.reward -= 200
-            print("step sobre la pared")
+            # print("step sobre la pared")
         if new_cell_value == MINE:
             self.reward -= 25
         if new_cell_value == EXIT_DOOR:
             self.reward += 10000
-            print("step sobre la exit door")
+            # print("step sobre la exit door")
         if new_cell_value == FLOOR:
             self.reward -= 10
-            print("step sobre floor")
+            # print("step sobre floor")
 
         self.done = new_cell_value in [MINE, EXIT_DOOR]
 
@@ -165,7 +165,7 @@ class Maze(gym.Env):
             or self.grid[row_new, col_new] == WALL
         ):
             self.reward -= 200
-            print("step fuera de grilla o contra pared")
+            # print("step fuera de grilla o contra pared")
             return (row, col)  # Mantener la posición actual
         return (row_new, col_new)
 

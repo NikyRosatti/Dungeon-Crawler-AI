@@ -1,6 +1,28 @@
 import flask
 from app.models import User
 
+def test_login_required_redirect(test_client):
+
+    routes = [
+        '/dashboard',
+        '/leaderboard',
+        '/profile',
+        '/community',
+        '/my_mazes', 
+        '/settings', 
+        '/map', 
+        '/logout', 
+        '/dungeons', 
+        '/map_creator', 
+        '/validate_map'
+    ]
+
+    for route in routes:
+        response = test_client.get(route)
+        assert response.status_code == 302
+        assert 'Location' in response.headers
+        assert response.headers['Location'] in '/login'
+
 def test_register_user(test_client):
     response = test_client.post('/register', data={
         'username': 'nuevo_usuario',
@@ -37,7 +59,6 @@ def test_register_user_duplicate(test_client):
         'avatar': '/static/img/avatars/NikyAvatar.png'
     })
 
-    # Intentar crear el mismo usuario de nuevo
     response = test_client.post('/register', data={
         'username': 'usuario_existente',
         'password': 'pass123',
@@ -63,6 +84,10 @@ def test_login_success(test_client, add_user):
 
 def test_get_login(test_client):
     response = test_client.get('/login')
+    assert response.status_code == 200
+
+def test_get_register(test_client):
+    response = test_client.get('/register')
     assert response.status_code == 200
 
 def test_login_fail(test_client, add_user):

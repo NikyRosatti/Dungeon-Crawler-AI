@@ -54,19 +54,23 @@ def login():
         user = User.query.filter(
             or_(User.username == username, User.email == username)
         ).first()
-        if user and bcrypt.checkpw(password, user.password):
+
+        if not user:
+            return render_template("login.html", error="User does not exist."), 400
+        
+        if bcrypt.checkpw(password, user.password):
             session["user_id"] = user.id
             return redirect(url_for("routes.dashboard"))
         else:
-            return render_template("login.html", error="Credenciales incorrectas")
+            return render_template("login.html", error="Incorrect credentials."), 400
 
     return render_template("login.html")
-
 
 @bp.route("/logout")
 @login_required
 def logout():
     session.pop("user_id", None)
+    session.clear()
     return redirect(url_for("routes.login"))
 
 
@@ -92,15 +96,15 @@ def register():
                 "/static/img/avatars/AgusAvatar.png",
             ]
             return render_template(
-                "register.html", error="Debes seleccionar un avatar", avatars=avatars
-            )
+                "register.html", error="Please, choose an avatar before register.", avatars=avatars
+            ), 400  #Error 400, bad request
 
         existing_user = User.query.filter(
             or_(User.username == username, User.email == email)
         ).first()
 
         if existing_user:
-            return render_template("register.html", error="Usuario ya registrado")
+            return render_template("register.html", error="Usuario ya registrado"), 400 #Error 400, bad request
 
         hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
         new_user = User(
@@ -111,7 +115,7 @@ def register():
         db.session.commit()
 
         session["user_id"] = new_user.id
-        return redirect(url_for("routes.dashboard"))
+        return render_template("dashboard.html"), 200
 
     avatars = [
         "/static/img/avatars/ValenAvatar.png",
@@ -323,7 +327,7 @@ def settings():
             db.session.delete(user)
             db.session.commit()
 
-            session.pop("user_id", None)
+            session.clear()
             return redirect(url_for("routes.register"))
 
     return render_template("settings.html")
@@ -366,7 +370,7 @@ def train(maze_id):
     num_envs = 5
 
     envs = DummyVecEnv([lambda: make_env(grid) for i in range(num_envs)])
-
+    envs = VecNormalize(envs, norm_obs=True, norm_reward=True)
     # Eliminar modelo previo si deseas empezar desde cero
     model_path = "./app/saved_models/ppo_dungeons.zip"
     if os.path.exists(model_path):
@@ -403,7 +407,7 @@ def train(maze_id):
     # Entrenar el modelo
     print("Inicio entrenamiento")
     time.sleep(2)
-    model.learn(total_timesteps=50000, progress_bar=True)
+    model.learn(total_timesteps=200000, progress_bar=True)
     print("Fin entrenamiento")
     time.sleep(2)
 

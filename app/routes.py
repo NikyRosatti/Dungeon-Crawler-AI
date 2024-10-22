@@ -151,13 +151,25 @@ def dashboard():
 @bp.route("/leaderboard")
 @login_required
 def leaderboard():
+    
+    sort_by = request.args.get('sort_by', 'completed_dungeons')  # 'completed_dungeons' como valor predeterminado
+    order = request.args.get('order', 'desc')  # 'desc' como valor predeterminado
+    
+    
     users = User.query.all()
     users_list = [
-        {"username": user.username, "completed_dungeons": len(user.completed_dungeons)}
+        {
+            "username": user.username,
+            "completed_dungeons": len(user.completed_dungeons),
+            "points": user.points,
+            "max_size": max(user.completed_dungeons, key=lambda dungeon: dungeon.maze_size).maze_size  if user.completed_dungeons else 0
+        }
         for user in users
     ]
+    
+    reverse_order = (order == 'desc')
     users_sorted = sorted(
-        users_list, key=lambda u: u["completed_dungeons"], reverse=True
+        users_list, key=lambda u: u[sort_by], reverse=reverse_order
     )
     return render_template("leaderboard.html", users=users_sorted)
 

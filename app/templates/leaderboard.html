@@ -2,15 +2,50 @@
 
 {% block title %}Leaderboard{% endblock %}
 
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/leaderboard.css') }}">
+{% endblock %}
+
 {% block content %}
     <div class="main-content">
         <h2>Leaderboard</h2>
+        
         <table class="leaderboard-table">
             <thead>
                 <tr>
                     <th>Rank</th>
-                    <th>Username</th>
-                    <th>Completed Dungeons</th>
+                    <th>
+                        <a href="{{ url_for('routes.leaderboard', sort_by='username', order='asc' if request.args.get('order') == 'desc' else 'desc') }}">
+                            Username 
+                            {% if request.args.get('sort_by') == 'username' %}
+                                <i class="fa-solid fa-chevron-{{ 'down' if request.args.get('order') == 'asc' else 'up' }}"></i>
+                            {% endif %}
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ url_for('routes.leaderboard', sort_by='completed_dungeons', order='asc' if request.args.get('order') == 'desc' else 'desc') }}">
+                            Completed Dungeons
+                            {% if request.args.get('sort_by') == 'completed_dungeons' %}
+                                <i class="fa-solid fa-chevron-{{ 'down' if request.args.get('order') == 'asc' else 'up' }}"></i>
+                            {% endif %}
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ url_for('routes.leaderboard', sort_by='max_size', order='asc' if request.args.get('order') == 'desc' else 'desc') }}">
+                            Largest Dungeon Completed 
+                            {% if request.args.get('sort_by') == 'max_size' %}
+                                <i class="fa-solid fa-chevron-{{ 'down' if request.args.get('order') == 'asc' else 'up' }}"></i>
+                            {% endif %}
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ url_for('routes.leaderboard', sort_by='points', order='asc' if request.args.get('order') == 'desc' else 'desc') }}">
+                            Points 
+                            {% if request.args.get('sort_by') == 'points' %}
+                                <i class="fa-solid fa-chevron-{{ 'down' if request.args.get('order') == 'asc' else 'up' }}"></i>
+                            {% endif %}
+                        </a>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -19,6 +54,9 @@
                     <td>{{ loop.index }}</td> 
                     <td>{{ user.username }}</td>
                     <td>{{ user.completed_dungeons }}</td> 
+                    <td>{{ user.max_size }}</td> 
+                    <td>{{ user.points}}</td> 
+                    
                 </tr>
                 {% endfor %}
             </tbody>    

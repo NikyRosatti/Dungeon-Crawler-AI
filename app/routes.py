@@ -135,7 +135,17 @@ def register():
 @bp.route("/dashboard")
 @login_required
 def dashboard():
-    return render_template("dashboard.html")
+    user = User.query.get(session["user_id"])
+    completed_dungeons = len(user.completed_dungeons)
+    max_dungeon = None
+    if user.completed_dungeons:
+        max_dungeon = max(user.completed_dungeons, key=lambda dungeon: dungeon.maze_size)
+        max_size = max_dungeon.maze_size
+    else:
+        max_size = 0  # Si no ha completado dungeons, el tamaño es 0
+
+    points = user.points
+    return render_template("dashboard.html", completed_dungeons = completed_dungeons, points = points, max_size= max_size)
 
 
 @bp.route("/leaderboard")
@@ -143,7 +153,7 @@ def dashboard():
 def leaderboard():
     users = User.query.all()
     users_list = [
-        {"username": user.username, "completed_dungeons": user.completed_dungeons or 0}
+        {"username": user.username, "completed_dungeons": len(user.completed_dungeons)}
         for user in users
     ]
     users_sorted = sorted(
@@ -407,7 +417,7 @@ def train(maze_id):
     # Entrenar el modelo
     print("Inicio entrenamiento")
     time.sleep(2)
-    model.learn(total_timesteps=200000, progress_bar=True)
+    model.learn(total_timesteps=10000, progress_bar=True)
     print("Fin entrenamiento")
     time.sleep(2)
 
@@ -531,6 +541,8 @@ def test(data):
     maze_id = data.get("maze_id")
     maze_id = int(maze_id)
 
+    user = User.query.get(session["user_id"])
+
     running_tests[maze_id] = True
 
     maze = MazeBd.query.filter_by(id=maze_id).first()
@@ -570,8 +582,19 @@ def test(data):
         time.sleep(0.05)
         if done:
             print("Laberinto resuelto")
+            if user:
+                if maze not in user.completed_dungeons:
+                    user.completed_dungeons.append(maze)
+                    if env.envs[0].minimum_steps == pasos:
+                        user.points += size + pasos
+                    else:
+                        user.points += size
+                    db.session.commit()
+                    socketio.emit("training_status", {"status": "finished"})
+                    print(f"Usuario {user.username} completó el laberinto {maze_id}")
+                else:
+                    print(f"El usuario {user.username} ya completó este laberinto.")
             socketio.emit("training_status", {"status": "finished"})
-
     running_tests.pop(maze_id, None)
 
 

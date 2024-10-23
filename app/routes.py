@@ -39,13 +39,23 @@ def login_required(f):
 
     return decorated_function
 
+def logout_required(f):
+    @wraps(f)
+    def decorat_function(*args, **kwargs):
+        if "user_id" in session:
+            return redirect(url_for("routes.dashboard"))
+        return f(*args, **kwargs)
+
+    return decorat_function
 
 @bp.route("/")
+@logout_required
 def index():
     return render_template("index.html")
 
 
 @bp.route("/login", methods=["GET", "POST"])
+@logout_required
 def login():
     if request.method == "POST":
         username = request.form["username"]
@@ -75,6 +85,7 @@ def logout():
 
 
 @bp.route("/register", methods=["GET", "POST"])
+@logout_required
 def register():
     if request.method == "POST":
         username = request.form["username"]

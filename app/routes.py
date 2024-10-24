@@ -444,7 +444,7 @@ def handle_move(direction):
 
 
 @socketio.on("restart_pos")
-def restart_position():
+def restart_position(position):
     maze_info["mapa_original"][maze_info["mapa_original"].index(-2)] = 3
     maze_info["mapa_original"][maze_info["start"]] = -1
     emit("map", maze_info["mapa_original"])
@@ -455,108 +455,129 @@ def restart_position():
 def map_creator():
     return render_template("map_creator.html")
 
-
 @bp.route("/validate_map", methods=["POST"])
 @login_required
 def validate_map():
     data = request.get_json()
-    map_grid = data.get("map")  # El mapa que enviaste desde el frontend
+    map_grid = data.get("map")
     size = data.get("size")
 
-    # Buscar el punto de inicio y de salida en el mapa
-    start_point = None
-    exit_point = None
-
-    # Convertir el arreglo plano en una matriz
-    grid = [map_grid[i : i + size] for i in range(0, len(map_grid), size)]
+    # Convertir el array en una matriz
+    grid = create_grid(map_grid, size)
 
     # Identificar el punto de inicio (2) y de salida (3)
-    start_point = None
-    exit_point = None
-    start_point, exit_point = find_points(
-        grid=grid, start_point=start_point, exit_point=exit_point
-    )
+    start_point, exit_point = find_points_in_grid(grid)
 
-    if start_point is None or exit_point is None:
-        return (
-            jsonify(
-                {"valid": False, "error": "No se encontró el punto de inicio o salida"}
-            ),
-            400,
-        )
+    if not are_points_valid(start_point, exit_point):
+        return invalid_points_response()
 
     # Validar si el laberinto es resoluble
     if is_winneable(grid):
-        # Crear la instancia del laberinto
-        new_maze = Maze(grid)
-        json_str = json.dumps(map_grid)  # Convertir el array a lista para JSON
-        new_maze = MazeBd(grid=json_str, user_id=session.get("user_id"), maze_size=size)
-        db.session.add(new_maze)
-        db.session.commit()
-
-        maze_id = new_maze.id
-
-        return jsonify(
-            {"valid": True, "redirect_url": url_for("routes.map", maze_id=maze_id)}
-        )
+        return save_maze_and_respond(grid, map_grid, size)
     else:
         return jsonify({"valid": False})
 
+# Funciones Auxiliares
+
+def create_grid(map_grid, size):
+    """Convierte el arreglo plano en una matriz 2D."""
+    return [map_grid[i: i + size] for i in range(0, len(map_grid), size)]
+
+def find_points_in_grid(grid):
+    """Encuentra los puntos de inicio y salida en el mapa."""
+    start_point, exit_point = None, None
+    return find_points(grid=grid, start_point=start_point, exit_point=exit_point)
+
+def are_points_valid(start_point, exit_point):
+    """Valida si se encontraron el punto de inicio y salida."""
+    return start_point is not None and exit_point is not None
+
+def invalid_points_response():
+    """Devuelve una respuesta JSON en caso de que falte el punto de inicio o salida."""
+    return jsonify({"valid": False, "error": "No se encontró el punto de inicio o salida"}), 400
+
+def save_maze_and_respond(grid, map_grid, size):
+    """Guarda el laberinto en la base de datos y responde con la URL de redirección."""
+    json_str = json.dumps(map_grid)  # Convertir el array a lista para JSON
+    new_maze = MazeBd(grid=json_str, user_id=session.get("user_id"), maze_size=size)
+    db.session.add(new_maze)
+    db.session.commit()
+
+    maze_id = new_maze.id
+
+    return jsonify({"valid": True, "redirect_url": url_for("routes.map", maze_id=maze_id)})
 
 running_tests = {}
 
 
 @socketio.on("testTraining")
 def test(data):
-
     global running_tests
 
-    maze_id = data.get("maze_id")
-    maze_id = int(maze_id)
-
+    maze_id = int(data.get("maze_id"))
     running_tests[maze_id] = True
 
+    # Cargar el laberinto desde la base de datos
+    maze, grid, size = load_maze_from_db(maze_id)
+
+    # Vectorizar entornos y cargar el modelo
+    env, model = setup_environment(grid, size)
+
+    # Ejecutar la prueba de entrenamiento
+    run_training_test(env, model, maze_id)
+
+
+def load_maze_from_db(maze_id):
+    """Carga el laberinto desde la base de datos y devuelve su información."""
     maze = MazeBd.query.filter_by(id=maze_id).first()
+    grid1 = json.loads(maze.grid)
+    size = maze.maze_size
+    grid = [grid1[i: i + size] for i in range(0, len(grid1), size)]
+    
+    return maze, grid, size
 
-    grid1 = json.loads(maze.grid)  # Asigna el grid a mapa_original
-    size = maze.maze_size  # Calcula el tamaño del mapa
 
-    grid = [grid1[i : i + size] for i in range(0, len(grid1), size)]
-
-    # Vectorizar entornos
-    env = DummyVecEnv([lambda: make_env(grid)])
-
+def setup_environment(grid, size):
+    """Configura el entorno de entrenamiento y carga el modelo PPO."""
+    env = DummyVecEnv([lambda: make_env(grid)])  # Vectoriza el entorno
     model_path = "./app/saved_models/ppo_dungeons.zip"
     model = PPO.load(model_path)
     print(f"Cargando el archivo {model_path}")
+    
+    return env, model
+
+
+def run_training_test(env, model, maze_id):
+    """Ejecuta la prueba de entrenamiento y emite el estado del mapa en tiempo real."""
+    global running_tests
 
     obs = env.reset()
-
     print(f"Cant minima pasos para resolver el laberinto: {env.envs[0].minimum_steps}")
-    # Variable para almacenar la secuencia de movimientos del entorno ganador
+
     done = False
     pasos = 0
+
     while not done:
-        if not running_tests.get(maze_id):  # Si se ha solicitado detener la prueba
+        if not running_tests.get(maze_id):  # Verifica si se solicitó detener la prueba
             print(f"Prueba detenida para maze_id {maze_id}")
             socketio.emit("training_status", {"status": "stopped"})
             break
 
-        action, _ = model.predict(obs)  # Elegir una acción aleatoria
-        obs, reward, done, _ = env.step(action)
+        action, _ = model.predict(obs)  # Predecir la acción con el modelo
+        obs, reward, done, _ = env.step(action)  # Ejecutar un paso en el entorno
 
         pasos += 1
         print(f"Action: {action}, Reward: {reward}, Done: {done}, Paso nro: {pasos}")
-        current_map_state = env.envs[0].get_current_map_state()
 
-        socketio.emit("map", current_map_state)
+        current_map_state = env.envs[0].get_current_map_state()  # Obtener el estado actual del mapa
+        socketio.emit("map", current_map_state)  # Emitir el estado del mapa al cliente
         time.sleep(0.05)
+
         if done:
             print("Laberinto resuelto")
             socketio.emit("training_status", {"status": "finished"})
 
-    running_tests.pop(maze_id, None)
-
+    running_tests.pop(maze_id, None)  # Eliminar la prueba de la lista de ejecuciones
 
 @socketio.on("stopTraining")
 def stop_test(data):

@@ -562,7 +562,7 @@ def test(data):
     env, model = setup_environment(grid, size)
 
     # Ejecutar la prueba de entrenamiento
-    run_training_test(env, model, maze_id)
+    run_training_test(env, model, maze_id, maze, size)
 
 
 def load_maze_from_db(maze_id):
@@ -585,7 +585,7 @@ def setup_environment(grid, size):
     return env, model
 
 
-def run_training_test(env, model, maze_id):
+def run_training_test(env, model, maze_id, maze, size):
     """Ejecuta la prueba de entrenamiento y emite el estado del mapa en tiempo real."""
     global running_tests
 
@@ -594,7 +594,7 @@ def run_training_test(env, model, maze_id):
 
     done = False
     pasos = 0
-
+    user = User.query.get(session["user_id"])
     while not done:
         if not running_tests.get(maze_id):  # Verifica si se solicitó detener la prueba
             print(f"Prueba detenida para maze_id {maze_id}")

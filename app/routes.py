@@ -380,6 +380,9 @@ def train(maze_id):
     #    os.remove(model_path)
     #    print(f"Model: Archivo existente {model_path} eliminado para crear uno nuevo")
     else:
+        policy_kwargs = dict(
+            net_arch=[128, 128, 128, 128, 128]  # Modificar tamaños y capas aquí
+        )
         # Crear un nuevo modelo
         print("Model: Creando el modelo nuevo")
         model = PPO(
@@ -387,14 +390,15 @@ def train(maze_id):
             envs,
             learning_rate=0.001,
             n_steps=2048,
-            ent_coef=0.08,
-            vf_coef=1,
+            ent_coef=0.00,
+            vf_coef=0.5,
             max_grad_norm=0.5,
             gae_lambda=0.99,
             n_epochs=10,
             gamma=0.01,
             clip_range=0.2,
             batch_size=64,
+            policy_kwargs=policy_kwargs,
             verbose=0,
         )
 
@@ -409,8 +413,8 @@ def train(maze_id):
 
     # Entrenar el modelo
     print("Inicio entrenamiento")
-    time.sleep(2)
-    model.learn(total_timesteps=50000, progress_bar=True)
+    time.sleep(0.5)
+    model.learn(total_timesteps=1000000, progress_bar=True)
     print("Fin entrenamiento")
 
     # Guardar el modelo y la normalización después del entrenamiento

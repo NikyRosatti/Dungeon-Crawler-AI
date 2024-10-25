@@ -8,13 +8,17 @@
     <link rel="stylesheet" href="/static/css/map.css">
 </head>
 <body data-maze-id="{{ maze_id }}">
-    <div class="progress">
-        <span>Progreso: </span>
-        <div id="progressBarContainer" style="width: 100%; background-color: #e0e0e0; border-radius: 5px; overflow: hidden;">
-            <div id="progressBar" style="width: 0%; height: 20px; background-color: #4caf50; text-align: center; line-height: 20px; color: white;">0%</div>
+    <div id="overlay" class="overlay">
+        <div id="progressModal">
+            <span>Progreso del entrenamiento: </span>
+            <div id="progressBarContainer">
+                <div id="progressBar">0%</div>
+            </div>
         </div>
     </div>
+
     <div class="grid" id="grid"></div>
+
     <div class="quick_buttons">
         <a href="/dungeons" class="btn">My Dungeons</a>
         <a href="/dashboard" class="btn">Menu</a>
@@ -22,13 +26,33 @@
         <button id="testTrainBtn" class="btn">Test</button>
         <button id="stopTrainBtn" class="btn">Stop</button>
     </div>
+    
     <audio id="winSound" src="/static/sound/win_sound.mp3" preload="auto"></audio>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js"></script>
     <script src="/static/js/script.js"></script>
     <script>
         const avatarUrl = "{{ avatar }}"; // Asumiendo que `avatar` es una ruta de imagen válida
-
         const socket = io();
+
+        // Mostrar el overlay y la barra de progreso al hacer clic en "Train"
+        document.getElementById('trainBtn').addEventListener('click', function() {
+            document.getElementById('overlay').classList.add('visible'); // Muestra el overlay
+            document.getElementById('progressModal').style.display = 'block'; // Muestra la barra de progreso
+            document.getElementById('progressBar').style.width = '0%'; // Reinicia la barra de progreso
+            document.getElementById('progressBar').textContent = '0%'; // Reinicia el texto
+        });
+
+        // Mostrar el overlay y la barra de progreso
+        socket.on('training_status', function(data) {
+            const overlay = document.getElementById('overlay');
+            if (data.status === "finished") {
+                overlay.classList.remove('visible'); // Oculta el overlay
+                setTimeout(() => {
+                    document.getElementById('progressModal').style.display = 'none'; // Ocultar la barra de progreso
+                }, 500); // Retardo antes de ocultar (opcional)
+            }
+        });
 
         // Actualizar barra de progreso
         socket.on('progress', function(data) {
@@ -36,9 +60,15 @@
             const progressBar = document.getElementById('progressBar');
             progressBar.style.width = progress + '%';
             progressBar.textContent = Math.round(progress) + '%';
-        });
 
-        // Código de otros eventos...
+            // Ocultar el overlay al llegar al 100%
+            if (progress >= 100) {
+                setTimeout(() => {
+                    document.getElementById('overlay').style.visibility = 'hidden';
+                    document.getElementById('progressModal').style.display = 'none'; // Ocultar la barra de progreso
+                }, 500); // Retardo antes de ocultar (opcional)
+            }
+        });
     </script>
 </body>
 </html>

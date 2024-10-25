@@ -107,6 +107,50 @@ body {
     border: 2px solid #fff;
 }
 
-.progress{
-    background-color: #fff;
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Fondo oscuro con transparencia */
+    display: flex;
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    z-index: 1000; /* Asegúrate de que esté encima de otros elementos */
+    backdrop-filter: blur(5px); /* Efecto de desenfoque en el fondo */
+    visibility: hidden; /* Inicialmente oculto */
+    opacity: 0; /* Inicialmente invisible */
+    transition: visibility 0s, opacity 0.5s linear; /* Añadir transición para suavizar */
+}
+
+.overlay.visible {
+    visibility: visible; /* Muestra el overlay */
+    opacity: 1; /* Hacerlo visible */
+}
+
+#progressModal {
+    display: none; /* Ocultado inicialmente */
+    background: rgba(255, 255, 255, 0.8); /* Fondo blanco con transparencia */
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#progressBarContainer {
+    width: 80%; /* Ajusta según sea necesario */
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 10px auto; /* Centrar la barra de progreso */
+}
+
+#progressBar {
+    width: 0;
+    height: 20px;
+    background-color: #4caf50; /* Color verde para el progreso */
+    text-align: center; /* Centrar el texto en la barra */
+    line-height: 20px; /* Alinear el texto verticalmente */
+    color: white; /* Color del texto */
+    transition: width 0.5s; /* Suavizar el cambio de ancho */
 }

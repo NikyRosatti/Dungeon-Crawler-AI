@@ -414,7 +414,23 @@ def train(maze_id):
     # Entrenar el modelo
     print("Inicio entrenamiento")
     time.sleep(2)
-    model.learn(total_timesteps=10000, progress_bar=True)
+
+    # Barra de progreso
+    total_timesteps = 10000
+    timesteps_per_batch = 1024
+    num_batches = total_timesteps // timesteps_per_batch
+
+    for i in range(num_batches):
+        model.learn(total_timesteps=timesteps_per_batch, reset_num_timesteps=False)
+        
+        # Calcular el progreso
+        progress = ((i + 1) / num_batches) * 100
+        print(f"Progreso: {progress:.2f}%")
+        
+        # Emitir progreso a todas las páginas conectadas
+        socketio.emit('progress', {'progress': progress})
+
+
     print("Fin entrenamiento")
     time.sleep(2)
 

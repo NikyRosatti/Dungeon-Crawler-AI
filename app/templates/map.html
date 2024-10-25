@@ -33,42 +33,6 @@
     <script src="/static/js/script.js"></script>
     <script>
         const avatarUrl = "{{ avatar }}"; // Asumiendo que `avatar` es una ruta de imagen válida
-        const socket = io();
-
-        // Mostrar el overlay y la barra de progreso al hacer clic en "Train"
-        document.getElementById('trainBtn').addEventListener('click', function() {
-            document.getElementById('overlay').classList.add('visible'); // Muestra el overlay
-            document.getElementById('progressModal').style.display = 'block'; // Muestra la barra de progreso
-            document.getElementById('progressBar').style.width = '0%'; // Reinicia la barra de progreso
-            document.getElementById('progressBar').textContent = '0%'; // Reinicia el texto
-        });
-
-        // Mostrar el overlay y la barra de progreso
-        socket.on('training_status', function(data) {
-            const overlay = document.getElementById('overlay');
-            if (data.status === "finished") {
-                overlay.classList.remove('visible'); // Oculta el overlay
-                setTimeout(() => {
-                    document.getElementById('progressModal').style.display = 'none'; // Ocultar la barra de progreso
-                }, 500); // Retardo antes de ocultar (opcional)
-            }
-        });
-
-        // Actualizar barra de progreso
-        socket.on('progress', function(data) {
-            const progress = data.progress;
-            const progressBar = document.getElementById('progressBar');
-            progressBar.style.width = progress + '%';
-            progressBar.textContent = Math.round(progress) + '%';
-
-            // Ocultar el overlay al llegar al 100%
-            if (progress >= 100) {
-                setTimeout(() => {
-                    document.getElementById('overlay').style.visibility = 'hidden';
-                    document.getElementById('progressModal').style.display = 'none'; // Ocultar la barra de progreso
-                }, 500); // Retardo antes de ocultar (opcional)
-            }
-        });
     </script>
 </body>
 </html>

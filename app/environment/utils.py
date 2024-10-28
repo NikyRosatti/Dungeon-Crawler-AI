@@ -2,6 +2,20 @@ import heapq
 import numpy as np
 from gymnasium.utils import seeding
 
+# Movimientos posibles: izquierda, abajo, derecha, arriba
+LEFT = 0
+DOWN = 1
+RIGHT = 2
+UP = 3
+
+# Objetos presentes en cada celda de la grilla
+AGENT = -1
+FLOOR = 0
+WALL = 1
+INITIAL_DOOR = 2
+EXIT_DOOR = 3
+MINE = 4
+
 
 def find_points(grid, start_point=None, exit_point=None):
     """
@@ -137,6 +151,39 @@ def generate_random_map(size=8, p=0.8, seed=None):
         board[-1][-1] = 3
         valid = is_winneable(board)
     return board
+
+
+def increment_position(grid, current_row, current_col, action):
+    row_new, col_new = current_row, current_col
+    grid_size = size(grid)
+
+    if action == DOWN:  # Abajo
+        row_new += 1
+    elif action == RIGHT:  # Derecha
+        col_new += 1
+    elif action == UP:  # Arriba
+        row_new -= 1
+    elif action == LEFT:  # Izquierda
+        col_new -= 1
+    else:
+        raise ValueError(f"Acción inválida: {action}")
+
+    # Si la nueva posición se sale de los límites, no permitir el movimiento
+    if (
+        row_new < 0
+        or row_new >= grid_size
+        or col_new < 0
+        or col_new >= grid_size
+        or grid[row_new, col_new] == WALL
+    ):
+        return (current_row, current_col)  # Mantener la posición actual
+    return (row_new, col_new)
+
+
+def size(grid):
+    grid = np.array(grid)
+    nrow, ncol = np.shape(grid)
+    return nrow if nrow == ncol else np.shape(grid)
 
 
 def action_to_string(action):

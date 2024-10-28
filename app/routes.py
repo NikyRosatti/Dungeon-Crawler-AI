@@ -24,9 +24,9 @@ from app.environment.utils import (
     action_to_string,
     obs_to_string,
 )
-from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
-from stable_baselines3.common.monitor import Monitor
-import os
+from app.environment.optimization import optimize_ppo, make_env
+import optuna
+from stable_baselines3.common.vec_env import DummyVecEnv
 import time
 
 bp = Blueprint("routes", __name__)
@@ -358,68 +358,6 @@ def map():
     )
 
 
-@socketio.on("start_simulation")
-def train(maze_id):
-
-    print(maze_id)
-    maze = MazeBd.query.filter_by(id=maze_id).first()
-
-    grid1 = json.loads(maze.grid)  # Asigna el grid a mapa_original
-    size = maze.maze_size  # Calcula el tamaño del mapa
-
-    grid = [grid1[i : i + size] for i in range(0, len(grid1), size)]
-    num_envs = 5
-
-    envs = DummyVecEnv([lambda: make_env(grid) for i in range(num_envs)])
-
-    # Eliminar modelo previo si deseas empezar desde cero
-    model_path = "./app/saved_models/ppo_dungeons.zip"
-    if os.path.exists(model_path):
-        model = PPO.load(model_path, env=envs)
-
-    #    os.remove(model_path)
-    #    print(f"Model: Archivo existente {model_path} eliminado para crear uno nuevo")
-    else:
-        # Crear un nuevo modelo
-        print("Model: Creando el modelo nuevo")
-        model = PPO(
-            "MlpPolicy",
-            envs,
-            learning_rate=0.001,
-            n_steps=2048,
-            ent_coef=0.08,
-            vf_coef=1,
-            max_grad_norm=0.5,
-            gae_lambda=0.99,
-            n_epochs=10,
-            gamma=0.01,
-            clip_range=0.2,
-            batch_size=64,
-            verbose=0,
-        )
-
-    # Cargar o crear la normalización
-    vec_norm_path = "./app/saved_models/vec_normalize.pkl"
-    if os.path.exists(vec_norm_path):
-        envs = VecNormalize.load(vec_norm_path, envs)
-        print(f"Vec: Cargando el archivo {vec_norm_path}")
-    else:
-        print("Vec: Creando el archivo de normalización")
-        envs = VecNormalize(envs, norm_obs=True, norm_reward=True)
-
-    # Entrenar el modelo
-    print("Inicio entrenamiento")
-    time.sleep(2)
-    model.learn(total_timesteps=50000, progress_bar=True)
-    print("Fin entrenamiento")
-
-    # Guardar el modelo y la normalización después del entrenamiento
-    model.save(model_path)
-    print("Modelo guardado con éxito")
-    envs.save(vec_norm_path)
-    print("Entornos guardados con éxito")
-
-
 @socketio.on("start_training")
 def handle_training(data):
     maze_id = data.get("maze_id")
@@ -522,6 +460,25 @@ def validate_map():
         return jsonify({"valid": False})
 
 
+@socketio.on("start_simulation")
+def train(maze_id):
+
+    print(maze_id)
+    maze = MazeBd.query.filter_by(id=maze_id).first()
+
+    grid1 = json.loads(maze.grid)  # Asigna el grid a mapa_original
+    size = maze.maze_size  # Calcula el tamaño del mapa
+
+    grid = [grid1[i : i + size] for i in range(0, len(grid1), size)]
+    num_envs = 5
+
+    # Optimización con Optuna
+    study = optuna.create_study(direction="maximize")
+    study.optimize(lambda trial: optimize_ppo(trial, grid, num_envs), n_trials=2)
+    best_trial = study.best_trial
+    print(f"Los mejores parametros encontrados fueron: {best_trial.params}")
+
+
 running_tests = {}
 
 
@@ -598,9 +555,3 @@ def stop_test(data):
                 "message": "No hay test en ejecución para este maze_id",
             },
         )
-
-
-def make_env(grid):
-    env = Maze(grid)
-    env = Monitor(env)
-    return env

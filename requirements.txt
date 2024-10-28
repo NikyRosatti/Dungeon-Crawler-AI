@@ -11,3 +11,4 @@ stable-baselines3
 tqdm
 rich
 bcrypt==4.2.0
+optuna

@@ -3,28 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa Interactivo</title>
+    <title>Create Map</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/map_creator.css">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 </head>
 <body>
+    <a href="/dashboard" class="btn" id="dashboardBtn" style="font-size:24px;">
+        <i class='fas fa-arrow-left' style="color:black;"></i>
+    </a>
     <div class="controls2">
-        <label for="size" id="text">Tamaño del mapa:</label>
+        <label for="size" id="text">Map Size:</label>
         <input type="number" id="size" value="5" min="1" max="13">
-        <button id="generate">Generar Mapa</button>
-        <button id="export">Exportar Mapa</button>
+        <button id="generate">Generate Map</button>
+        <button id="export">Export Map</button>
     </div>
     <div class="container">
         <!-- Panel de selección de bloques -->
         <div class="controls">
-            <h3>Tipos de Bloques</h3>
-            <button id="floor-btn" data-block=0>Suelo</button>
-            <button id="wall-btn" data-block=1>Pared</button>
-            <button id="start-btn" data-block=2>Inicio</button>
-            <button id="end-btn" data-block=3>Fin</button>
+            <h3>Block Type</h3>
+            <button id="floor-btn" data-block=0>Floor</button>
+            <button id="wall-btn" data-block=1>Wall</button>
+            <button id="start-btn" data-block=2>Start</button>
+            <button id="end-btn" data-block=3>End</button>
         </div>
         <!-- Grilla interactiva -->
         <div class="grid-container" id="grid-container"></div>

@@ -528,3 +528,10 @@ footer p {
 .filter-bar .filter-btn:hover {
     background-color: #f5df64;
 }
+
+.no-mazes-message {
+    display: flex;
+    justify-content: center;
+    margin: 100px;
+    font-size: 50px;
+}

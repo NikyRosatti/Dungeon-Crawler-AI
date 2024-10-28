@@ -4,6 +4,20 @@ document.addEventListener('DOMContentLoaded', function () {
     // Extraer el JSON serializado desde el atributo data-mazes
     const mazes = JSON.parse(gridElement.dataset.mazes);
 
+    // Verificar si no hay laberintos (mazes) para mostrar
+    if (mazes.length === 0) {
+
+        const mazesGridContainer = document.querySelector('#mazes-grid');
+        mazesGridContainer.style.background = 'none'; // O puedes usar 'transparent'
+        
+        const noMazesMessage = document.createElement('p');
+        noMazesMessage.textContent = 'Todavía no hay mapas creados';
+        noMazesMessage.classList.add('no-mazes-message'); // Clase opcional para estilos
+        const mainContent = document.querySelector('.main-content');
+        mainContent.appendChild(noMazesMessage);
+        return; // Detener la ejecución si no hay laberintos
+    }
+
     // Iterar sobre cada maze y generar la cuadrícula
     mazes.forEach(maze => {
         const mapaOriginal = maze.grid;

@@ -173,3 +173,41 @@ body {
     background: url(/static/img/puerta.png) no-repeat center bottom / 60%,
                 url(/static/img/dirt.jpg) center center / cover no-repeat;
 }
+
+.quick_buttons {
+   display: flex;
+   position: relative;
+   right: 40%;
+   text-decoration: none;
+}
+.quick_buttons .btn {
+    background-color: #76837157;
+    color: rgb(255, 255, 255);
+    font-family: 'Handjet', sans-serif;
+    font-size: 30px;
+    border: none;
+    padding: 20px 30px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    width: 120px;
+    display: inline-block;
+}
+
+a{
+    display: flex; /* Usamos inline-flex para alinear el icono y el texto */
+    align-items: center; /* Alinea verticalmente el contenido */
+    background-color:#768371; /* Color de fondo */
+    color: rgb(255, 255, 255); /* Color del texto */
+    font-family: 'Handjet', sans-serif; /* Fuente */
+    font-size: 30px; /* Tamaño de fuente */
+    border: none; /* Sin borde */
+    padding: 10px 20px; /* Espaciado interno */
+    margin: 10px; /* Margen */
+    border-radius: 5px; /* Bordes redondeados */
+    text-decoration: none; /* Sin subrayado */
+    cursor: pointer; /* Cambia el cursor a mano */
+    right: 40%;
+    position: relative;
+}

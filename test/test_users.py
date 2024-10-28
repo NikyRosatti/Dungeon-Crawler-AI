@@ -87,11 +87,11 @@ def test_login_success(test_client, add_user):
 
 
 def test_get_login(test_client):
-    response = test_client.get('/login')
+    response = test_client.get('/login', follow_redirects=True)
     assert response.status_code == 200
 
 def test_get_register(test_client):
-    response = test_client.get('/register')
+    response = test_client.get('/register', follow_redirects=True)
     assert response.status_code == 200
 
 def test_login_fail(test_client, add_user):

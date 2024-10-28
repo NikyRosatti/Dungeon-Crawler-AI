@@ -72,11 +72,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     cell.addEventListener('click', () => {
                         if (selectedBlockType !== null && selectedBlockType !== undefined) {
                             if (selectedBlockType == 2 && startPlaced) {
-                                alert('Solo se permite una entrada (inicio)');
+                                showModal('Place only one door (Start)');
                                 return;
                             }
                             if (selectedBlockType == 3 && endPlaced) {
-                                alert('Solo se permite una salida (fin)');
+                                showModal('Place only one door (End)');
                                 return;
                             }
                             if (selectedBlockType === 2) startPlaced = true;
@@ -138,11 +138,34 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.valid) {
                 window.location.href = data.redirect_url;
             } else {
-                alert('No');
+                showModal('Invalid Map');
             }
         })
         .catch(error => console.error('Error al validar el mapa:', error));
-        alert(JSON.stringify(innerMap));
+
         console.log('Mapa exportado:', innerMap);
     });
+});
+
+const showModal = (message) => {
+    const modal = document.getElementById('modal');
+    const modalMessage = document.getElementById('modal-message');
+    modalMessage.textContent = message;
+    modal.style.display = 'block';
+};
+
+const closeModal = () => {
+    const modal = document.getElementById('modal');
+    modal.style.display = 'none';
+};
+
+// Evento para cerrar el modal al hacer clic en la "X"
+document.getElementById('close-modal').addEventListener('click', closeModal);
+
+// También permite cerrar el modal al hacer clic fuera de él
+window.addEventListener('click', (event) => {
+    const modal = document.getElementById('modal');
+    if (event.target == modal) {
+        closeModal();
+    }
 });

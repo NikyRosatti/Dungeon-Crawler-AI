@@ -31,7 +31,7 @@ def test_register_user(test_client):
         'avatar': '/static/img/avatars/ValenAvatar.png'
     })
     
-    assert response.status_code == 200
+    assert response.status_code == 302
     assert b'Usuario ya registrado' not in response.data
 
     user = User.query.filter_by(username='nuevo_usuario').first()
@@ -40,11 +40,15 @@ def test_register_user(test_client):
 
 
 def test_register_user_without_avatar(test_client):
+    # limpia la sesion al comenzar el test
+    with test_client.session_transaction() as session:
+        session.clear()
+
     response = test_client.post('/register', data={
         'username': 'usuario_sin_avatar',
         'password': 'pass123',
         'email': 'sin@avatar.com',
-        'avatar': ''
+        'avatar': None
     })
 
     assert response.status_code == 400

@@ -110,12 +110,12 @@ def register():
     username = request.form["username"]
     password = request.form["password"].encode("utf-8")
     email = request.form["email"]
-    avatar = request.form["avatar"]
+    avatar = request.form.get("avatar") # Evita errores si no esta presente
 
     if not avatar:
         return render_template(
-            "register.html", error="Debes seleccionar un avatar", avatars=AVATARS
-        )
+            "register.html", error="Please, choose an avatar before register.", avatars=AVATARS
+        ), 400
 
     existing_user = User.query.filter(
         or_(User.username == username, User.email == email)

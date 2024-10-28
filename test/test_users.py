@@ -100,6 +100,9 @@ def test_login_fail(test_client, add_user):
     assert b'Incorrect credentials' in response.data
     
 def test_login_user_not_exist(test_client):
+    with test_client.session_transaction() as session:
+        session.clear()
+
     response = test_client.post('/login', data={
         'username': 'usuario',
         'password': 'password'

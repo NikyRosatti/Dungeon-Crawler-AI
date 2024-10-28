@@ -118,10 +118,9 @@ def register():
         ), 400
 
     existing_user = User.query.filter(
-        or_(User.username == username, User.email == email)
-    ).first()
-
-    if existing_user:
+    (User.username == username) | (User.email == email)
+        ).first()
+    if existing_user is not None:
         return render_template("register.html", error="Usuario ya registrado"), 400 #Error 400, bad request
 
     hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())

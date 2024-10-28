@@ -55,22 +55,17 @@ def test_register_user_without_avatar(test_client):
     assert b'Please, choose an avatar before register.' in response.data  
     assert b'avatar' in response.data
 
-def test_register_user_duplicate(test_client):
-    test_client.post('/register', data={
-        'username': 'usuario_existente',
-        'password': 'pass123',
-        'email': 'existente@ejemplo.com',
-        'avatar': '/static/img/avatars/NikyAvatar.png'
-    })
-
+def test_register_user_duplicate(test_client, add_user):
+     # Primer intento de registro (este debería fallar si el usuario ya existe)
     response = test_client.post('/register', data={
-        'username': 'usuario_existente',
+        'username': 'usuario_test',
         'password': 'pass123',
-        'email': 'nuevo@ejemplo.com',
+        'email': 'nuevo@ejemplo.com',  # Cambiamos el correo
         'avatar': '/static/img/avatars/ValenAvatar.png'
     })
 
-    assert response.status_code == 400 
+    # Verifica que se reciba un error 400 (Usuario duplicado)
+    assert response.status_code == 400
     assert b'' in response.data
     
 def test_login_success(test_client, add_user):

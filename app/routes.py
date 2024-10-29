@@ -1,5 +1,6 @@
 from flask import (
     Blueprint,
+    abort,
     render_template,
     redirect,
     request,
@@ -287,8 +288,7 @@ def my_mazes():
 @login_required
 def settings():
     user = User.query.get(session["user_id"])
-    error= None
-    success = None
+
     if request.method == "POST":
         # Actualizar contraseña
         if "update_password" in request.form:
@@ -300,14 +300,14 @@ def settings():
         elif "delete_account" in request.form:
             return delete_account(user)
         
-    return render_template("settings.html", error=error, success=success)
+    return render_template("settings.html")
 
 
 def update_password(user):
     current_password = request.form["current_password"].encode("utf-8")
     new_password = request.form["new_password"].encode("utf-8")
     confirm_password = request.form["confirm_password"].encode("utf-8")
-    
+
     if not bcrypt.checkpw(current_password, user.password):
         return render_template(
             "settings.html", error="Incorrect current password."
@@ -323,7 +323,7 @@ def update_password(user):
     db.session.commit()
 
     return render_template(
-        "settings.html",  success="Password updated successfully."
+        "settings.html", success="Password updated successfully."
     )
 
 
@@ -360,6 +360,9 @@ def delete_account(user):
 def map():
     maze_id = int(request.args.get("maze_id", 0))
     maze = MazeBd.query.filter_by(id=maze_id).first()
+
+    if maze is None:
+        abort(404)
 
      # Diccionario con información del laberinto
     maze_info["mapa_original"] = json.loads(maze.grid)  # Asigna el grid a mapa_original,
@@ -524,7 +527,7 @@ def validate_map():
     if is_winneable(grid):
         return save_maze_and_respond(grid, map_grid, size)
     else:
-        return jsonify({"valid": False, "error": "No hay camino posible"}),400
+        return jsonify({"valid": False, "error": "No hay camino posible"}), 400
 
 # Funciones Auxiliares
 

@@ -524,7 +524,7 @@ def validate_map():
     if is_winneable(grid):
         return save_maze_and_respond(grid, map_grid, size)
     else:
-        return jsonify({"valid": False})
+        return jsonify({"valid": False, "error": "No hay camino posible"}),400
 
 # Funciones Auxiliares
 

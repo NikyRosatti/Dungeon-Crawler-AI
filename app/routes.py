@@ -58,7 +58,7 @@ def login():
         if not user:
             return render_template("login.html", error="User does not exist."), 400
         
-        if bcrypt.checkpw(password, user.password):
+        if bcrypt.checkpw(password, user.password.encode("utf-8")):
             session["user_id"] = user.id
             return redirect(url_for("routes.dashboard"))
         else:
@@ -108,7 +108,7 @@ def register():
 
         hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
         new_user = User(
-            username=username, password=hashed_password, email=email, avatar=avatar
+            username=username, password=hashed_password.decode('utf-8'), email=email, avatar=avatar
         )
 
         db.session.add(new_user)

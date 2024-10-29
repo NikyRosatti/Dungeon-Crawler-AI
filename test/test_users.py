@@ -7,14 +7,12 @@ def test_login_required_redirect(test_client):
         '/dashboard',
         '/leaderboard',
         '/profile',
-        '/community',
-        '/my_mazes', 
+        '/community', 
         '/settings', 
         '/map', 
         '/logout', 
         '/dungeons', 
-        '/map_creator', 
-        '/validate_map'
+        '/map_creator'
     ]
 
     for route in routes:

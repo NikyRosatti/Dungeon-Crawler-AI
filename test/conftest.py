@@ -17,6 +17,7 @@ def test_client():
 
     # Después de las pruebas, limpiar la base de datos
     with app.app_context():
+        db.session.remove()
         db.drop_all()
 
 @pytest.fixture(autouse=True)

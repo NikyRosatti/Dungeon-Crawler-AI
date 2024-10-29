@@ -287,7 +287,8 @@ def my_mazes():
 @login_required
 def settings():
     user = User.query.get(session["user_id"])
-
+    error= None
+    success = None
     if request.method == "POST":
         # Actualizar contraseña
         if "update_password" in request.form:
@@ -299,14 +300,14 @@ def settings():
         elif "delete_account" in request.form:
             return delete_account(user)
         
-    return render_template("settings.html")
+    return render_template("settings.html", error=error, success=success)
 
 
 def update_password(user):
     current_password = request.form["current_password"].encode("utf-8")
     new_password = request.form["new_password"].encode("utf-8")
     confirm_password = request.form["confirm_password"].encode("utf-8")
-
+    
     if not bcrypt.checkpw(current_password, user.password):
         return render_template(
             "settings.html", error="Incorrect current password."
@@ -322,7 +323,7 @@ def update_password(user):
     db.session.commit()
 
     return render_template(
-        "settings.html", success="Password updated successfully."
+        "settings.html",  success="Password updated successfully."
     )
 
 

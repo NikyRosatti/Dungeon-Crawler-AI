@@ -7,17 +7,29 @@
     <title>Cuadrícula Dinámica</title>
     <link rel="stylesheet" href="/static/css/map.css">
 </head>
-<body  data-maze-id="{{ maze_id }}">
+<body data-maze-id="{{ maze_id }}">
+    <div id="overlay" class="overlay">
+        <div id="progressModal">
+            <span>Progreso del entrenamiento: </span>
+            <div id="progressBarContainer">
+                <div id="progressBar">0%</div>
+            </div>
+        </div>
+    </div>
+
     <div class="grid" id="grid"></div>
-    <div class ="quick_buttons">
+
+    <div class="quick_buttons">
         <a href="/dungeons" class="btn">My Dungeons</a>
         <a href="/dashboard" class="btn">Menu</a>
         <button id="trainBtn" class="btn">Train</button>
         <button id="testTrainBtn" class="btn">Test</button>
-        <button id="stopTrainBtn"class="btn">Stop</button>
+        <button id="stopTrainBtn" class="btn">Stop</button>
     </div>
+    
     <audio id="winSound" src="/static/sound/win_sound.mp3" preload="auto"></audio>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js" ></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js"></script>
     <script src="/static/js/script.js"></script>
     <script>
         const avatarUrl = "{{ avatar }}"; // Asumiendo que `avatar` es una ruta de imagen válida

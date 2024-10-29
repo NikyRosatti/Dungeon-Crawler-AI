@@ -92,13 +92,35 @@ document.getElementById('trainBtn').addEventListener('click', function() {
     const mazeId = document.body.getAttribute('data-maze-id');
     socket.emit('start_training', { maze_id: mazeId });
 
-    // Escuchar el progreso del entrenamiento
+    document.getElementById('overlay').classList.add('visible'); // Muestra el overlay
+    document.getElementById('progressModal').style.display = 'block'; // Muestra la barra de progreso
+    document.getElementById('progressBar').style.width = '0%'; // Reinicia la barra de progreso
+    document.getElementById('progressBar').textContent = '0%'; // Reinicia el texto
+
+    // Mostrar el overlay y la barra de progreso
     socket.on('training_status', function(data) {
-        console.log("Estado del entrenamiento:", data.status);
-        if (data.status === 'finished') {
-            console.log("Entrenamiento completado.");
-        } else if (data.status === 'error') {
-            console.error("Error:", data.message);
+        const overlay = document.getElementById('overlay');
+        if (data.status === "finished") {
+            overlay.classList.remove('visible'); // Oculta el overlay
+            setTimeout(() => {
+                document.getElementById('progressModal').style.display = 'none'; // Ocultar la barra de progreso
+            }, 500); // Retardo antes de ocultar (opcional)
+        }
+    });
+
+    // Actualizar barra de progreso
+    socket.on('progress', function(data) {
+        const progress = data.progress;
+        const progressBar = document.getElementById('progressBar');
+        progressBar.style.width = progress + '%';
+        progressBar.textContent = Math.round(progress) + '%';
+
+        // Ocultar el overlay al llegar al 100%
+        if (progress >= 100) {
+            setTimeout(() => {
+                document.getElementById('overlay').style.visibility = 'hidden';
+                document.getElementById('progressModal').style.display = 'none'; // Ocultar la barra de progreso
+            }, 500); // Retardo antes de ocultar (opcional)
         }
     });
 });

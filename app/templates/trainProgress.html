@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Progress</title>
+    <style>
+        #progress-bar {
+            width: 100%;
+            background-color: #ddd;
+            margin-top: 20px;
+        }
+        #progress {
+            width: 0%;
+            height: 30px;
+            background-color: #4CAF50;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+        }
+        #status {
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <h2>Entrenamiento del Modelo</h2>
+
+    <!-- Mensaje de estado -->
+    <div id="status">Esperando...</div>
+
+    <!-- Barra de progreso -->
+    <div id="progress-bar">
+        <div id="progress">0%</div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+        // Código de escucha del progreso que ya implementaste en JavaScript
+    </script>
+</body>
+</html>

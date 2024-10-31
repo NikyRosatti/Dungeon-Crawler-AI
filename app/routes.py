@@ -76,7 +76,7 @@ def login():
     if not user:
         return render_template("login.html", error="User does not exist."), 400
 
-    if not bcrypt.checkpw(password, user.password):
+    if not bcrypt.checkpw(password, user.password.encode("utf-8")):
         return render_template("login.html", error="Incorrect credentials."), 400
 
     session["user_id"] = user.id
@@ -115,7 +115,7 @@ def register():
 
     hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
     new_user = User(
-        username=username, password=hashed_password, email=email, avatar=avatar
+        username=username, password=hashed_password.decode('utf-8'), email=email, avatar=avatar
     )
 
     db.session.add(new_user)

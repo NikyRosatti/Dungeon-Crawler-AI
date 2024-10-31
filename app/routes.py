@@ -613,15 +613,19 @@ def run_training_test(env, model, maze_id, maze, size):
 
         if done:
             print("Maze solved")
+            socketio.emit("finish_map")
             if user:
                 if maze not in user.completed_dungeons:
                     user.completed_dungeons.append(maze)
+                    newPoints = 0
                     if env.envs[0].minimum_steps == steps:
                         user.points += size + steps
+                        newPoints +=  size + steps
                     else:
                         user.points += size
+                        newPoints += size
                     db.session.commit()
-                    socketio.emit("training_status", {"status": "finished"})
+                    socketio.emit("win", {"points": newPoints })
                     print(f"User {user.username} completed the maze {maze_id}.")
                 else:
                     print(f"The user {user.username} already completed this maze.")
@@ -629,6 +633,7 @@ def run_training_test(env, model, maze_id, maze, size):
             break
 
         if env.envs[0].lose:
+            socketio.emit("lose")
             print(f"Your agent could not complete the maze in {N_MAX_STEPS} steps!!")
 
     running_tests.pop(maze_id, None)  # Eliminar la prueba de la lista de ejecuciones

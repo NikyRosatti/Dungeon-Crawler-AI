@@ -84,7 +84,31 @@ if (window.location.pathname === '/map') {
             socket.emit('move', key);
         }
     });
+
+    const showModal = (message) => {
+        const modal = document.getElementById('modal');
+        const modalMessage = document.getElementById('modal-message');
+        modalMessage.textContent = message;
+        modal.style.display = 'block';
+    };
+    
+    const closeModal = () => {
+        const modal = document.getElementById('modal');
+        modal.style.display = 'none';
+    };
+
+    // Escuchar el evento "win"
+    socket.on("win", (data) => {
+        const points = data.points;
+        showModal(`¡Ganaste! Has obtenido ${points} puntos.`);
+    });
+    document.getElementById('close-modal').addEventListener('click', closeModal);
+    // Escuchar el evento "lose"
+    socket.on("lose", () => {
+        showModal("Tu agente no pudo completar el laberinto en el número máximo de pasos. ¡Inténtalo de nuevo!");
+    });
 }
+
 
 document.getElementById('trainBtn').addEventListener('click', function() {
     // Obtener el maze_id del atributo data-maze-id del cuerpo

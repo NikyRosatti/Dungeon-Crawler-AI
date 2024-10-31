@@ -176,7 +176,8 @@ body {
 
 .mine {
     background: url(/static/img/skeleton.png) no-repeat center bottom / 80%,
-                url(/static/img/dirt.jpg) center center / cover no-repeat;}
+                url(/static/img/dirt.jpg) center center / cover no-repeat;
+}
 
 .quick_buttons {
    display: flex;

@@ -17,9 +17,6 @@ INITIAL_DOOR = 2
 EXIT_DOOR = 3
 MINE = 4
 
-# Maximum number of steps to be taken: When the agent makes 100 actions (steps), it ends (losing).
-N_MAX_STEPS = 100
-
 
 class Maze(gym.Env):
     metadata = {"render_modes": ["human"], "render_fps": 30}
@@ -31,6 +28,8 @@ class Maze(gym.Env):
         self.nrow, self.ncol = np.shape(self.grid)
         self.start_point, self.exit_point = find_points(grid, start_point, exit_point)
         self.minimum_steps = len(get_min_steps(self.grid)) - 1
+        # Maximum number of steps to be taken: When the agent makes 100 actions (steps), it ends (losing).
+        self.maximum_steps = self.size() * 10
         self.action_space = spaces.Discrete(4)
 
         # Define the observation space: current position in the maze
@@ -51,7 +50,9 @@ class Maze(gym.Env):
         self.total_steps_performed = 0
         self.reward = 0
         self.done = False
-        self.lose = False
+        self.win = False
+        self.lose_by_mine = False
+        self.lose_by_steps = False
 
     def size(self):
         return self.nrow if self.nrow == self.ncol else np.shape(self.grid)
@@ -64,7 +65,9 @@ class Maze(gym.Env):
         self.total_steps_performed = 0
         self.reward = 0
         self.done = False
-        self.lose = False
+        self.win = False
+        self.lose_by_mine = False
+        self.lose_by_steps = False
 
         return self._obs_space(), {}
 
@@ -106,16 +109,19 @@ class Maze(gym.Env):
         new_cell_value = self.grid[new_row, new_col]
 
         if new_cell_value == MINE:
-            self.reward -= 1
-            self.lose = True
+            self.reward -= 10
+            self.lose_by_mine = True
+            self.done = True
         if new_cell_value == EXIT_DOOR:
             self.reward += 100
+            self.win = True
             self.done = True
         if new_cell_value == FLOOR:
             self.reward -= 0.1
-        if self.total_steps_performed >= N_MAX_STEPS:
+        if self.total_steps_performed >= self.maximum_steps:
             self.reward -= 10
-            self.lose = True
+            self.lose_by_steps = True
+            self.done = True
 
         return new_state
 

@@ -16,7 +16,7 @@ from app import socketio
 import bcrypt
 from functools import wraps
 from app.services.map_service import move_player, change_door
-from app.environment.maze import Maze, N_MAX_STEPS
+from app.environment.maze import Maze
 import json
 from stable_baselines3 import PPO
 from app.environment.utils import (
@@ -589,7 +589,7 @@ def run_training_test(env, model, maze_id, maze, size):
     env.norm_reward = False
     obs = env.reset()
     steps = 0
-    while steps < N_MAX_STEPS:
+    while steps < env.envs[0].maximum_steps:
         steps += 1
         print(f"Steps: {steps}")
 
@@ -609,9 +609,9 @@ def run_training_test(env, model, maze_id, maze, size):
 
         current_map_state = env.envs[0].get_current_map_state()
         socketio.emit("map", current_map_state)
-        time.sleep(0.05)
+        time.sleep(1)
 
-        if done:
+        if env.envs[0].win:
             print("Maze solved")
             if user:
                 if maze not in user.completed_dungeons:
@@ -627,9 +627,13 @@ def run_training_test(env, model, maze_id, maze, size):
                     print(f"The user {user.username} already completed this maze.")
             socketio.emit("training_status", {"status": "finished"})
             break
+        
+        if env.envs[0].lose_by_mine:
+            print("You agent died brutally when stepped in a mine")
+            break
 
-        if env.envs[0].lose:
-            print(f"Your agent could not complete the maze in {N_MAX_STEPS} steps!!")
+        if env.envs[0].lose_by_steps:
+            print(f"Your agent could not complete the maze in {env.envs[0].maximum_steps} steps!!")
 
     running_tests.pop(maze_id, None)  # Eliminar la prueba de la lista de ejecuciones
 

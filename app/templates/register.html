@@ -21,6 +21,11 @@
         <div class="card">
             <div class="titulo">
                 <h1><strong>Create Account</strong></h1>
+                {% if error %}
+                  <div class="error-message">
+                    <p>{{ error }}</p>
+                  </div>
+                {% endif %}
                 <form action="/register" method="post" class="login-form" id="register-form">
                     <div>
                         <label for="username">Username:</label>

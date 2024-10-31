@@ -9,6 +9,13 @@ __pycache__/
 #Database extensions
 *.db
 
+# Machine Learning Files
+*.zip
+*.pkl
+
+# Tensorflow logs / Tensorboard
+logs/
+
 # Distribution / packaging
 .Python
 build/

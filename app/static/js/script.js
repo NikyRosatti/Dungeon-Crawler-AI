@@ -111,43 +111,48 @@ if (window.location.pathname === '/map') {
 
 
 document.getElementById('trainBtn').addEventListener('click', function() {
-    // Obtener el maze_id del atributo data-maze-id del cuerpo
+    // Configuración inicial para restablecer el modal y el progreso
     const socket = io();
     const mazeId = document.body.getAttribute('data-maze-id');
     socket.emit('start_training', { maze_id: mazeId });
 
-    document.getElementById('overlay').classList.add('visible'); // Muestra el overlay
-    document.getElementById('progressModal').style.display = 'block'; // Muestra la barra de progreso
-    document.getElementById('progressBar').style.width = '0%'; // Reinicia la barra de progreso
-    document.getElementById('progressBar').textContent = '0%'; // Reinicia el texto
+    // Mostrar overlay y modal, reiniciando visibilidad y barra de progreso
+    const overlay = document.getElementById('overlay');
+    const progressModal = document.getElementById('progressModal');
+    const progressBar = document.getElementById('progressBar');
+    
+    overlay.classList.add('visible');           // Muestra el overlay
+    overlay.style.visibility = 'visible';       // Asegura que esté visible en la segunda ejecución
+    progressModal.style.display = 'block';      // Muestra la barra de progreso
+    progressBar.style.width = '0%';             // Reinicia el ancho de la barra de progreso
+    progressBar.textContent = '0%';             // Reinicia el texto de la barra
 
-    // Mostrar el overlay y la barra de progreso
+    // Evento para verificar si el entrenamiento finalizó
     socket.on('training_status', function(data) {
-        const overlay = document.getElementById('overlay');
         if (data.status === "finished") {
             overlay.classList.remove('visible'); // Oculta el overlay
             setTimeout(() => {
-                document.getElementById('progressModal').style.display = 'none'; // Ocultar la barra de progreso
-            }, 500); // Retardo antes de ocultar (opcional)
+                progressModal.style.display = 'none'; // Oculta el modal con un pequeño retardo
+            }, 500);
         }
     });
 
     // Actualizar barra de progreso
     socket.on('progress', function(data) {
         const progress = data.progress;
-        const progressBar = document.getElementById('progressBar');
         progressBar.style.width = progress + '%';
         progressBar.textContent = Math.round(progress) + '%';
 
-        // Ocultar el overlay al llegar al 100%
+        // Ocultar el overlay y el modal al llegar al 100%
         if (progress >= 100) {
             setTimeout(() => {
-                document.getElementById('overlay').style.visibility = 'hidden';
-                document.getElementById('progressModal').style.display = 'none'; // Ocultar la barra de progreso
-            }, 500); // Retardo antes de ocultar (opcional)
+                overlay.style.visibility = 'hidden';
+                progressModal.style.display = 'none';
+            }, 500);
         }
     });
 });
+
 
 document.getElementById('testTrainBtn').addEventListener('click', function() {
     // Obtener el maze_id del atributo data-maze-id del cuerpo

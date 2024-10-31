@@ -1,5 +1,4 @@
 from app.environment.maze import Maze
-from stable_baselines3.common.monitor import Monitor
 from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 import torch.nn as nn
@@ -27,7 +26,7 @@ def suggest_activation_fn(trial):
         return nn.Tanh
 
 
-def optimize_ppo(trial, grid, num_envs):
+def optimize_ppo(trial, grid):
     # Definir los hiperparámetros que Optuna va a optimizar
     learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-2)
     gamma = trial.suggest_float("gamma", 0.8, 0.9999)
@@ -61,14 +60,13 @@ def optimize_ppo(trial, grid, num_envs):
     if not os.path.exists(logdir):
         os.makedirs(logdir)
     # Crear los entornos
-    envs = DummyVecEnv([lambda: make_env(grid) for _ in range(num_envs)])
-    envs = VecNormalize(envs, norm_obs=True, norm_reward=True)
+    envs = make_env(grid)
     print("Vec: Creando el archivo de normalización")
 
     # Definir el modelo PPO con los hiperparámetros seleccionados
     model = PPO(
         "MlpPolicy",
-        envs,
+        env=envs,
         learning_rate=learning_rate,
         n_steps=2048,
         batch_size=64,
@@ -79,11 +77,12 @@ def optimize_ppo(trial, grid, num_envs):
         clip_range=0.2,
         policy_kwargs=policy_kwargs,
         verbose=0,
+        tensorboard_log=logdir
     )
     print("Model: Creando el modelo")
 
     print("Inicio entrenamiento")
-    model.learn(total_timesteps=100000, progress_bar=True)
+    model.learn(total_timesteps=20000, progress_bar=True)
     print("Fin entrenamiento")
 
     # Evaluar el modelo (puedes adaptar esta parte según cómo mides el rendimiento)
@@ -121,5 +120,4 @@ def evaluate_model(model, envs):
 
 def make_env(grid):
     env = Maze(grid)
-    env = Monitor(env)
     return env

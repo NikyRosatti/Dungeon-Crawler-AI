@@ -1,3 +1,4 @@
+import os
 from flask import (
     Blueprint,
     render_template,
@@ -15,7 +16,7 @@ from app import socketio
 import bcrypt
 from functools import wraps
 from app.services.map_service import move_player, change_door
-from app.environment.maze import Maze
+from app.environment.maze import Maze, N_MAX_STEPS
 import json
 from stable_baselines3 import PPO
 from app.environment.utils import (
@@ -24,9 +25,7 @@ from app.environment.utils import (
     action_to_string,
     obs_to_string,
 )
-from app.environment.optimization import optimize_ppo, make_env
-import optuna
-from stable_baselines3.common.vec_env import DummyVecEnv
+from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 import time
 
 bp = Blueprint("routes", __name__)
@@ -463,20 +462,49 @@ def validate_map():
 @socketio.on("start_simulation")
 def train(maze_id):
 
-    print(maze_id)
     maze = MazeBd.query.filter_by(id=maze_id).first()
 
-    grid1 = json.loads(maze.grid)  # Asigna el grid a mapa_original
-    size = maze.maze_size  # Calcula el tamaño del mapa
+    grid1 = json.loads(maze.grid)
+    size = maze.maze_size
 
     grid = [grid1[i : i + size] for i in range(0, len(grid1), size)]
-    num_envs = 5
 
-    # Optimización con Optuna
-    study = optuna.create_study(direction="maximize")
-    study.optimize(lambda trial: optimize_ppo(trial, grid, num_envs), n_trials=2)
-    best_trial = study.best_trial
-    print(f"Los mejores parametros encontrados fueron: {best_trial.params}")
+    log_dir = os.path.join("app", "saved_models", "logs", f"{maze_id}")
+    os.makedirs(log_dir, exist_ok=True)
+
+    num_envs = 5
+    env = DummyVecEnv([lambda: Maze(grid) for _ in range(num_envs)])
+
+    model_path = f"app/saved_models/trained_models_per_id/{maze_id}/"
+    os.makedirs(model_path, exist_ok=True)
+
+    try:
+        env = VecNormalize.load(load_path=model_path + "norm_env.pkl", venv=env)
+        print("TrainEnv: Retraining the environment")
+    except:
+        env = VecNormalize(env, norm_obs=False, norm_reward=True, clip_obs=10.0)
+        print("TrainEnv: Creating the environment")
+
+    try:
+        model = PPO.load(path=model_path + "ppo.zip", env=env)
+        print("TrainModel: Retraining the model")
+    except:
+        model = PPO("MlpPolicy", env=env, verbose=0, tensorboard_log=log_dir)
+        print("TrainModel: Creating the model")
+
+    print("Training started")
+    timesteps = 10000
+    iterations_per_learning = 10
+    for i in range(iterations_per_learning):
+        print(f"Training iteration {i+1}!")
+        model.learn(
+            total_timesteps=timesteps, reset_num_timesteps=False, progress_bar=True
+        )
+        model.save(model_path + "ppo.zip")
+    print(f"Model {model_path} saved successfully")
+    env.save(model_path + "norm_env.pkl")
+    print("Environments saved successfully")
+    print("End of training")
 
 
 running_tests = {}
@@ -494,46 +522,63 @@ def test(data):
 
     maze = MazeBd.query.filter_by(id=maze_id).first()
 
-    grid1 = json.loads(maze.grid)  # Asigna el grid a mapa_original
-    size = maze.maze_size  # Calcula el tamaño del mapa
+    grid1 = json.loads(maze.grid)
+    size = maze.maze_size
 
     grid = [grid1[i : i + size] for i in range(0, len(grid1), size)]
 
-    # Vectorizar entornos
-    env = DummyVecEnv([lambda: make_env(grid)])
+    vec_norm_path = f"app/saved_models/trained_models_per_id/{maze_id}/norm_env.pkl"
+    env = DummyVecEnv([lambda: Maze(grid)])
+    try:
+        env = VecNormalize.load(load_path=vec_norm_path, venv=env)
+        print(f"Loading the environment {vec_norm_path}")
+    except:
+        print(f"Vectorized environment not found, loading a generic one")
+        env = VecNormalize(env, norm_obs=False, norm_reward=True, clip_obs=10.0)
 
-    model_path = "./app/saved_models/ppo_dungeons.zip"
-    model = PPO.load(model_path)
-    print(f"Cargando el archivo {model_path}")
+    try:
+        model_to_load = f"app/saved_models/trained_models_per_id/{maze_id}/ppo.zip"
+        model = PPO.load(model_to_load, env=env)
+        print(f"Loading the file {model_to_load}")
+    except:
+        model = PPO("MlpPolicy", env=env)
+        print("Playing without a trained model!")
 
+    print(f"Minimum steps required to solve the maze: {env.envs[0].minimum_steps}")
+
+    env.training = False
+    env.norm_reward = False
     obs = env.reset()
-    print(f"Obs despues del reset: {obs_to_string(obs)}")
-    print(
-        f"Cant minima pasos para resolver el laberinto: {env.envs[0].unwrapped.minimum_steps}"
-    )
-    done = False
-    pasos = 0
-    while not done:
+    steps = 0
+    while steps < N_MAX_STEPS:
+        steps += 1
+        print(f"Steps: {steps}")
+
         if not running_tests.get(maze_id):  # Si se ha solicitado detener la prueba
-            print(f"Prueba detenida para maze_id {maze_id}")
+            print(f"Test stopped for maze_id {maze_id}")
             socketio.emit("training_status", {"status": "stopped"})
+            running_tests.pop(maze_id, None)
             break
 
         action, _ = model.predict(obs)
-        print(f"{pasos}.1. Action segun el predict: {action_to_string(action)}")
-
+        print(f"  Action according to the prediction: {action_to_string(action)}")
         obs, reward, done, _ = env.step(action)
-        pasos += 1
-        print(f"{pasos}.2. Obs despues del step: {obs_to_string(obs)}")
-        print(f"{pasos}.3. Reward: {reward}, Done: {done}")
+        print(
+            f"  Observation after the step: {obs_to_string(obs)}" + 
+            f"  Reward: {reward}, Done: {done}"
+        )
 
-        current_map_state = env.envs[0].unwrapped.get_current_map_state()
+        current_map_state = env.envs[0].get_current_map_state()
         socketio.emit("map", current_map_state)
         time.sleep(0.05)
 
         if done:
-            print("Laberinto resuelto")
+            print("Maze solved")
             socketio.emit("training_status", {"status": "finished"})
+            break
+
+        if env.envs[0].lose:
+            print(f"Your agent could not complete the maze in {N_MAX_STEPS} steps!!")
 
     running_tests.pop(maze_id, None)
 
@@ -546,12 +591,12 @@ def stop_test(data):
     global running_tests
     if maze_id in running_tests:
         running_tests[maze_id] = False  # Señalar que se debe detener el test
-        print(f"Solicitud para detener el test {maze_id}")
+        print(f"Request to stop the test {maze_id}")
     else:
         socketio.emit(
             "training_status",
             {
                 "status": "error",
-                "message": "No hay test en ejecución para este maze_id",
+                "message": "There is no test running for this maze_id",
             },
         )

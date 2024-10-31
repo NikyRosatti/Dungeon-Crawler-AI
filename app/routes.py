@@ -379,7 +379,7 @@ def map():
 
 
 @socketio.on("start_simulation")
-def train(maze_id):
+def train(maze_id, path_saved):
 
     print(maze_id)
     maze = MazeBd.query.filter_by(id=maze_id).first()
@@ -393,7 +393,7 @@ def train(maze_id):
     envs = DummyVecEnv([lambda: make_env(grid) for i in range(num_envs)])
     envs = VecNormalize(envs, norm_obs=True, norm_reward=True)
     # Eliminar modelo previo si deseas empezar desde cero
-    model_path = "./app/saved_models/ppo_dungeons.zip"
+    model_path = path_saved + "/ppo_dungeons.zip"
     if os.path.exists(model_path):
         os.remove(model_path)
         print(f"Model: Archivo existente {model_path} eliminado para crear uno nuevo")
@@ -417,7 +417,7 @@ def train(maze_id):
     )
 
     # Cargar o crear la normalización
-    vec_norm_path = "./app/saved_models/vec_normalize.pkl"
+    vec_norm_path = path_saved + "/vec_normalize.pkl"
     if os.path.exists(vec_norm_path):
         envs = VecNormalize.load(vec_norm_path, envs)
         print(f"Vec: Cargando el archivo {vec_norm_path}")
@@ -460,7 +460,7 @@ def handle_training(data):
     maze_id = data.get("maze_id")
     if maze_id is not None:
         emit("training_status", {"status": "started"})
-        train(maze_id)
+        train(maze_id, "./app/saved_models")
         emit("training_status", {"status": "finished"})
     else:
         emit("training_status", {"status": "error", "message": "Maze ID is missing"})
@@ -471,7 +471,7 @@ def handle_test(data):
     maze_id = data.get("maze_id")
     if maze_id is not None:
         emit("training_status", {"status": "started"})
-        train(maze_id)
+        train(maze_id, "./app/saved_models")
         emit("training_status", {"status": "finished"})
     else:
         emit("training_status", {"status": "error", "message": "Maze ID is missing"})

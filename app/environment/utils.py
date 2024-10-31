@@ -2,25 +2,39 @@ import heapq
 import numpy as np
 from gymnasium.utils import seeding
 
+# Possible movements: left, down, right, up
+LEFT = 0
+DOWN = 1
+RIGHT = 2
+UP = 3
+
+# Objects present in each cell of the grid
+AGENT = -1
+FLOOR = 0
+WALL = 1
+INITIAL_DOOR = 2
+EXIT_DOOR = 3
+MINE = 4
+
 
 def find_points(grid, start_point=None, exit_point=None):
     """
-    Método privado para buscar los puntos en la grilla.
+    Method to find points in the grid.
 
-    Además asegura que el start_point y el exit_point sean tuplas.
+    Also ensures that start_point and exit_point are tuples.
 
-    Parámetros:
-        grid (numpy.ndarray): La grilla del laberinto.
-        start_point (tuple | None): Tupla con la posición de inicio o None.
-        exit_point (tuple | None): Tupla con la posición de salida o None.
+    Parameters:
+        grid (numpy.ndarray): The maze grid.
+        start_point (tuple | None): Tuple with the starting position or None.
+        exit_point (tuple | None): Tuple with the exit position or None.
 
-    Devuelve:
-        tuple: Dos tuplas que representan el punto de inicio y el punto de salida respectivamente.
+    Returns:
+        tuple: Two tuples representing the starting point and exit point, respectively.
     """
 
     def find_coordinates(matrix, value):
         """
-        Dada una matriz y un valor, devuelve la posicion de ese valor en la matriz
+        Given a matrix and a value, returns the position of that value in the matrix.
         """
         for i, row in enumerate(matrix):
             for j, elem in enumerate(row):
@@ -37,12 +51,35 @@ def find_points(grid, start_point=None, exit_point=None):
 
 
 def get_min_steps(grid, start_point=None, exit_point=None):
+    """
+    A* Algorithm.
+
+    Parameters:
+        grid (numpy.ndarray): The maze grid.
+        start_point (tuple | None): Tuple with the starting position or None.
+        exit_point (tuple | None): Tuple with the exit position or None.
+
+    Returns:
+        list: List of nodes to traverse to go from start to exit.
+        None: If no path is available.
+    """
+
     def heuristica(a, b):
+        """
+        Manhattan distance between two points on the grid.
+
+        Parameters:
+            a (tuple): Coordinate of the first point.
+            b (tuple): Coordinate of the second point.
+
+        Returns:
+            int: Manhattan distance between `a` and `b`.
+        """
         return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
     start_point, exit_point = find_points(grid, start_point, exit_point)
-    start_point = tuple(start_point)  # Convertir a tupla
-    exit_point = tuple(exit_point)  # Convertir a tupla
+    start_point = tuple(start_point)
+    exit_point = tuple(exit_point)
     filas, columnas = np.shape(grid)
 
     lista_abierta = []
@@ -85,45 +122,31 @@ def get_min_steps(grid, start_point=None, exit_point=None):
 
 def is_winneable(grid):
     """
-    Verifica si el laberinto es resolvible utilizando una búsqueda en profundidad.
+    Checks if the maze is solvable using the A* algorithm.
 
-    Un laberinto es resolvible si hay un camino disponible del punto de inicio y el punto de fin.
+    A maze is solvable if there is an available path from the start point to the end point.
 
-    Devuelve:
-        bool: Verdadero si el laberinto es resolvible, falso en caso contrario.
+    Parameters:
+        grid (numpy.ndarray | list): The maze grid.
+
+    Returns:
+        bool: True if the maze is solvable, False otherwise.
     """
     grid = np.array(grid)
     return get_min_steps(grid) is not None
 
 
-# Utils de frozen_lake, usado para step() de ellos, nosotros no lo usamos
-def categorical_sample(prob_n, np_random: np.random.Generator):
-    """
-    Muestra de una distribución categórica donde cada fila especifica las probabilidades de clase.
-
-    Parámetros:
-        prob_n (array_like): Arreglo de probabilidades por clase.
-        np_random (np.random.Generator): Generador de números aleatorios de NumPy.
-
-    Devuelve:
-        int: Índice de la clase seleccionada.
-    """
-    prob_n = np.asarray(prob_n)
-    csprob_n = np.cumsum(prob_n)
-    return np.argmax(csprob_n > np_random.random())
-
-
 def generate_random_map(size=8, p=0.8, seed=None):
     """
-    Genera un mapa aleatorio para el laberinto.
+    Generates a random map for the maze.
 
-    Parámetros:
-        size (int): El tamaño del laberinto (número de filas y columnas). Por defecto es 8.
-        p (float): Probabilidad de que una celda sea un espacio libre (0) frente a una pared (1). Por defecto es 0.8.
-        seed (int): Semilla para la generación aleatoria. Si se proporciona, se usa para reproducibilidad.
+    Parameters:
+        size (int): The size of the maze (number of rows and columns). Default is 8.
+        p (float): Probability that a cell is free space (0) versus a wall (1). Default is 0.8.
+        seed (int): Seed for random generation. If provided, it is used for reproducibility.
 
-    Devuelve:
-        numpy.ndarray: Un arreglo 2D que representa el laberinto generado.
+    Returns:
+        numpy.ndarray: A 2D array representing the generated maze.
     """
     valid = False
     board = []
@@ -139,7 +162,53 @@ def generate_random_map(size=8, p=0.8, seed=None):
     return board
 
 
+def increment_position(current_row, current_col, action):
+    """
+    Moves within a grid given a row and column.
+
+    Parameters:
+        current_row (tuple): Row of the current state.
+        current_col (tuple): Column of the current state.
+        action (int): Movement to perform (up, down, left, right) according to the corresponding integer.
+
+    Returns:
+        tuple: The new row and column after the action is performed.
+        ValueError Exception if the action is not registered as valid.
+    """
+    row_new, col_new = current_row, current_col
+
+    if action == DOWN:
+        row_new += 1
+    elif action == RIGHT:
+        col_new += 1
+    elif action == UP:
+        row_new -= 1
+    elif action == LEFT:
+        col_new -= 1
+    else:
+        raise ValueError(f"Acción inválida: {action}")
+
+    return (row_new, col_new)
+
+
+def size(grid):
+    """
+    Size of a given grid.
+
+    Parameters:
+        grid (numpy.ndarray | list): The grid of the maze.
+
+    Returns:
+        (int | tuple): int if the grid size is square,
+                       tuple if the grid is not square, in the form of (NRows, NCols).
+    """
+    grid = np.array(grid)
+    nrow, ncol = np.shape(grid)
+    return nrow if nrow == ncol else np.shape(grid)
+
+
 def action_to_string(action):
+    """String representation of actions for the environment. Returns 'UNKNOWN' in case of an invalid action."""
     if action == 0:
         return "LEFT"
     if action == 1:
@@ -152,6 +221,7 @@ def action_to_string(action):
 
 
 def object_to_string(obj):
+    """String representation of environment objects. Returns 'UNKNOWN_OBJ' in case of an invalid object."""
     if obj == -1:
         return "AGENT"
     if obj == 0:
@@ -168,17 +238,19 @@ def object_to_string(obj):
 
 
 def obs_to_string(obs):
+    """
+    String representation of the observation space of the environment.
+
+    Parameters:
+        obs (VecEnvObs | np.array): The observation space.
+
+    Returns:
+        str: Agent position (X, Y) and exit position (X, Y).
+    """
     obs = obs[0]
     x_Agent = obs[0]
     y_Agent = obs[1]
-    minSteps_StepsPerf = obs[2]
-    left_Agent = obs[3]
-    right_Agent = obs[4]
-    top_Agent = obs[5]
-    bottom_Agent = obs[6]
-    s = (
-        f"[X_Agent: {x_Agent}, Y_Agent: {y_Agent}, MinSteps-StepsPerf: {minSteps_StepsPerf}"
-        + f", Left: {object_to_string(left_Agent)}, Right: {object_to_string(right_Agent)}"
-        + f", Top: {object_to_string(top_Agent)}, Bottom: {object_to_string(bottom_Agent)}]"
-    )
+    x_Exit_door = obs[2]
+    y_Exit_door = obs[3]
+    s = f"[X_Agent: {x_Agent}, Y_Agent: {y_Agent}, x_Exit_door: {x_Exit_door}, y_Exit_door: {y_Exit_door}]"
     return s

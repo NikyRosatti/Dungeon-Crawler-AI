@@ -1,6 +1,10 @@
 import heapq
+import json
+
 import numpy as np
 from gymnasium.utils import seeding
+
+from app.models import MazeBd
 
 # Possible movements: left, down, right, up
 LEFT = 0
@@ -8,13 +12,64 @@ DOWN = 1
 RIGHT = 2
 UP = 3
 
-# Objects present in each cell of the grid
-AGENT = -1
-FLOOR = 0
-WALL = 1
-INITIAL_DOOR = 2
-EXIT_DOOR = 3
-MINE = 4
+
+def find_player_position(map):
+    try:
+        return map.index(-1)  # Buscar la posición del jugador (-1)
+    except ValueError:
+        return map.index(2)  # Si no hay -1, devolver la posición de 2
+
+
+def move_player(direction, map, map_size):
+    player_pos = find_player_position(map)
+
+    if direction == "ArrowUp":
+        new_pos = player_pos - map_size if player_pos >= map_size else player_pos
+    elif direction == "ArrowDown":
+        new_pos = (
+            player_pos + map_size if player_pos < len(map) - map_size else player_pos
+        )
+    elif direction == "ArrowLeft":
+        new_pos = player_pos - 1 if player_pos % map_size != 0 else player_pos
+    elif direction == "ArrowRight":
+        new_pos = player_pos + 1 if (player_pos + 1) % map_size != 0 else player_pos
+    else:
+        new_pos = player_pos
+
+    if map[new_pos] == 0:
+        map[player_pos] = 0
+        map[new_pos] = -1
+    elif map[new_pos] == 3:
+        map[player_pos] = 0
+        map[new_pos] = -2
+
+
+def change_door(map):
+    if isinstance(map, list) and 2 in map:
+        i = map.index(2)
+        map[i] = -1
+    else:
+        print("Error: map no es una lista o no contiene el valor 2")
+
+
+def create_grid(map_grid, size):
+    """Convierte el arreglo plano en una matriz 2D."""
+    return [map_grid[i : i + size] for i in range(0, len(map_grid), size)]
+
+
+def are_points_valid(start_point, exit_point):
+    """Valida si se encontraron el punto de inicio y salida."""
+    return start_point is not None and exit_point is not None
+
+
+def load_maze_from_db(maze_id):
+    """Carga el laberinto desde la base de datos y devuelve su información."""
+    maze = MazeBd.query.filter_by(id=maze_id).first()
+    grid1 = json.loads(maze.grid)
+    size = maze.maze_size
+    grid = [grid1[i : i + size] for i in range(0, len(grid1), size)]
+
+    return maze, grid, size
 
 
 def find_points(grid, start_point=None, exit_point=None):
@@ -235,22 +290,3 @@ def object_to_string(obj):
     if obj == 4:
         return "MINE"
     return "UNKNOWN_OBJ"
-
-
-def obs_to_string(obs):
-    """
-    String representation of the observation space of the environment.
-
-    Parameters:
-        obs (VecEnvObs | np.array): The observation space.
-
-    Returns:
-        str: Agent position (X, Y) and exit position (X, Y).
-    """
-    obs = obs[0]
-    x_Agent = obs[0]
-    y_Agent = obs[1]
-    x_Exit_door = obs[2]
-    y_Exit_door = obs[3]
-    s = f"[X_Agent: {x_Agent}, Y_Agent: {y_Agent}, x_Exit_door: {x_Exit_door}, y_Exit_door: {y_Exit_door}]"
-    return s

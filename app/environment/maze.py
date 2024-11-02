@@ -28,7 +28,7 @@ class Maze(gym.Env):
         self.nrow, self.ncol = np.shape(self.grid)
         self.start_point, self.exit_point = find_points(grid, start_point, exit_point)
         self.minimum_steps = len(get_min_steps(self.grid)) - 1
-        # Maximum number of steps to be taken: When the agent makes 100 actions (steps), it ends (losing).
+        # Maximum number of steps to be taken: When the agent makes (Maze.size() * 10) actions (steps), it ends (losing).
         self.maximum_steps = self.size() * 10
         self.action_space = spaces.Discrete(4)
 
@@ -92,7 +92,7 @@ class Maze(gym.Env):
     def _update_state_and_reward(self, row, col, action):
         new_row, new_col = increment_position(row, col, action)
 
-        # If the new position goes out of bounds, do not allow the movement
+        # If the new position goes out of bounds or its a wall, do not allow the movement
         if (
             new_row < 0
             or new_row >= self.size()
@@ -109,20 +109,25 @@ class Maze(gym.Env):
         new_cell_value = self.grid[new_row, new_col]
 
         if new_cell_value == MINE:
-            self.reward -= 10
+            self.reward = -100
             self.lose_by_mine = True
-            self.done = True
         if new_cell_value == EXIT_DOOR:
             self.reward += 100
             self.win = True
-            self.done = True
         if new_cell_value == FLOOR:
             self.reward -= 0.1
         if self.total_steps_performed >= self.maximum_steps:
-            self.reward -= 10
+            self.reward -= 20
             self.lose_by_steps = True
-            self.done = True
 
+        self.done = self.lose_by_mine or self.lose_by_steps or self.win
+        
+        if self.done:
+            self.episode_result = {
+                "win": self.win,
+                "lose_by_mine": self.lose_by_mine,
+                "lose_by_steps": self.lose_by_steps
+            }
         return new_state
 
     def get_current_map_state(self):

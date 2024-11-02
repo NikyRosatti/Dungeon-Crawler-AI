@@ -49,7 +49,6 @@ AVATARS = [
 ]
 
 
-
 # Decorador de login
 def login_required(f):
     @wraps(f)
@@ -472,6 +471,7 @@ def save_maze_and_respond(grid, map_grid, size):
 
     return jsonify({"valid": True, "redirect_url": url_for("routes.map", maze_id=maze_id)})
 
+
 @socketio.on("start_simulation")
 def train(maze_id):
 
@@ -488,7 +488,9 @@ def train(maze_id):
     num_envs = 5
     env = DummyVecEnv([lambda: Maze(grid) for _ in range(num_envs)])
 
-    model_path = f"app/saved_models/trained_models_per_id/{maze_id}/"
+    model_path = os.path.join(
+        "app", "saved_models", "trained_models_per_id", str(maze_id), ""
+    )
     os.makedirs(model_path, exist_ok=True)
 
     try:
@@ -516,9 +518,9 @@ def train(maze_id):
         # Calcular el progreso
         progress = ((i + 1) / iterations_per_learning) * 100
         print(f"Progress: {progress:.2f}%")
-        
+
         # Emitir progreso a todas las páginas conectadas
-        socketio.emit('progress', {'progress': progress})
+        socketio.emit("progress", {"progress": progress})
         model.save(model_path + "ppo.zip")
     print(f"Model {model_path} saved successfully")
     env.save(model_path + "norm_env.pkl")
@@ -540,7 +542,7 @@ def test(data):
     maze, grid, size = load_maze_from_db(maze_id)
 
     # Vectorizar entornos y cargar el modelo
-    env, model = setup_environment(grid, size, maze_id)
+    env, model = setup_environment(grid, maze_id)
 
     # Ejecutar la prueba de entrenamiento
     run_training_test(env, model, maze_id, maze, size)
@@ -552,13 +554,19 @@ def load_maze_from_db(maze_id):
     grid1 = json.loads(maze.grid)
     size = maze.maze_size
     grid = [grid1[i: i + size] for i in range(0, len(grid1), size)]
-    
+
     return maze, grid, size
 
 
-def setup_environment(grid, size, maze_id):
+def setup_environment(grid, maze_id):
     """Configura el entorno de entrenamiento y carga el modelo PPO."""
-    vec_norm_path = f"app/saved_models/trained_models_per_id/{maze_id}/norm_env.pkl"
+    vec_norm_path = os.path.join(
+        "app", "saved_models", "trained_models_per_id", str(maze_id), "norm_env.pkl"
+    )
+    model_to_load = os.path.join(
+        "app", "saved_models", "trained_models_per_id", str(maze_id), "ppo.zip"
+    )
+
     env = DummyVecEnv([lambda: Maze(grid)])
     try:
         env = VecNormalize.load(load_path=vec_norm_path, venv=env)
@@ -568,13 +576,12 @@ def setup_environment(grid, size, maze_id):
         env = VecNormalize(env, norm_obs=False, norm_reward=True, clip_obs=10.0)
 
     try:
-        model_to_load = f"app/saved_models/trained_models_per_id/{maze_id}/ppo.zip"
         model = PPO.load(model_to_load, env=env)
         print(f"Loading the file {model_to_load}")
     except:
-        model = PPO("MlpPolicy", env=env)
         print("Playing without a trained model!")
-    
+        model = PPO("MlpPolicy", env=env)
+
     return env, model
 
 
@@ -609,11 +616,14 @@ def run_training_test(env, model, maze_id, maze, size):
 
         current_map_state = env.envs[0].get_current_map_state()
         socketio.emit("map", current_map_state)
-        time.sleep(1)
+        time.sleep(0.05)
 
-        if env.envs[0].win:
-            print("Maze solved")
-            if user:
+        if done:
+            win = env.envs[0].episode_result.get("win")
+            lose_by_mine = env.envs[0].episode_result.get("lose_by_mine")
+            lose_by_steps = env.envs[0].episode_result.get("lose_by_steps")
+            if win:
+                print("Maze solved")
                 if maze not in user.completed_dungeons:
                     user.completed_dungeons.append(maze)
                     if env.envs[0].minimum_steps == steps:
@@ -625,17 +635,20 @@ def run_training_test(env, model, maze_id, maze, size):
                     print(f"User {user.username} completed the maze {maze_id}.")
                 else:
                     print(f"The user {user.username} already completed this maze.")
-            socketio.emit("training_status", {"status": "finished"})
-            break
-        
-        if env.envs[0].lose_by_mine:
-            print("You agent died brutally when stepped in a mine")
-            break
+                socketio.emit("training_status", {"status": "finished"})
 
-        if env.envs[0].lose_by_steps:
-            print(f"Your agent could not complete the maze in {env.envs[0].maximum_steps} steps!!")
+            if lose_by_mine:
+                print("You agent died brutally when stepped in a mine")
+
+            if lose_by_steps:
+                print(
+                    f"Your agent could not complete the maze in {env.envs[0].maximum_steps} steps!!"
+                )
+
+            break
 
     running_tests.pop(maze_id, None)  # Eliminar la prueba de la lista de ejecuciones
+
 
 @socketio.on("stopTraining")
 def stop_test(data):

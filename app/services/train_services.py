@@ -4,7 +4,7 @@ import time
 
 from flask import session
 
-from app.environment.maze import Maze, N_MAX_STEPS
+from app.environment.maze import Maze
 from app.models import User, MazeBd, db
 from app.services.map_services import action_to_string
 
@@ -29,7 +29,9 @@ def train_model(maze_id):
     num_envs = 5
     env = DummyVecEnv([lambda: Maze(grid) for _ in range(num_envs)])
 
-    model_path = f"app/saved_models/trained_models_per_id/{maze_id}/"
+    model_path = os.path.join(
+        "app", "saved_models", "trained_models_per_id", str(maze_id), ""
+    )
     os.makedirs(model_path, exist_ok=True)
 
     try:
@@ -80,7 +82,7 @@ def run_training_test(env, model, maze_id, maze, size):
     env.norm_reward = False
     obs = env.reset()
     steps = 0
-    while steps < N_MAX_STEPS:
+    while steps < env.envs[0].maximum_steps:
         steps += 1
         print(f"Steps: {steps}")
 
@@ -105,8 +107,11 @@ def run_training_test(env, model, maze_id, maze, size):
         time.sleep(0.05)
 
         if done:
-            print("Maze solved")
-            if user:
+            win = env.envs[0].episode_result.get("win")
+            lose_by_mine = env.envs[0].episode_result.get("lose_by_mine")
+            lose_by_steps = env.envs[0].episode_result.get("lose_by_steps")
+            if win:
+                print("Maze solved")
                 if maze not in user.completed_dungeons:
                     user.completed_dungeons.append(maze)
                     if env.envs[0].minimum_steps == steps:
@@ -119,19 +124,29 @@ def run_training_test(env, model, maze_id, maze, size):
                     print(f"User {user.username} completed the maze {maze_id}.")
                 else:
                     print(f"The user {user.username} already completed this maze.")
-            results["status"] = "finished"
-            yield results
-            break
+                results["status"] = "finished"
+                yield results
 
-        if env.envs[0].lose:
-            print(f"Your agent could not complete the maze in {N_MAX_STEPS} steps!!")
+            if lose_by_mine:
+                print("You agent died brutally when stepped in a mine")
+            if lose_by_steps:
+                print(
+                    f"Your agent could not complete the maze in {env.envs[0].maximum_steps} steps!!"
+                )
+            break
 
     running_tests.pop(maze_id, None)  # Eliminar la prueba de la lista de ejecuciones
 
 
 def setup_environment(grid, maze_id):
     """Configura el entorno de entrenamiento y carga el modelo PPO."""
-    vec_norm_path = f"app/saved_models/trained_models_per_id/{maze_id}/norm_env.pkl"
+    vec_norm_path = os.path.join(
+        "app", "saved_models", "trained_models_per_id", str(maze_id), "norm_env.pkl"
+    )
+    model_to_load = os.path.join(
+        "app", "saved_models", "trained_models_per_id", str(maze_id), "ppo.zip"
+    )
+    
     env = DummyVecEnv([lambda: Maze(grid)])
     try:
         env = VecNormalize.load(load_path=vec_norm_path, venv=env)
@@ -141,12 +156,11 @@ def setup_environment(grid, maze_id):
         env = VecNormalize(env, norm_obs=False, norm_reward=True, clip_obs=10.0)
 
     try:
-        model_to_load = f"app/saved_models/trained_models_per_id/{maze_id}/ppo.zip"
         model = PPO.load(model_to_load, env=env)
         print(f"Loading the file {model_to_load}")
     except:
-        model = PPO("MlpPolicy", env=env)
         print("Playing without a trained model!")
+        model = PPO("MlpPolicy", env=env)
 
     return env, model
 

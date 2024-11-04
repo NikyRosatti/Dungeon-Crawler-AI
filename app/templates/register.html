@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ get_locale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/static/css/login.css">
-    <title>DC-AI, Register</title>
+    <title>{{ _('DC-AI, Register') }}</title>
 </head>
 <body>
     <div class="container">
@@ -20,21 +20,26 @@
         </div>
         <div class="card">
             <div class="titulo">
-                <h1><strong>Create Account</strong></h1>
+                <h1><strong>{{ _('Create Account') }}</strong></h1>
+                {% if error %}
+                  <div class="error-message">
+                    <p>{{ error }}</p>
+                  </div>
+                {% endif %}
                 <form action="/register" method="post" class="login-form" id="register-form">
                     <div>
-                        <label for="username">Username:</label>
+                        <label for="username">{{ _('Username:') }}</label>
                         <input type="text" id="username" name="username" required>
                     </div>
                     <div>
-                        <label for="email">Email:</label>
+                        <label for="email">{{ _('Email:') }}</label>
                         <input type="email" id="email" name="email" required>
                     </div>
                     <div>
-                        <label for="password">Password:</label>
+                        <label for="password">{{ _('Password:') }}</label>
                         <input type="password" id="password" name="password" required>
                     </div>
-                    <button type="button" id="choose-avatar-btn">Choose Avatar</button>
+                    <button type="button" id="choose-avatar-btn">{{ _('Choose Avatar') }}</button>
                     <div class="avatar-selection" id="avatar-selection" style="display: none;">
                         <div class="avatar-grid">
                             {% for avatar in avatars %}
@@ -44,16 +49,16 @@
                             </label>
                             {% endfor %}
                         </div>
-                        <button type="button" id="select-avatar-btn">Select</button>
+                        <button type="button" id="select-avatar-btn">{{ _('Select') }}</button>
                     </div>   
                     <div id="avatar-error" class="error-message" style="display: none;">
-                        Please, choose an avatar before register.
+                        {{ _('Please, choose an avatar before registering.') }}
                     </div>                 
-                    <button type="submit">Register</button>
+                    <button type="submit">{{ _('Register') }}</button>
                 </form>
                 <div class="register-link">
-                    <p>Already have an account?</p>
-                    <a href="/login">Log in</a>
+                    <p>{{ _('Already have an account?') }}</p>
+                    <a href="/login">{{ _('Log in') }}</a>
                 </div>
             </div>
         </div>

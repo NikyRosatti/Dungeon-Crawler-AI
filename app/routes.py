@@ -11,6 +11,7 @@ from flask import (
 )
 from app.models import User, MazeBd, db
 from sqlalchemy import or_
+from flask_babel import gettext as _
 from flask_socketio import emit
 from app import socketio
 import bcrypt
@@ -27,6 +28,7 @@ from app.environment.utils import (
 )
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 import time
+import re
 
 bp = Blueprint("routes", __name__)
 maze_info = {
@@ -77,10 +79,10 @@ def login():
     ).first()
 
     if not user:
-        return render_template("login.html", error="User does not exist."), 400
+        return render_template("login.html", error=_("User does not exist.")), 400
 
     if not bcrypt.checkpw(password, user.password.encode("utf-8")):
-        return render_template("login.html", error="Incorrect credentials."), 400
+        return render_template("login.html", error=_("Incorrect credentials.")), 400
 
     session["user_id"] = user.id
     return redirect(url_for("routes.dashboard"))
@@ -98,6 +100,8 @@ def logout():
 def register():
     if request.method != "POST":
         return render_template("register.html", avatars=AVATARS)
+
+    EMAIL_REGEX = r"^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$"
     
     username = request.form["username"]
     password = request.form["password"].encode("utf-8")
@@ -106,7 +110,7 @@ def register():
 
     if not avatar:
         return render_template(
-            "register.html", error="Debes seleccionar un avatar", avatars=AVATARS
+            "register.html", error=_("You must select an avatar"), avatars=AVATARS
         )
 
     existing_user = User.query.filter(
@@ -114,7 +118,23 @@ def register():
     ).first()
 
     if existing_user:
-        return render_template("register.html", error="Usuario ya registrado"), 400 #Error 400, bad request
+      return render_template("register.html", error=_("Username already exists"), avatars=AVATARS), 400
+
+    if len(username) < 3:
+        return render_template("register.html", error=_("Username must have at least 3 characters"), avatars=AVATARS), 400
+
+    if not username.isalnum():
+        return render_template(
+            "register.html", error=_("Username can only contain letters and numbers"), avatars=AVATARS
+        ), 400
+
+    if not re.match(EMAIL_REGEX, email):
+        return render_template(
+            "register.html", error=_("Please enter a valid email address"), avatars=AVATARS
+        ), 400
+
+    if len(password) < 8:
+        return render_template("register.html", error=_("Password must have at least 8 characters"), avatars=AVATARS), 400
 
     hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
     new_user = User(
@@ -181,9 +201,9 @@ def profile():
     if selected_avatar := request.form.get("avatar"):
         user.avatar = selected_avatar
         db.session.commit()
-        flash("Avatar actualizado con éxito!", "success")
+        flash(_("Avatar updated successfully!"), "success")
     else:
-        flash("Por favor, selecciona un avatar.", "danger")
+        flash(_("Please, select an avatar."), "danger")
     return redirect("/profile")
 
 
@@ -302,12 +322,12 @@ def update_password(user):
 
     if not bcrypt.checkpw(current_password, user.password):
         return render_template(
-            "settings.html", error="Incorrect current password."
+            "settings.html", error=_("Incorrect current password.")
         )
 
     if new_password != confirm_password:
         return render_template(
-            "settings.html", error="New passwords do not match."
+            "settings.html", error=_("New passwords do not match.")
         )
 
     hashed_new_password = bcrypt.hashpw(new_password, bcrypt.gensalt())
@@ -315,7 +335,7 @@ def update_password(user):
     db.session.commit()
 
     return render_template(
-        "settings.html", success="Password updated successfully."
+        "settings.html", success=_("Password updated successfully.")
     )
 
 
@@ -324,18 +344,18 @@ def update_email(user):
     confirm_email = request.form["confirm_email"]
 
     if new_email != confirm_email:
-        return render_template("settings.html", error="Emails do not match.")
+        return render_template("settings.html", error=_("Emails do not match."))
 
     if User.query.filter_by(email=new_email).first():
         return render_template(
-            "settings.html", error="Email is already in use."
+            "settings.html", error=_("Email is already in use.")
         )
 
     user.email = new_email
     db.session.commit()
 
     return render_template(
-        "settings.html", success="Email updated successfully."
+        "settings.html", success=_("Email updated successfully.")
     )
 
 

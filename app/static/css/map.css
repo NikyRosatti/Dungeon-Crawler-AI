@@ -52,7 +52,7 @@ body {
 }
 
 .mine {
-    background: url(/static/img/skeleton.png) no-repeat center bottom / 80%,
+    background: url(/static/img/mine.png) no-repeat center bottom / 100%,
                 url(/static/img/dirt.jpg) center center / cover no-repeat;
 }
 

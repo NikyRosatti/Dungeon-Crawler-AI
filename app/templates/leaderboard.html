@@ -16,7 +16,7 @@
                 <tr>
                     <th>{{ _('Rank') }}</th>
                     <th>
-                        <a href="{{ url_for('routes.leaderboard', sort_by='username', order='asc' if request.args.get('order') == 'desc' else 'desc') }}">
+                        <a href="{{ url_for('principal.leaderboard', sort_by='username', order='asc' if request.args.get('order') == 'desc' else 'desc') }}">
                             {{ _('Username') }}
                             {% if request.args.get('sort_by') == 'username' %}
                                 <i class="fa-solid fa-chevron-{{ 'down' if request.args.get('order') == 'asc' else 'up' }}"></i>
@@ -24,7 +24,7 @@
                         </a>
                     </th>
                     <th>
-                        <a href="{{ url_for('routes.leaderboard', sort_by='completed_dungeons', order='asc' if request.args.get('order') == 'desc' else 'desc') }}">
+                        <a href="{{ url_for('principal.leaderboard', sort_by='completed_dungeons', order='asc' if request.args.get('order') == 'desc' else 'desc') }}">
                             {{ _('Completed Dungeons') }}
                             {% if request.args.get('sort_by') == 'completed_dungeons' %}
                                 <i class="fa-solid fa-chevron-{{ 'down' if request.args.get('order') == 'asc' else 'up' }}"></i>
@@ -32,7 +32,7 @@
                         </a>
                     </th>
                     <th>
-                        <a href="{{ url_for('routes.leaderboard', sort_by='max_size', order='asc' if request.args.get('order') == 'desc' else 'desc') }}">
+                        <a href="{{ url_for('principal.leaderboard', sort_by='max_size', order='asc' if request.args.get('order') == 'desc' else 'desc') }}">
                             {{ _('Largest Dungeon Completed') }}
                             {% if request.args.get('sort_by') == 'max_size' %}
                                 <i class="fa-solid fa-chevron-{{ 'down' if request.args.get('order') == 'asc' else 'up' }}"></i>
@@ -40,7 +40,7 @@
                         </a>
                     </th>
                     <th>
-                        <a href="{{ url_for('routes.leaderboard', sort_by='points', order='asc' if request.args.get('order') == 'desc' else 'desc') }}">
+                        <a href="{{ url_for('principal.leaderboard', sort_by='points', order='asc' if request.args.get('order') == 'desc' else 'desc') }}">
                             {{ _('Points') }}
                             {% if request.args.get('sort_by') == 'points' %}
                                 <i class="fa-solid fa-chevron-{{ 'down' if request.args.get('order') == 'asc' else 'up' }}"></i>

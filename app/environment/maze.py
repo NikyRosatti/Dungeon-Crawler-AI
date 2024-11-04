@@ -1,7 +1,13 @@
-import numpy as np
 import gymnasium as gym
+import numpy as np
 from gymnasium import spaces
-from app.environment.utils import get_min_steps, find_points, increment_position
+
+from app.services.map_services import (
+    find_points,
+    get_min_steps,
+    increment_position,
+)
+
 
 # Possible movements: left, down, right, up
 LEFT = 0

@@ -161,7 +161,11 @@ def get_min_steps(grid, start_point=None, exit_point=None):
             vecino = (actual[0] + mov[0], actual[1] + mov[1])
 
             if 0 <= vecino[0] < filas and 0 <= vecino[1] < columnas:
-                if grid[vecino[0]][vecino[1]] == 1 or vecino in lista_cerrada:
+                if (
+                    grid[vecino[0]][vecino[1]] == 1
+                    or grid[vecino[0]][vecino[1]] == 4
+                    or vecino in lista_cerrada
+                ):
                     continue
 
                 g_score_vecino = g_score[actual] + 1

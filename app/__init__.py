@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, request
+from flask_babel import Babel
 from flask_migrate import Migrate
 from flask_socketio import SocketIO
 from flask_sqlalchemy import SQLAlchemy
@@ -8,12 +9,21 @@ db = SQLAlchemy()
 socketio = SocketIO()
 
 
+def get_locale():
+    return request.accept_languages.best_match(["en", "es"])
+
+
 def create_app(config_class):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
     db.init_app(app)
     socketio.init_app(app)
+
+    babel = Babel()
+    babel.init_app(app, locale_selector=get_locale)
+
+    app.jinja_env.globals["get_locale"] = get_locale
 
     from app.routes.auth_routes import bp as bp_auth
     from app.routes.principal_routes import bp as bp_princ
@@ -27,6 +37,7 @@ def create_app(config_class):
 
     with app.app_context():
         from app.models import User
+
         db.create_all()
         if User.query.filter_by(username="TheVoidItself").first() is None:
             null_user = User(

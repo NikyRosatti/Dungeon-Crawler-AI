@@ -104,6 +104,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 case 3:
                                     cell.classList.add("end");
                                     break;
+                                case 4:
+                                    cell.classList.add('mine');
+                                    break;
                             }
                         }
                     });

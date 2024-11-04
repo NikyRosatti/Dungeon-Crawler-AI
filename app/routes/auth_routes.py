@@ -1,5 +1,6 @@
 import bcrypt
 from sqlalchemy import or_
+import re
 
 from flask import (
     Blueprint,
@@ -9,6 +10,7 @@ from flask import (
     session,
     url_for,
 )
+from flask_babel import gettext as _
 
 from app.models import User, db
 from app.controllers.auth_controllers import login_required, logout_required, AVATARS
@@ -31,10 +33,10 @@ def login():
     ).first()
 
     if not user:
-        return render_template("login.html", error="User does not exist."), 400
+        return render_template("login.html", error=_("User does not exist.")), 400
 
     if not bcrypt.checkpw(password, user.password.encode("utf-8")):
-        return render_template("login.html", error="Incorrect credentials."), 400
+        return render_template("login.html", error=_("Incorrect credentials.")), 400
 
     session["user_id"] = user.id
     return redirect(url_for("principal.dashboard"))
@@ -55,6 +57,8 @@ def register():
     if request.method != "POST":
         return render_template("register.html", avatars=AVATARS)
 
+    EMAIL_REGEX = r"^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$"
+
     username = request.form["username"]
     password = request.form["password"].encode("utf-8")
     email = request.form["email"]
@@ -62,7 +66,7 @@ def register():
 
     if not avatar:
         return render_template(
-            "register.html", error="Debes seleccionar un avatar", avatars=AVATARS
+            "register.html", error=_("You must select an avatar"), avatars=AVATARS
         )
 
     existing_user = User.query.filter(
@@ -70,10 +74,23 @@ def register():
     ).first()
 
     if existing_user:
-        return (
-            render_template("register.html", error="Usuario ya registrado"),
-            400,
-        )  # Error 400, bad request
+        return render_template("register.html", error=_("Username already exists"), avatars=AVATARS), 400
+
+    if len(username) < 3:
+        return render_template("register.html", error=_("Username must have at least 3 characters"), avatars=AVATARS), 400
+
+    if not username.isalnum():
+        return render_template(
+            "register.html", error=_("Username can only contain letters and numbers"), avatars=AVATARS
+        ), 400
+
+    if not re.match(EMAIL_REGEX, email):
+        return render_template(
+            "register.html", error=_("Please enter a valid email address"), avatars=AVATARS
+        ), 400
+
+    if len(password) < 8:
+        return render_template("register.html", error=_("Password must have at least 8 characters"), avatars=AVATARS), 400
 
     hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
     new_user = User(

@@ -8,6 +8,7 @@ from flask import (
     request,
     session,
 )
+from flask_babel import gettext as _
 
 from app.controllers.auth_controllers import (
     AVATARS,
@@ -97,9 +98,9 @@ def profile():
     if selected_avatar := request.form.get("avatar"):
         user.avatar = selected_avatar
         db.session.commit()
-        flash("Avatar actualizado con éxito!", "success")
+        flash(_("Avatar updated successfully!"), "success")
     else:
-        flash("Por favor, selecciona un avatar.", "danger")
+        flash(_("Please, select an avatar."), "danger")
     return redirect("/profile")
 
 

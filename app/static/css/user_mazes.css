@@ -372,6 +372,11 @@ footer p {
                 url(/static/img/dirt.jpg) center center / cover no-repeat;
 }
 
+.mine {
+    background: url(/static/img/mine.png) no-repeat center bottom / 100%,
+                url(/static/img/dirt.jpg) center center / cover no-repeat;
+}
+
 /* Estilos para el contenedor de los laberintos */
 #mazes-grid {
     display: grid;

@@ -3,12 +3,16 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO
 from flask_migrate import Migrate
 from flask_babel import Babel
+from app.helpers import get_user_language
 
 
 db = SQLAlchemy()
 socketio = SocketIO()
 
 def get_locale():
+    user_language = get_user_language()
+    if user_language:
+        return user_language
     return request.accept_languages.best_match(['en', 'es'])
 
 

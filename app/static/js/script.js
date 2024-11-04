@@ -82,25 +82,34 @@ if (window.location.pathname === '/map') {
     });
     
     // Escuchar el evento "lose_by_mine"
-    socket.on('lose_by_mine', function() {
+    socket.on('lose_by_mine', function(data) {
         // Buscar la celda del agente en el grid
-        const agentCell = document.querySelector('.agent');
+        const pos = data.pos; // Esta es la posición de la mina
+        const gridCells = document.querySelectorAll('.cell'); // Asegúrate de que este sea el selector correcto
+        const [y, x] = pos;
 
+        // Suponiendo que n es el tamaño original del mapa (sin bordes)
+        const n = Math.sqrt(gridCells.length) - 2; // Número de celdas en una fila/columna del mapa original
+        // Calcular el índice en el NodeList
+        const index = (y + 1) * (n + 2) + (x + 1)
+        
+        const Cell = gridCells[index];
+        
         // Cambiar la imagen de fondo de la celda del agente a explosion.gif
-        if (agentCell) {
-            agentCell.style.backgroundImage = "url('/static/gifs/explotion.gif')";
-            agentCell.style.backgroundSize = 'cover'; // Asegúrate de que la imagen cubra completamente la celda
-            agentCell.style.backgroundPosition = 'center'; // Centrar la imagen
-            agentCell.style.backgroundRepeat = 'no-repeat';
+        if (Cell) {
+            Cell.style.backgroundImage = "url('/static/gifs/explotion.gif'), url(/static/img/dirt.jpg)";
+            Cell.style.backgroundSize = 'cover'; // Asegúrate de que la imagen cubra completamente la celda
+            Cell.style.backgroundPosition = 'center'; // Centrar la imagen
+            Cell.style.backgroundRepeat = 'no-repeat';
 
             // Ralentizar la reaparición del agente después de 2 segundos
             setTimeout(() => {
                 // Restaurar la imagen del agente después de la explosión
-                agentCell.style.backgroundImage = `url(${avatarUrl}), url(/static/img/dirt.jpg)`;
-                agentCell.style.backgroundSize = '73%, cover'; // Ajustar el tamaño del fondo
-                agentCell.style.backgroundPosition = 'center bottom, center center';
-                agentCell.style.backgroundRepeat = 'no-repeat, no-repeat';
-            }, 2000); // Esperar 2 segundos
+                Cell.style.backgroundImage = `url('/static/img/mine.png'), url(/static/img/dirt.jpg)`;
+                Cell.style.backgroundSize = 'cover'; // Ajustar el tamaño del fondo
+                Cell.style.backgroundPosition = 'center bottom, center center';
+                Cell.style.backgroundRepeat = 'no-repeat, no-repeat';
+            }, 1500); // Esperar 2 segundos
         }
     });
     document.addEventListener('keydown', function(event) {

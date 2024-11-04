@@ -662,8 +662,10 @@ def run_training_test(env, model, maze_id, maze, size):
                 socketio.emit("training_status", {"status": "finished"})
 
             if lose_by_mine:
-                socketio.emit("lose_by_mine")
+                pos = env.envs[0].final_position
+                socketio.emit("lose_by_mine", {"pos": pos})
                 print("You agent died brutally when stepped in a mine")
+                print(f"{pos}")
 
             if lose_by_steps:
                 print(

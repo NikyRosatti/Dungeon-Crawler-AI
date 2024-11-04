@@ -27,6 +27,7 @@ from app.environment.utils import (
 )
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 import time
+import re
 
 bp = Blueprint("routes", __name__)
 maze_info = {
@@ -99,6 +100,8 @@ def logout():
 def register():
     if request.method != "POST":
         return render_template("register.html", avatars=AVATARS)
+
+    EMAIL_REGEX = r"^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$"
     
     username = request.form["username"]
     password = request.form["password"].encode("utf-8")
@@ -115,7 +118,23 @@ def register():
     ).first()
 
     if existing_user:
-        return render_template("register.html", error="Usuario ya registrado"), 400 #Error 400, bad request
+        return render_template("register.html", error="Usuario ya registrado", avatars=AVATARS), 400
+
+    if len(username) < 3:
+        return render_template("register.html", error="El nombre de usuario debe tener al menos 3 caracteres", avatars=AVATARS), 400
+
+    if not username.isalnum():
+        return render_template(
+            "register.html", error="Username can only contain letters and numbers", avatars=AVATARS
+        ), 400
+
+    if not re.match(EMAIL_REGEX, email):
+        return render_template(
+            "register.html", error="Please enter a valid email address", avatars=AVATARS
+        ), 400
+
+    if len(password) < 8:
+        return render_template("register.html", error="La contraseña debe tener al menos 8 caracteres", avatars=AVATARS), 400
 
     hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
     new_user = User(

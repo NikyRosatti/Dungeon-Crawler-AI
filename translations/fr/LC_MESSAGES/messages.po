@@ -1,4 +1,4 @@
-# English translations for PROJECT.
+# French translations for PROJECT.
 # Copyright (C) 2024 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
@@ -8,11 +8,11 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-11-04 18:31-0300\n"
-"PO-Revision-Date: 2024-10-31 19:16-0300\n"
+"PO-Revision-Date: 2024-11-04 18:20-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: en\n"
-"Language-Team: en <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,446 +20,437 @@ msgstr ""
 
 #: app/routes.py:82
 msgid "User does not exist."
-msgstr ""
+msgstr "L'utilisateur n'existe pas."
 
 #: app/routes.py:85
 msgid "Incorrect credentials."
-msgstr ""
+msgstr "Identifiants incorrects."
 
 #: app/routes.py:113
 msgid "You must select an avatar"
-msgstr ""
+msgstr "Vous devez sélectionner un avatar."
 
 #: app/routes.py:121
 msgid "Username already exists"
-msgstr ""
+msgstr "Le nom d'utilisateur existe déjà."
 
 #: app/routes.py:124
 msgid "Username must have at least 3 characters"
-msgstr ""
+msgstr "Le nom d'utilisateur doit comporter au moins 3 caractères."
 
 #: app/routes.py:128
 msgid "Username can only contain letters and numbers"
-msgstr ""
+msgstr "Le nom d'utilisateur ne peut contenir que des lettres et des chiffres."
 
 #: app/routes.py:133
 msgid "Please enter a valid email address"
-msgstr ""
+msgstr "Veuillez entrer une adresse e-mail valide."
 
 #: app/routes.py:137
 msgid "Password must have at least 8 characters"
-msgstr ""
+msgstr "Le mot de passe doit comporter au moins 8 caractères."
 
 #: app/routes.py:204
 msgid "Avatar updated successfully!"
-msgstr ""
+msgstr "Avatar mis à jour avec succès !"
 
 #: app/routes.py:206
 msgid "Please, select an avatar."
-msgstr ""
+msgstr "Veuillez sélectionner un avatar."
 
 #: app/routes.py:325
 msgid "Incorrect current password."
-msgstr ""
+msgstr "Mot de passe actuel incorrect."
 
 #: app/routes.py:330
 msgid "New passwords do not match."
-msgstr ""
+msgstr "Les nouveaux mots de passe ne correspondent pas."
 
 #: app/routes.py:338
 msgid "Password updated successfully."
-msgstr ""
+msgstr "Mot de passe mis à jour avec succès."
 
 #: app/routes.py:347
 msgid "Emails do not match."
-msgstr ""
+msgstr "Les e-mails ne correspondent pas."
 
 #: app/routes.py:351
 msgid "Email is already in use."
-msgstr ""
+msgstr "L'email est déjà utilisé."
 
 #: app/routes.py:358
 msgid "Email updated successfully."
-msgstr ""
+msgstr "Email mis à jour avec succès."
 
 #: app/templates/base.html:25 app/templates/dashboard.html:3
 msgid "Dashboard"
-msgstr ""
+msgstr "Tableau de bord"
 
 #: app/templates/base.html:26 app/templates/profile.html:3
 msgid "Profile"
-msgstr ""
+msgstr "Profil"
 
 #: app/templates/base.html:27 app/templates/map.html:23
 msgid "My Dungeons"
-msgstr ""
+msgstr "Mes donjons"
 
 #: app/templates/base.html:28
 msgid "Community Maps"
-msgstr ""
+msgstr "Cartes de la communauté"
 
 #: app/templates/base.html:29 app/templates/leaderboard.html:3
 msgid "Leaderboard"
-msgstr ""
+msgstr "Classement"
 
 #: app/templates/base.html:30 app/templates/settings.html:3
 #: app/templates/settings.html:7
 msgid "Settings"
-msgstr ""
+msgstr "Paramètres"
 
 #: app/templates/base.html:31
 msgid "Logout"
-msgstr ""
+msgstr "Déconnexion"
 
 #: app/templates/base.html:48
 msgid "All Rights Reserved."
-msgstr ""
+msgstr "Tous droits réservés."
 
 #: app/templates/community.html:3
 msgid "Community Mazes - DC-AI"
-msgstr ""
+msgstr "Labyrinthes de la communauté - DC-AI"
 
 #: app/templates/community.html:11
 msgid "Community Mazes"
-msgstr ""
+msgstr "Labyrinthes de la communauté"
 
 #: app/templates/community.html:17
 msgid "Sort by:"
-msgstr ""
+msgstr "Trier par :"
 
 #: app/templates/community.html:19
 msgid "Date (Newest to Oldest)"
-msgstr ""
+msgstr "Date (du plus récent au plus ancien)"
 
 #: app/templates/community.html:20
 msgid "Date (Oldest to Newest)"
-msgstr ""
+msgstr "Date (du plus ancien au plus récent)"
 
 #: app/templates/community.html:21
 msgid "Creator Name (A-Z)"
-msgstr ""
+msgstr "Nom du créateur (A-Z)"
 
 #: app/templates/community.html:22
 msgid "Creator Name (Z-A)"
-msgstr ""
+msgstr "Nom du créateur (Z-A)"
 
 #: app/templates/community.html:23
 msgid "Grid Size (Largest to Smallest)"
-msgstr ""
+msgstr "Taille de la grille (du plus grand au plus petit)"
 
 #: app/templates/community.html:24
 msgid "Grid Size (Smallest to Largest)"
-msgstr ""
+msgstr "Taille de la grille (du plus petit au plus grand)"
 
 #: app/templates/community.html:26
 msgid "Apply Filter"
-msgstr ""
+msgstr "Appliquer le filtre"
 
 #: app/templates/community.html:38
 msgid "Previous"
-msgstr ""
+msgstr "Précédent"
 
 #: app/templates/community.html:41
 msgid "Page"
-msgstr ""
+msgstr "Page"
 
 #: app/templates/community.html:41
 msgid "of"
-msgstr ""
+msgstr "de"
 
 #: app/templates/community.html:44
 msgid "Next"
-msgstr ""
+msgstr "Suivant"
 
 #: app/templates/dashboard.html:12
 msgid "Start New Dungeon"
-msgstr ""
+msgstr "Commencer un nouveau donjon"
 
 #: app/templates/dashboard.html:17
 msgid "Choose Dungeon"
-msgstr ""
+msgstr "Choisir un donjon"
 
 #: app/templates/dashboard.html:23
 msgid "Start New Dungeon Sign"
-msgstr ""
+msgstr "Commencer un nouveau panneau de donjon"
 
 #: app/templates/dashboard.html:24
 msgid "Embark on a new adventure!"
-msgstr ""
+msgstr "Partez pour une nouvelle aventure !"
 
 #: app/templates/dashboard.html:27
 msgid "Choose Dungeon Sign"
-msgstr ""
+msgstr "Choisir un panneau de donjon"
 
 #: app/templates/dashboard.html:28
 msgid "Train the AI with your own dungeons"
-msgstr ""
+msgstr "Entraînez l'IA avec vos propres donjons"
 
 #: app/templates/dashboard.html:33 app/templates/leaderboard.html:36
 msgid "Largest Dungeon Completed"
-msgstr ""
+msgstr "Plus grand donjon complété"
 
 #: app/templates/dashboard.html:37 app/templates/leaderboard.html:28
 msgid "Completed Dungeons"
-msgstr ""
+msgstr "Donjons complétés"
 
 #: app/templates/dashboard.html:41 app/templates/leaderboard.html:44
 msgid "Points"
-msgstr ""
+msgstr "Points"
 
 #: app/templates/index.html:12
 msgid "DC-AI, Home"
-msgstr ""
+msgstr "DC-AI, Accueil"
 
 #: app/templates/index.html:23
 msgid "Welcome to Dungeons Crawler AI"
-msgstr ""
+msgstr "Bienvenue dans Dungeons Crawler AI"
 
 #: app/templates/index.html:24
 msgid "Your AI-powered adventure begins here"
-msgstr ""
+msgstr "Votre aventure propulsée par l'IA commence ici"
 
 #: app/templates/index.html:27
 msgid "Login"
-msgstr ""
+msgstr "Connexion"
 
 #: app/templates/index.html:28 app/templates/login.html:46
 #: app/templates/register.html:57
 msgid "Register"
-msgstr ""
+msgstr "S'inscrire"
 
 #: app/templates/index.html:32
 msgid ""
 "Embark on an adventure where artificial intelligence drives the journey. "
 "Train, explore, and battle through dungeons!"
 msgstr ""
+"Partez pour une aventure où l'intelligence artificielle guide le voyage. "
+"Entraînez-vous, explorez et combattez à travers des donjons !"
 
 #: app/templates/index.html:42
 msgid "© 2024 Dungeons Crawler AI. All Rights Reserved."
-msgstr ""
+msgstr "© 2024 Dungeons Crawler AI. Tous droits réservés."
 
 #: app/templates/leaderboard.html:17
 msgid "Rank"
-msgstr ""
+msgstr "Rang"
 
 #: app/templates/leaderboard.html:20
 msgid "Username"
-msgstr ""
+msgstr "Nom d'utilisateur"
 
 #: app/templates/login.html:12
 msgid "DC-AI, Login"
-msgstr ""
+msgstr "DC-AI, Connexion"
 
 #: app/templates/login.html:23
 msgid "Login into an account"
-msgstr ""
+msgstr "Connectez-vous à un compte"
 
 #: app/templates/login.html:24
 msgid "Challenge your mind: log in to explore"
-msgstr ""
+msgstr "Défiez votre esprit : connectez-vous pour explorer"
 
 #: app/templates/login.html:34
 msgid "Username or Email:"
-msgstr ""
+msgstr "Nom d'utilisateur ou email :"
 
 #: app/templates/login.html:38 app/templates/register.html:39
 msgid "Password:"
-msgstr ""
+msgstr "Mot de passe :"
 
 #: app/templates/login.html:41
 msgid "LOGIN"
-msgstr ""
+msgstr "CONNEXION"
 
 #: app/templates/login.html:45
 msgid "Don't have an account?"
-msgstr ""
+msgstr "Vous n'avez pas de compte ?"
 
 #: app/templates/map.html:7
 msgid "Dynamic Grid"
-msgstr ""
+msgstr "Grille dynamique"
 
 #: app/templates/map.html:13
 msgid "Training Progress:"
-msgstr ""
+msgstr "Progression de l'entraînement :"
 
 #: app/templates/map.html:24
 msgid "Menu"
-msgstr ""
+msgstr "Menu"
 
 #: app/templates/map.html:25
+#, fuzzy
 msgid "Train"
-msgstr ""
+msgstr "Rang"
 
 #: app/templates/map.html:26
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
 #: app/templates/map.html:27
 msgid "Stop"
-msgstr ""
+msgstr "Arrêter"
 
 #: app/templates/map_creator.html:19
 msgid "Map Size:"
-msgstr ""
+msgstr "Taille de la carte :"
 
 #: app/templates/map_creator.html:21
 msgid "Generate Map"
-msgstr ""
+msgstr "Générer la carte"
 
 #: app/templates/map_creator.html:22
 msgid "Export Map"
-msgstr ""
+msgstr "Exporter la carte"
 
 #: app/templates/map_creator.html:27
 msgid "Block Type"
-msgstr ""
+msgstr "Type de bloc"
 
 #: app/templates/map_creator.html:28
 msgid "Floor"
-msgstr ""
+msgstr "Sol"
 
 #: app/templates/map_creator.html:29
 msgid "Wall"
-msgstr ""
+msgstr "Mur"
 
 #: app/templates/map_creator.html:30
 msgid "Start"
-msgstr ""
+msgstr "Début"
 
 #: app/templates/map_creator.html:31
 msgid "End"
-msgstr ""
+msgstr "Fin"
 
 #: app/templates/map_creator.html:32
 msgid "Mine"
-msgstr ""
+msgstr "Mine"
 
 #: app/templates/profile.html:14
 msgid "Avatar of"
-msgstr ""
+msgstr "Avatar de"
 
 #: app/templates/profile.html:15
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: app/templates/profile.html:16
 msgid "Joined"
-msgstr ""
+msgstr "Inscrit"
 
 #: app/templates/profile.html:18
 msgid "Change avatar"
-msgstr ""
+msgstr "Changer d'avatar"
 
 #: app/templates/profile.html:28
 msgid "Save"
-msgstr ""
+msgstr "Enregistrer"
 
 #: app/templates/register.html:12
 msgid "DC-AI, Register"
-msgstr ""
+msgstr "DC-AI, Inscription"
 
 #: app/templates/register.html:23
 msgid "Create Account"
-msgstr ""
+msgstr "Créer un compte"
 
 #: app/templates/register.html:31
 msgid "Username:"
-msgstr ""
+msgstr "Nom d'utilisateur :"
 
 #: app/templates/register.html:35
 msgid "Email:"
-msgstr ""
+msgstr "Email :"
 
 #: app/templates/register.html:42
 msgid "Choose Avatar"
-msgstr ""
+msgstr "Choisir un avatar"
 
 #: app/templates/register.html:52
 msgid "Select"
-msgstr ""
+msgstr "Sélectionner"
 
 #: app/templates/register.html:55
 msgid "Please, choose an avatar before registering."
-msgstr ""
+msgstr "Veuillez choisir un avatar avant de vous inscrire."
 
 #: app/templates/register.html:60
 msgid "Already have an account?"
-msgstr ""
+msgstr "Vous avez déjà un compte ?"
 
 #: app/templates/register.html:61
 msgid "Log in"
-msgstr ""
+msgstr "Connexion"
 
 #: app/templates/settings.html:18 app/templates/settings.html:26
 msgid "Change Password"
-msgstr ""
+msgstr "Changer le mot de passe"
 
 #: app/templates/settings.html:19 app/templates/settings.html:40
 msgid "Change Email"
-msgstr ""
+msgstr "Changer l'email"
 
 #: app/templates/settings.html:20 app/templates/settings.html:51
 #: app/templates/settings.html:53
 msgid "Delete Account"
-msgstr ""
+msgstr "Supprimer le compte"
 
 #: app/templates/settings.html:21
 msgid "Change Language"
-msgstr ""
+msgstr "Changer la langue"
 
 #: app/templates/settings.html:27
 msgid "Current Password"
-msgstr ""
+msgstr "Mot de passe actuel"
 
 #: app/templates/settings.html:30
 msgid "New Password"
-msgstr ""
+msgstr "Nouveau mot de passe"
 
 #: app/templates/settings.html:33
 msgid "Confirm New Password"
-msgstr ""
+msgstr "Confirmer le nouveau mot de passe"
 
 #: app/templates/settings.html:36
 msgid "Update Password"
-msgstr ""
+msgstr "Mettre à jour le mot de passe"
 
 #: app/templates/settings.html:41
 msgid "New Email"
-msgstr ""
+msgstr "Nouvel email"
 
 #: app/templates/settings.html:44
 msgid "Confirm New Email"
-msgstr ""
+msgstr "Confirmer le nouvel email"
 
 #: app/templates/settings.html:47
 msgid "Update Email"
-msgstr ""
+msgstr "Mettre à jour l'email"
 
 #: app/templates/settings.html:52
 msgid "Warning: This action cannot be undone."
-msgstr ""
+msgstr "Attention : cette action ne peut pas être annulée."
 
 #: app/templates/settings.html:53
 msgid "Are you sure you want to delete your account?"
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir supprimer votre compte ?"
 
 #: app/templates/user_mazes.html:3
 msgid "User Mazes - DC-AI"
-msgstr ""
+msgstr "Labyrinthes de l'utilisateur - DC-AI"
 
 #: app/templates/user_mazes.html:10
 msgid "My Created Mazes"
-msgstr ""
-
-#~ msgid "Dungeons"
-#~ msgstr ""
-
-#~ msgid "Crawler"
-#~ msgstr ""
-
-#~ msgid "AI"
-#~ msgstr ""
-
-#~ msgid "GitHub"
-#~ msgstr ""
+msgstr "Mes labyrinthes créés"
 

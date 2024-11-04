@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ get_locale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,19 +16,19 @@
         <i class='fas fa-arrow-left' style="color:black;"></i>
     </a>
     <div class="controls2">
-        <label for="size" id="text">Map Size:</label>
+        <label for="size" id="text">{{ _('Map Size:') }}</label>
         <input type="number" id="size" value="5" min="1" max="13">
-        <button id="generate">Generate Map</button>
-        <button id="export">Export Map</button>
+        <button id="generate">{{ _('Generate Map') }}</button>
+        <button id="export">{{ _('Export Map') }}</button>
     </div>
     <div class="container">
         <!-- Panel de selección de bloques -->
         <div class="controls">
-            <h3>Block Type</h3>
-            <button id="floor-btn" data-block=0>Floor</button>
-            <button id="wall-btn" data-block=1>Wall</button>
-            <button id="start-btn" data-block=2>Start</button>
-            <button id="end-btn" data-block=3>End</button>
+            <h3>{{ _('Block Type') }}</h3>
+            <button id="floor-btn" data-block=0>{{ _('Floor') }}</button>
+            <button id="wall-btn" data-block=1>{{ _('Wall') }}</button>
+            <button id="start-btn" data-block=2>{{ _('Start') }}</button>
+            <button id="end-btn" data-block=3>{{ _('End') }}</button>
         </div>
         <!-- Grilla interactiva -->
         <div class="grid-container" id="grid-container"></div>

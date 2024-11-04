@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}{{ _('Dashboard') }}{% endblock %}
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
 {% endblock %}
@@ -9,36 +9,36 @@
             <div class="actions">
                 <div class="button-container">
                     <a href="/map_creator" class="button">
-                        <div class="button-text">Start New Dungeon</div>
+                        <div class="button-text">{{ _('Start New Dungeon') }}</div>
                     </a>
                 </div>
                 <div class="button-container">
                     <a href="/community" class="button">
-                        <div class="button-text">Choose Dungeon</div>
+                        <div class="button-text">{{ _('Choose Dungeon') }}</div>
                     </a>
                 </div>
             </div>
             <div class="signs">
                 <div class="sign sign-left">
-                    <img src="/static/img/cartelmadera.png" alt="Start New Dungeon Sign">
-                    <p class="sign-text">Embark on a new adventure!</p>
+                    <img src="/static/img/cartelmadera.png" alt="{{ _('Start New Dungeon Sign') }}">
+                    <p class="sign-text">{{ _('Embark on a new adventure!') }}</p>
                 </div>
                 <div class="sign sign-right">
-                    <img src="/static/img/cartelmadera.png" alt="Choose Dungeon Sign">
-                    <p class="sign-text">Train the AI with your own dungeons</p>
+                    <img src="/static/img/cartelmadera.png" alt="{{ _('Choose Dungeon Sign') }}">
+                    <p class="sign-text">{{ _('Train the AI with your own dungeons') }}</p>
                 </div>
             </div>
             <div class="stats">
                 <div class="stat-card">
-                    <h3>Largest Dungeon Completed</h3>
+                    <h3>{{ _('Largest Dungeon Completed') }}</h3>
                     <p>{{ max_size }}X{{ max_size }}</p>
                 </div>
                 <div class="stat-card">
-                    <h3>Completed Dungeons</h3>
+                    <h3>{{ _('Completed Dungeons') }}</h3>
                     <p>{{ completed_dungeons }}</p>
                 </div>
                 <div class="stat-card">
-                    <h3>Points</h3>
+                    <h3>{{ _('Points') }}</h3>
                     <p>{{ points }}</p>
                 </div>
             </div>

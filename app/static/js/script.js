@@ -63,6 +63,9 @@ if (window.location.pathname === '/map') {
                 case 3:
                     cell.classList.add('end');    // Final
                     break;
+                case 4:
+                    cell.classList.add('mine');
+                    break;
             }
 
             grid.appendChild(cell);

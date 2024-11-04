@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ get_locale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Handjet:wght@400;700&display=swap">
-    <title>Cuadrícula Dinámica</title>
+    <title>{{ _('Dynamic Grid') }}</title>
     <link rel="stylesheet" href="/static/css/map.css">
 </head>
 <body data-maze-id="{{ maze_id }}">
     <div id="overlay" class="overlay">
         <div id="progressModal">
-            <span>Progreso del entrenamiento: </span>
+            <span>{{ _('Training Progress:') }}</span>
             <div id="progressBarContainer">
                 <div id="progressBar">0%</div>
             </div>
@@ -20,11 +20,11 @@
     <div class="grid" id="grid"></div>
 
     <div class="quick_buttons">
-        <a href="/dungeons" class="btn">My Dungeons</a>
-        <a href="/dashboard" class="btn">Menu</a>
-        <button id="trainBtn" class="btn">Train</button>
-        <button id="testTrainBtn" class="btn">Test</button>
-        <button id="stopTrainBtn" class="btn">Stop</button>
+        <a href="/dungeons" class="btn">{{ _('My Dungeons') }}</a>
+        <a href="/dashboard" class="btn">{{ _('Menu') }}</a>
+        <button id="trainBtn" class="btn">{{ _('Train') }}</button>
+        <button id="testTrainBtn" class="btn">{{ _('Test') }}</button>
+        <button id="stopTrainBtn" class="btn">{{ _('Stop') }}</button>
     </div>
     <div id="modal" class="modal">
         <div class="modal-content">

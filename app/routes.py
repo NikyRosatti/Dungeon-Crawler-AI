@@ -662,6 +662,7 @@ def run_training_test(env, model, maze_id, maze, size):
                 socketio.emit("training_status", {"status": "finished"})
 
             if lose_by_mine:
+                socketio.emit("lose_by_mine")
                 print("You agent died brutally when stepped in a mine")
 
             if lose_by_steps:
@@ -671,9 +672,9 @@ def run_training_test(env, model, maze_id, maze, size):
 
             break
 
-        if env.envs[0].lose:
+        if env.envs[0].lose_by_mine | env.envs[0].lose_by_steps:
             socketio.emit("lose")
-            print(f"Your agent could not complete the maze in {N_MAX_STEPS} steps!!")
+            
 
     running_tests.pop(maze_id, None)  # Eliminar la prueba de la lista de ejecuciones
 

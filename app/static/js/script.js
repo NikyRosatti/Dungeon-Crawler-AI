@@ -81,6 +81,28 @@ if (window.location.pathname === '/map') {
         },1000);
     });
     
+    // Escuchar el evento "lose_by_mine"
+    socket.on('lose_by_mine', function() {
+        // Buscar la celda del agente en el grid
+        const agentCell = document.querySelector('.agent');
+
+        // Cambiar la imagen de fondo de la celda del agente a explosion.gif
+        if (agentCell) {
+            agentCell.style.backgroundImage = "url('/static/gifs/explotion.gif')";
+            agentCell.style.backgroundSize = 'cover'; // Asegúrate de que la imagen cubra completamente la celda
+            agentCell.style.backgroundPosition = 'center'; // Centrar la imagen
+            agentCell.style.backgroundRepeat = 'no-repeat';
+
+            // Ralentizar la reaparición del agente después de 2 segundos
+            setTimeout(() => {
+                // Restaurar la imagen del agente después de la explosión
+                agentCell.style.backgroundImage = `url(${avatarUrl}), url(/static/img/dirt.jpg)`;
+                agentCell.style.backgroundSize = '73%, cover'; // Ajustar el tamaño del fondo
+                agentCell.style.backgroundPosition = 'center bottom, center center';
+                agentCell.style.backgroundRepeat = 'no-repeat, no-repeat';
+            }, 2000); // Esperar 2 segundos
+        }
+    });
     document.addEventListener('keydown', function(event) {
         const key = event.key;
         if ((key == 'ArrowUp' || key == 'ArrowLeft' || key == 'ArrowDown' || key == 'ArrowRight')) {
@@ -175,6 +197,8 @@ document.getElementById('testTrainBtn').addEventListener('click', function() {
         }
     });
 });
+
+
 
 document.getElementById('stopTrainBtn').addEventListener('click', function() {
     const socket = io();

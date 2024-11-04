@@ -119,7 +119,7 @@ def register():
     ).first()
 
     if existing_user:
-        return render_template("register.html", error=_("Username already exists"), avatars=AVATARS), 400
+      return render_template("register.html", error=_("Username already exists"), avatars=AVATARS), 400
 
     if len(username) < 3:
         return render_template("register.html", error=_("Username must have at least 3 characters"), avatars=AVATARS), 400

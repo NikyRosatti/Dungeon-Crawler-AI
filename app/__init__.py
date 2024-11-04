@@ -13,8 +13,7 @@ def get_locale():
     user_language = get_user_language()
     if user_language:
         return user_language
-    return request.accept_languages.best_match(['en', 'es'])
-
+    return request.accept_languages.best_match(['en', 'es', 'ru', 'it', 'de', 'fr', 'zh', 'ja', 'ga', 'la'])
 
 def create_app(config_class):
     app = Flask(__name__)

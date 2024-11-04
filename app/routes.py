@@ -311,6 +311,9 @@ def settings():
 
         elif "delete_account" in request.form:
             return delete_account(user)
+
+        elif "update_language" in request.form:
+            return update_language(user)
         
     return render_template("settings.html")
 
@@ -356,6 +359,18 @@ def update_email(user):
 
     return render_template(
         "settings.html", success=_("Email updated successfully.")
+    )
+
+def update_language(user):
+    selected_language = request.form["language"]
+
+    user.language = selected_language
+    db.session.commit()
+
+    return render_template(
+        "settings.html",
+        success=_("Language updated successfully."),
+        user_language=selected_language
     )
 
 

@@ -1,58 +1,57 @@
 # Tensorboard Logs
-Para ver los logs creados por tensorboard de los entrenamientos que se fueron guardando
+To view the logs created by TensorBoard from the training sessions that were saved,
 
-Modificar en el código en la parte de la creación del modelo (PPO por ejemplo) tal que:
+Modify the code in the part where the model is created (for example, PPO) as follows:
 
 <i>model = PPO("MlpPolicy", env=envs, ...<b>tensorboard_log=logdir</b>)</i>
 
 
-# Dependencia Numpy y TensorFlow
+# Dependencies: Numpy and TensorFlow
 
 ## Ubuntu
-Para poder ver los logs correctamente, la version de Numpy tiene que ser numpy<2.0.0
+To properly view the logs, the version of Numpy must be numpy<2.0.0
 
-Se deberia reemplazar y desinstalar
+You should replace and uninstall:
 ``` txt
 numpy==2.1.1
 ```
-Del <b>requirements.txt</b>
-Por
+In the <b>requirements.txt</b> file
+with
 ```txt
 numpy<2.0.0
 ```
 
-Y hacer el comando
+Then, run the following command:
 ``` bash
 pip install -r requirements.txt
 ```
 
-# Instalar TensorFlow
-Se necesita TensorFlow instalado para poder ver Tensorboard
+# Install TensorFlow
+TensorFlow is required to view TensorBoard
 
-## Instalacion global
-Instalar globalmente TensorFlow
+## Global Installation
+To install TensorFlow globally, run:
 
 ``` bash
 pip install TensorFlow
 ```
 
-## Instalacion local
-En <b>requirements.txt</b> se encuentra Tensorflow como dependencia de Pip
-Al hacer
+## Local Installation
+If TensorFlow is listed as a dependency in <b>requirements.txt</b>, simply run:
 ``` bash
 pip install -r requirements.txt
 ```
-Se deberia instalar tambien sin problemas
+This should install it without any issues
 
-# Ver Logs
-Pararse una carpeta antes de logs/
+# View Logs
+Navigate one directory before the logs/ folder.
 
-Por ejemplo:
+For example:
 ``` bash
 cd /app/saved_models
 ```
 
-Hacer:
+Then, run the following command:
 
 ``` bash
 tensorboard --logdir=logs

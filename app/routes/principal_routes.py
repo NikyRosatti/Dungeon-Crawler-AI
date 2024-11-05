@@ -45,7 +45,7 @@ def dashboard():
         )
         max_size = max_dungeon.maze_size
     else:
-        max_size = 0  # Si no ha completado dungeons, el tamaño es 0
+        max_size = 0  # If no dungeons have been completed, the size is 0
 
     points = user.points
     return render_template(
@@ -62,8 +62,8 @@ def leaderboard():
 
     sort_by = request.args.get(
         "sort_by", "completed_dungeons"
-    )  # 'completed_dungeons' como valor predeterminado
-    order = request.args.get("order", "desc")  # 'desc' como valor predeterminado
+    )  # 'completed_dungeons' as the default value
+    order = request.args.get("order", "desc")  # 'desc' as the default value
 
     users = User.query.all()
     users_list = [
@@ -117,7 +117,7 @@ def settings():
     user = User.query.get(session["user_id"])
 
     if request.method == "POST":
-        # Actualizar contraseña
+        # Update password
         if "update_password" in request.form:
             return update_password(user)
 
@@ -133,21 +133,21 @@ def settings():
 @bp.route("/community")
 @login_required
 def community():
-    # Obtener los parámetros de la solicitud, como el filtro y la página
+    # Get request parameters, such as filter and page
     filter_by = request.args.get("filter", "created_at_desc")
     page = request.args.get("page", 1, type=int)
     per_page = 8
 
-    # Construir la consulta base, uniendo con la tabla User
+    # Build the base query, joining with the User table
     query = build_maze_query(filter_by)
 
-    # Paginación de los resultados
+    # Pagination of the results
     paginated_mazes = query.paginate(page=page, per_page=per_page)
 
-    # Serializar los laberintos
+    # Serialize the mazes
     mazes_serialized = serialize_mazes(paginated_mazes)
 
-    # Manejo de la paginación
+    # Pagination handling
     pagination = {
         "page": paginated_mazes.page,
         "total_pages": paginated_mazes.pages,
@@ -157,7 +157,7 @@ def community():
         "prev_num": paginated_mazes.prev_num,
     }
 
-    # Devolver la plantilla con los datos
+    # Return the template with the data
     return render_template(
         "community.html", mazes=json.dumps(mazes_serialized), pagination=pagination
     )
@@ -169,7 +169,7 @@ def my_mazes():
     user_id = session["user_id"]
     user_mazes = MazeBd.query.filter_by(user_id=user_id).all()
 
-    # Convertir los mazes a diccionarios serializables
+    # Convert the mazes to serializable dictionaries
     user_mazes_serialized = serialize_mazes(user_mazes)
 
     return render_template("user_mazes.html", mazes=json.dumps(user_mazes_serialized))

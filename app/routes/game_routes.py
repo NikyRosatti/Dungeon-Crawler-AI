@@ -34,7 +34,7 @@ from app.services.train_services import (
 
 bp = Blueprint("game", __name__)
 maze_info = {
-    "mapa_original": [],
+    "original_map": [],
     "start": None,
     "map_size": 0,
 }
@@ -46,17 +46,17 @@ def map():
     maze_id = int(request.args.get("maze_id", 0))
     maze = MazeBd.query.filter_by(id=maze_id).first()
 
-    # Diccionario con información del laberinto
-    maze_info["mapa_original"] = json.loads(
+    # Dictionary with maze information
+    maze_info["original_map"] = json.loads(
         maze.grid
-    )  # Asigna el grid a mapa_original,
-    maze_info["start"] = maze_info["mapa_original"].index(2)
-    maze_info["map_size"] = maze.maze_size  # Calcula el tamaño del mapa
+    )  # Assign the grid to original_map,
+    maze_info["start"] = maze_info["original_map"].index(2)
+    maze_info["map_size"] = maze.maze_size  # Calculate the map size
 
     avatar = User.query.get(session["user_id"]).avatar
     return render_template(
         "map.html",
-        mapa_original=change_door(maze_info["mapa_original"]),
+        original_map=change_door(maze_info["original_map"]),
         avatar=avatar,
         maze_id=maze_id,
     )
@@ -75,16 +75,16 @@ def validate_map():
     map_grid = data.get("map")
     size = data.get("size")
 
-    # Convertir el array en una matriz
+    # Convert the array into a matrix
     grid = create_grid(map_grid, size)
 
-    # Identificar el punto de inicio (2) y de salida (3)
+    # Identify the start (2) and exit (3) points
     start_point, exit_point = find_points(grid)
 
     if not are_points_valid(start_point, exit_point):
         return invalid_points_response()
 
-    # Validar si el laberinto es resoluble
+    # Validate if the maze is solvable
     if is_winneable(grid):
         return save_maze_and_respond(map_grid, size)
     else:
@@ -115,27 +115,27 @@ def handle_test(data):
 
 @socketio.on("connect")
 def handle_connect():
-    if not maze_info["mapa_original"]:  # Verificar si mapa_original está inicializado
-        emit("map", "No hay un mapa cargado.")
+    if not maze_info["original_map"]:  # Check if original_map is initialized
+        emit("map", "No map loaded.")
     else:
-        emit("map", maze_info["mapa_original"])
+        emit("map", maze_info["original_map"])
 
 
 @socketio.on("move")
 def handle_move(direction):
-    move_player(direction, maze_info["mapa_original"], maze_info["map_size"])
+    move_player(direction, maze_info["original_map"], maze_info["map_size"])
 
-    if -2 in maze_info["mapa_original"]:
+    if -2 in maze_info["original_map"]:
         emit("finish_map", "You Win!")
 
-    emit("map", maze_info["mapa_original"])
+    emit("map", maze_info["original_map"])
 
 
 @socketio.on("restart_pos")
 def restart_position(position):
-    maze_info["mapa_original"][maze_info["mapa_original"].index(-2)] = 3
-    maze_info["mapa_original"][maze_info["start"]] = -1
-    emit("map", maze_info["mapa_original"])
+    maze_info["original_map"][maze_info["original_map"].index(-2)] = 3
+    maze_info["original_map"][maze_info["start"]] = -1
+    emit("map", maze_info["original_map"])
 
 
 @socketio.on("start_simulation")
@@ -151,13 +151,13 @@ def test(data):
     maze_id = int(data.get("maze_id"))
     running_tests[maze_id] = True
 
-    # Cargar el laberinto desde la base de datos
+    # Load the maze from the database
     maze, grid, size = load_maze_from_db(maze_id)
 
-    # Vectorizar entornos y cargar el modelo
+    # Vectorize environments and load the model
     env, model = setup_environment(grid, maze_id)
 
-    # Ejecutar la prueba de entrenamiento y emitir los resultados
+    # Run the training test and emit results
     for update in run_training_test(env, model, maze_id, maze, size):
         socketio.emit("training_update", update["status"])
         socketio.emit("map", update["map"])
@@ -170,7 +170,7 @@ def stop_test(data):
 
     global running_tests
     if maze_id in running_tests:
-        running_tests[maze_id] = False  # Señalar que se debe detener el test
+        running_tests[maze_id] = False  # Mark that the test should be stopped
         print(f"Request to stop the test {maze_id}")
     else:
         socketio.emit(

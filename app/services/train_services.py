@@ -15,7 +15,6 @@ running_tests = {}
 
 
 def train_model(maze_id):
-
     maze = MazeBd.query.filter_by(id=maze_id).first()
 
     grid1 = json.loads(maze.grid)
@@ -56,11 +55,11 @@ def train_model(maze_id):
         model.learn(
             total_timesteps=timesteps, reset_num_timesteps=False, progress_bar=True
         )
-        # Calcular el progreso
+        # Calculate progress
         progress = ((i + 1) / iterations_per_learning) * 100
         print(f"Progress: {progress:.2f}%")
 
-        # Emitir progreso a todas las páginas conectadas
+        # Emit progress to all connected pages
         yield {"progress": progress}
         model.save(model_path + "ppo.zip")
     print(f"Model {model_path} saved successfully")
@@ -70,7 +69,7 @@ def train_model(maze_id):
 
 
 def run_training_test(env, model, maze_id, maze, size):
-    """Ejecuta la prueba de entrenamiento y emite el estado del mapa en tiempo real."""
+    """Runs the training test and emits the map state in real-time."""
     global running_tests
 
     results = {"status": "running", "map": None}
@@ -86,7 +85,7 @@ def run_training_test(env, model, maze_id, maze, size):
         steps += 1
         print(f"Steps: {steps}")
 
-        if not running_tests.get(maze_id):  # Si se ha solicitado detener la prueba
+        if not running_tests.get(maze_id):  # If the test has been requested to stop
             print(f"Test stopped for maze_id {maze_id}")
             results["status"] = "stopped"
             yield results
@@ -128,18 +127,18 @@ def run_training_test(env, model, maze_id, maze, size):
                 yield results
 
             if lose_by_mine:
-                print("You agent died brutally when stepped in a mine")
+                print("Your agent died brutally when stepping on a mine")
             if lose_by_steps:
                 print(
                     f"Your agent could not complete the maze in {env.envs[0].maximum_steps} steps!!"
                 )
             break
 
-    running_tests.pop(maze_id, None)  # Eliminar la prueba de la lista de ejecuciones
+    running_tests.pop(maze_id, None)  # Remove the test from the running list
 
 
 def setup_environment(grid, maze_id):
-    """Configura el entorno de entrenamiento y carga el modelo PPO."""
+    """Sets up the training environment and loads the PPO model."""
     vec_norm_path = os.path.join(
         "app", "saved_models", "trained_models_per_id", str(maze_id), "norm_env.pkl"
     )

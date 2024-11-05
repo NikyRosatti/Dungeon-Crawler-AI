@@ -15,9 +15,9 @@ UP = 3
 
 def find_player_position(map):
     try:
-        return map.index(-1)  # Buscar la posición del jugador (-1)
+        return map.index(-1)  # Find the player's position (-1)
     except ValueError:
-        return map.index(2)  # Si no hay -1, devolver la posición de 2
+        return map.index(2)  # If no -1, return the position of 2
 
 
 def move_player(direction, map, map_size):
@@ -49,21 +49,21 @@ def change_door(map):
         i = map.index(2)
         map[i] = -1
     else:
-        print("Error: map no es una lista o no contiene el valor 2")
+        print("Error: map is not a list or does not contain the value 2")
 
 
 def create_grid(map_grid, size):
-    """Convierte el arreglo plano en una matriz 2D."""
+    """Converts the flat array into a 2D matrix."""
     return [map_grid[i : i + size] for i in range(0, len(map_grid), size)]
 
 
 def are_points_valid(start_point, exit_point):
-    """Valida si se encontraron el punto de inicio y salida."""
+    """Validates if the start and exit points are found."""
     return start_point is not None and exit_point is not None
 
 
 def load_maze_from_db(maze_id):
-    """Carga el laberinto desde la base de datos y devuelve su información."""
+    """Loads the maze from the database and returns its information."""
     maze = MazeBd.query.filter_by(id=maze_id).first()
     grid1 = json.loads(maze.grid)
     size = maze.maze_size
@@ -94,7 +94,7 @@ def find_points(grid, start_point=None, exit_point=None):
         for i, row in enumerate(matrix):
             for j, elem in enumerate(row):
                 if elem == value:
-                    # Devuelve una tupla con las coordenadas (fila, columna)
+                    # Returns a tuple with coordinates (row, column)
                     return (i, j)
         return None
 
@@ -245,7 +245,7 @@ def increment_position(current_row, current_col, action):
     elif action == LEFT:
         col_new -= 1
     else:
-        raise ValueError(f"Acción inválida: {action}")
+        raise ValueError(f"Invalid action: {action}")
 
     return (row_new, col_new)
 

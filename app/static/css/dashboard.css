@@ -13,7 +13,7 @@ body {
     color: white;
     font-family: 'Jaro', sans-serif;
     position: relative;
-    background: url(/static/img/fondoLogin.png) center center / cover no-repeat;
+    background: url(/static/img/login_background.png) center center / cover no-repeat;
     backdrop-filter: blur(15px); 
 }
 

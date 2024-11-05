@@ -5,7 +5,7 @@ body {
     background-color: #f0f0f0;
     flex-direction: column;
     font-family: Arial, sans-serif;
-    background: url(/static/img/fondoMap.jpg) center center / cover no-repeat;
+    background: url(/static/img/map_background.jpg) center center / cover no-repeat;
     background-attachment: fixed; /* Fija el fondo para que no se mueva al hacer scroll */
     background-size: cover; /* Hace que el fondo siempre cubra toda la pantalla */
     justify-content: center; /* Centra verticalmente el contenido */
@@ -160,17 +160,17 @@ body {
 }
 
 .wall {
-    background: url(/static/img/pared2.jpg) center center / cover;
+    background: url(/static/img/wall.jpg) center center / cover;
     filter: brightness(0.6);
 }
 
 .start {
-    background: url(/static/img/puerta.png) center bottom / 60% no-repeat,
+    background: url(/static/img/door.png) center bottom / 60% no-repeat,
                 url(/static/img/dirt.jpg) center center / cover no-repeat;
 }
 
 .end {
-    background: url(/static/img/puerta.png) no-repeat center bottom / 60%,
+    background: url(/static/img/door.png) no-repeat center bottom / 60%,
                 url(/static/img/dirt.jpg) center center / cover no-repeat;
 }
 

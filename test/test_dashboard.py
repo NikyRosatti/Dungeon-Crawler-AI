@@ -67,7 +67,7 @@ def test_dashboard_signs_images(login_user):
     response = login_user.get('/dashboard')
     
     assert response.status_code == 200
-    assert b'/static/img/cartelmadera.png' in response.data
+    assert b'/static/img/wood_sign.png' in response.data
     assert b'alt="Start New Dungeon Sign"' in response.data
     assert b'alt="Choose Dungeon Sign"' in response.data 
 

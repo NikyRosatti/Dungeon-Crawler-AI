@@ -8,7 +8,7 @@ body {
     flex-direction: column;
     font-family: 'Handjet';
     font-size: 36px;
-    background: url(/static/img/fondoMap.jpg) center center / cover no-repeat;
+    background: url(/static/img/map_background.jpg) center center / cover no-repeat;
 }
 
 .container {
@@ -36,17 +36,17 @@ body {
 }
 
 .wall {
-    background: url(/static/img/pared2.jpg) center center / cover no-repeat;
+    background: url(/static/img/wall.jpg) center center / cover no-repeat;
     filter: brightness(0.5);
 }
 
 .start { 
-    background: url(/static/img/puerta.png) center bottom / 60% no-repeat,
+    background: url(/static/img/door.png) center bottom / 60% no-repeat,
                 url(/static/img/dirt.jpg) center center / cover no-repeat;
 }
 
 .end {
-    background: url(/static/img/puerta.png) no-repeat center bottom / 60%,
+    background: url(/static/img/door.png) no-repeat center bottom / 60%,
                 url(/static/img/dirt.jpg) center center / cover no-repeat;
 
 }
@@ -63,7 +63,7 @@ body {
 
 .winner_agent {        
     background: url(/static/img/agent2.png) no-repeat center bottom / 55%,
-                url(/static/img/salida.png) no-repeat center bottom / 60%,
+                url(/static/img/exit.png) no-repeat center bottom / 60%,
                 url(/static/img/dirt.jpg) center center / cover no-repeat;
 }
 

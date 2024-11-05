@@ -39,7 +39,7 @@ if (window.location.pathname === '/map') {
             switch (value) {
                 case -2:
                     cell.classList.add('end'); 
-                    cell.style.backgroundImage = `url(${avatarUrl}), url(/static/img/salida.png),url(/static/img/dirt.jpg)`;
+                    cell.style.backgroundImage = `url(${avatarUrl}), url(/static/img/exit.png),url(/static/img/dirt.jpg)`;
                     cell.style.backgroundSize = '73%, cover'; // Ajustar tamaño de fondo
                     cell.style.backgroundPosition = 'center bottom, center center'; // Posicionar ambas imágenes
                     cell.style.backgroundRepeat = 'no-repeat, no-repeat'; // Sin repetir ambas imágenes

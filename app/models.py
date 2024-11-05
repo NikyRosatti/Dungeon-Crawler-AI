@@ -2,7 +2,7 @@ from datetime import datetime
 
 from app import db
 
-# Tabla intermedia para relacionar usuarios y mazes completados
+# Intermediate table to link users and completed mazes
 user_completed_dungeons = db.Table(
     "user_completed_maze",
     db.Column("user_id", db.Integer, db.ForeignKey("user.id"), primary_key=True),
@@ -36,13 +36,13 @@ class MazeBd(db.Model):
     grid = db.Column(db.JSON, nullable=False)
     user_id = db.Column(
         db.Integer, db.ForeignKey("user.id"), nullable=False
-    )  # FK a User
+    )  # FK to User
     created_at = db.Column(
         db.DateTime, nullable=False, default=datetime.utcnow
-    )  # Fecha de creación
+    )  # Creation date
     maze_size = db.Column(db.Integer, nullable=False)
 
-    # Relación con el modelo User
+    # Relationship with the User model
     user = db.relationship("User", backref="mazes", lazy=True)
 
     def __repr__(self):

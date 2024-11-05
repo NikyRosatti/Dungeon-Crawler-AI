@@ -1,4 +1,4 @@
-/* Estilos globales */
+/* Global styles */
 body {
     display: flex;
     margin: 0;
@@ -6,24 +6,24 @@ body {
     flex-direction: column;
     font-family: Arial, sans-serif;
     background: url(/static/img/map_background.jpg) center center / cover no-repeat;
-    background-attachment: fixed; /* Fija el fondo para que no se mueva al hacer scroll */
-    background-size: cover; /* Hace que el fondo siempre cubra toda la pantalla */
-    justify-content: center; /* Centra verticalmente el contenido */
-    align-items: center; /* Centra horizontalmente el contenido */
-    min-height: 100vh; /* Asegura que el body ocupe toda la altura */
+    background-attachment: fixed; /* Fixes the background so it doesn't move when scrolling */
+    background-size: cover; /* Ensures the background always covers the entire screen */
+    justify-content: center; /* Vertically centers the content */
+    align-items: center; /* Horizontally centers the content */
+    min-height: 100vh; /* Ensures the body takes up the full height */
 }
 
-/* Contenedor principal que incluye el panel de control y la grilla */
+/* Main container that includes the control panel and the grid */
 .container {
     display: flex;
-    justify-content: center; /* Centra horizontalmente el contenido */
-    align-items: center; /* Centra verticalmente el contenido */
+    justify-content: center; /* Horizontally centers the content */
+    align-items: center; /* Vertically centers the content */
     padding: 20px;
     width: 100%;
-    margin: 0 auto; /* Asegura que el contenedor esté centrado */
+    margin: 0 auto; /* Ensures the container is centered */
 }
 
-/* Panel de control a la izquierda */
+/* Control panel on the left */
 .controls {
     display: flex;
     flex-direction: column;
@@ -88,7 +88,8 @@ body {
   box-shadow: 0px 0px 0px 7px rgba(57, 112, 11, 0.2);
   background-color: white;
 }
-/* Botones del panel de control */
+
+/* Control panel buttons */
 .controls button {
     background-color:#768371;
     color: rgb(255, 255, 255);
@@ -107,17 +108,17 @@ body {
     border: 2px solid #fff;
 }
 
-/* Contenedor de la grilla */
+/* Grid container */
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(10, 50px); /* Columnas del mapa */
-    grid-template-rows: repeat(10, 50px);    /* Filas del mapa */
+    grid-template-columns: repeat(10, 50px); /* Map columns */
+    grid-template-rows: repeat(10, 50px);    /* Map rows */
     gap: 2px;
-    justify-content: center; /* Centra la grilla horizontalmente */
+    justify-content: center; /* Horizontally centers the grid */
     margin-left: 30px;
 }
 
-/* Celdas de la grilla */
+/* Grid cells */
 .grid-container .cell {
     background-color: lightgray;
     width: 50px;
@@ -128,7 +129,7 @@ body {
     align-items: center;
 }
 
-/* Opciones dentro de las celdas */
+/* Options within the cells */
 .grid .cell-options {
     display: none;
     position: absolute;
@@ -139,7 +140,7 @@ body {
     z-index: 10;
 }
 
-/* Opciones de selección de celdas */
+/* Cell selection options */
 .grid .cell-options div {
     width: 20px;
     height: 20px;
@@ -149,12 +150,12 @@ body {
     background-size: cover;
 }
 
-/* Mostrar las opciones cuando una celda está seleccionada */
+/* how options when a cell is selected */
 .grid .cell.selected .cell-options {
     display: block;
 }
 
-/* Tipos de bloques (suelo, pared, inicio, fin) */
+/* Block types (ground, wall, start, end) */
 .floor {
     background: url(/static/img/dirt.jpg) center center / cover;
 }
@@ -185,6 +186,7 @@ body {
    right: 40%;
    text-decoration: none;
 }
+
 .quick_buttons .btn {
     background-color: #76837157;
     color: rgb(255, 255, 255);
@@ -201,18 +203,18 @@ body {
 }
 
 a{
-    display: flex; /* Usamos inline-flex para alinear el icono y el texto */
-    align-items: center; /* Alinea verticalmente el contenido */
-    background-color:#768371; /* Color de fondo */
-    color: rgb(255, 255, 255); /* Color del texto */
-    font-family: 'Handjet', sans-serif; /* Fuente */
-    font-size: 30px; /* Tamaño de fuente */
-    border: none; /* Sin borde */
-    padding: 10px 20px; /* Espaciado interno */
-    margin: 10px; /* Margen */
-    border-radius: 5px; /* Bordes redondeados */
-    text-decoration: none; /* Sin subrayado */
-    cursor: pointer; /* Cambia el cursor a mano */
+    display: flex; /* Use inline-flex to align the icon and text */
+    align-items: center; /* Vertically align the content */
+    background-color: #768371; /* Background color */
+    color: rgb(255, 255, 255); /* Text color */
+    font-family: 'Handjet', sans-serif; /* Font */
+    font-size: 30px; /* Font size */
+    border: none; /* No border */
+    padding: 10px 20px; /* Internal spacing */
+    margin: 10px; /* Margin */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* No underline */
+    cursor: pointer; /* Change cursor to pointer */
     right: 40%;
     position: relative;
 }
@@ -241,18 +243,18 @@ a{
 }
 
 .modal-content p{
-    display: flex; /* Usamos inline-flex para alinear el icono y el texto */
-    align-items: center; /* Alinea verticalmente el contenido */
-    background-color:#768371; /* Color de fondo */
-    color:#f3f3f3; /* Color del texto */
-    font-family: 'Handjet', sans-serif; /* Fuente */
-    font-size: 30px; /* Tamaño de fuente */
-    border: none; /* Sin borde */
-    padding: 10px 20px; /* Espaciado interno */
-    margin: 10px; /* Margen */
-    border-radius: 5px; /* Bordes redondeados */
-    text-decoration: none; /* Sin subrayado */
-    cursor: pointer; /* Cambia el cursor a mano */
+    display: flex; /* Use inline-flex to align the icon and text */
+    align-items: center; /* Vertically align the content */
+    background-color: #768371; /* Background color */
+    color: #f3f3f3; /* Text color */
+    font-family: 'Handjet', sans-serif; /* Font */
+    font-size: 30px; /* Font size */
+    border: none; /* No border */
+    padding: 10px 20px; /* Internal spacing */
+    margin: 10px; /* Margin */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* No underline */
+    cursor: pointer; /* Change cursor to pointer */
     position: relative;
     justify-content: center;
 }

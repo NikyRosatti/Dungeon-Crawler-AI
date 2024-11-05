@@ -13,22 +13,21 @@ body {
 
 .container {
     position: relative;
-    width: 40vw; /* 40% del ancho del viewport */
-    height: 40vw; /* Usar 40vw para que la altura sea igual al ancho y mantener un cuadrado */
-
+    width: 40vw; /* 40% of the viewport width */
+    height: 40vw; /* Use 40vw to keep height equal to width and maintain a square */
 }
 
 .grid {
-    width: 40vw; /* 40% del ancho del viewport */
-    aspect-ratio: 1; /* Mantiene la proporción cuadrada */
+    width: 40vw; /* 40% of the viewport width */
+    aspect-ratio: 1; /* Maintains the square ratio */
     display: grid;
-    gap: 2px ;
+    gap: 2px;
     background-color: #000000;
 }
 
 .cell {
-    width: 100%;  /* Toma el 100% del ancho de la celda */
-    height: 100%; /* Toma el 100% del alto de la celda */
+    width: 100%;  /* Takes 100% of the cell width */
+    height: 100%; /* Takes 100% of the cell height */
 }
 
 .floor {
@@ -48,7 +47,6 @@ body {
 .end {
     background: url(/static/img/door.png) no-repeat center bottom / 60%,
                 url(/static/img/dirt.jpg) center center / cover no-repeat;
-
 }
 
 .mine {
@@ -70,12 +68,13 @@ body {
 .end2 {
     
 }
-.quick_buttons{
+
+.quick_buttons {
     display: flex;
 }
 
-.quick_buttons a{
-    background-color:#768371b2;
+.quick_buttons a {
+    background-color: #768371b2;
     color: rgb(255, 255, 255);
     border: none;
     padding: 20px 40px;
@@ -100,11 +99,11 @@ body {
     cursor: pointer;
     text-align: center;
     width: 120px;
-    display: inline-block; /* Asegura que los enlaces y botones se comporten de manera similar */
+    display: inline-block; /* Ensures that links and buttons behave similarly */
 }
 
 .btn:hover {
-    background-color: #8fa683; /* Cambia el color al pasar el mouse */
+    background-color: #8fa683; /* Change color on hover */
 }
 
 .btn.active {
@@ -118,44 +117,44 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Fondo oscuro con transparencia */
+    background: rgba(0, 0, 0, 0.5); /* Dark background with transparency */
     display: flex;
-    justify-content: center; /* Centrar horizontalmente */
-    align-items: center; /* Centrar verticalmente */
-    z-index: 1000; /* Asegúrate de que esté encima de otros elementos */
-    backdrop-filter: blur(5px); /* Efecto de desenfoque en el fondo */
-    visibility: hidden; /* Inicialmente oculto */
-    opacity: 0; /* Inicialmente invisible */
-    transition: visibility 0s, opacity 0.5s linear; /* Añadir transición para suavizar */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    z-index: 1000; /* Ensure it is above other elements */
+    backdrop-filter: blur(5px); /* Blur effect on the background */
+    visibility: hidden; /* Initially hidden */
+    opacity: 0; /* Initially invisible */
+    transition: visibility 0s, opacity 0.5s linear; /* Add transition for smoothness */
 }
 
 .overlay.visible {
-    visibility: visible; /* Muestra el overlay */
-    opacity: 1; /* Hacerlo visible */
+    visibility: visible; /* Show the overlay */
+    opacity: 1; /* Make it visible */
 }
 
 #progressModal {
-    display: none; /* Ocultado inicialmente */
-    background: rgba(255, 255, 255, 0.8); /* Fondo blanco con transparencia */
+    display: none; /* Initially hidden */
+    background: rgba(255, 255, 255, 0.8); /* White background with transparency */
     padding: 20px;
     border-radius: 5px;
     text-align: center;
 }
 
 #progressBarContainer {
-    width: 80%; /* Ajusta según sea necesario */
+    width: 80%; /* Adjust as needed */
     background-color: #e0e0e0;
     border-radius: 5px;
     overflow: hidden;
-    margin: 10px auto; /* Centrar la barra de progreso */
+    margin: 10px auto; /* Center the progress bar */
 }
 
 #progressBar {
     width: 0;
     height: 20px;
-    background-color: #4caf50; /* Color verde para el progreso */
-    text-align: center; /* Centrar el texto en la barra */
-    line-height: 20px; /* Alinear el texto verticalmente */
-    color: white; /* Color del texto */
-    transition: width 0.5s; /* Suavizar el cambio de ancho */
+    background-color: #4caf50; /* Green color for progress */
+    text-align: center; /* Center text in the bar */
+    line-height: 20px; /* Vertically align text */
+    color: white; /* Text color */
+    transition: width 0.5s; /* Smooth width change */
 }

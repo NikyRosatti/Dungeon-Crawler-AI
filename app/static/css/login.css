@@ -116,7 +116,7 @@ button[type="submit"] {
   font-family: 'Press Start 2P';
   box-shadow: 0 0 10px #ffffff;
   margin-bottom: 20px;
-  backdrop-filter: blur(1px); /* Efecto de desenfoque */
+  backdrop-filter: blur(1px); /* Blur effect */
   transition: transform 0.3s ease;
 }
 

@@ -133,7 +133,7 @@ def handle_move(direction):
 
 @socketio.on("restart_pos")
 def restart_position(position):
-    maze_info["mapa_original"][maze_info["mapa_original"].index(-2)] = 3
+    maze_info["mapa_original"][maze_info["mapa_original"].index(-1)] = 3
     maze_info["mapa_original"][maze_info["start"]] = -1
     emit("map", maze_info["mapa_original"])
 
@@ -158,9 +158,7 @@ def test(data):
     env, model = setup_environment(grid, maze_id)
 
     # Ejecutar la prueba de entrenamiento y emitir los resultados
-    for update in run_training_test(env, model, maze_id, maze, size):
-        socketio.emit("training_update", update["status"])
-        socketio.emit("map", update["map"])
+    run_training_test(env, model, maze_id, maze, size)
 
 
 @socketio.on("stopTraining")

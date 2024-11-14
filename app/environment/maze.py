@@ -91,7 +91,8 @@ class Maze(gym.Env):
         row, col = self.current_state
         new_state = self._update_state_and_reward(row, col, action)
         self.current_state = new_state
-
+        if self.lose_by_mine or self.done:
+            self.final_position = self.current_state
         # truncation=False as the time limit is handled by the `TimeLimit` wrapper added during `make`
         return self._obs_space(), self.reward, self.done, False, {}
 
@@ -127,7 +128,7 @@ class Maze(gym.Env):
             self.lose_by_steps = True
 
         self.done = self.lose_by_mine or self.lose_by_steps or self.win
-        
+
         if self.done:
             self.episode_result = {
                 "win": self.win,

@@ -3,7 +3,9 @@ import os
 import time
 
 from flask import session
+from flask_socketio import emit
 
+from app import socketio
 from app.environment.maze import Maze
 from app.models import User, MazeBd, db
 from app.services.map_services import action_to_string
@@ -73,8 +75,6 @@ def run_training_test(env, model, maze_id, maze, size):
     """Ejecuta la prueba de entrenamiento y emite el estado del mapa en tiempo real."""
     global running_tests
 
-    results = {"status": "running", "map": None}
-
     print(f"Minimum steps required to solve the maze: {env.envs[0].minimum_steps}")
 
     user = User.query.get(session["user_id"])
@@ -88,8 +88,7 @@ def run_training_test(env, model, maze_id, maze, size):
 
         if not running_tests.get(maze_id):  # Si se ha solicitado detener la prueba
             print(f"Test stopped for maze_id {maze_id}")
-            results["status"] = "stopped"
-            yield results
+            socketio.emit("training_status", {"status": "stopped"})
             running_tests.pop(maze_id, None)
             break
 
@@ -102,8 +101,7 @@ def run_training_test(env, model, maze_id, maze, size):
         )
 
         current_map_state = env.envs[0].get_current_map_state()
-        results["map"] = current_map_state
-        yield results
+        socketio.emit("map", current_map_state)
         time.sleep(0.05)
 
         if done:
@@ -112,28 +110,37 @@ def run_training_test(env, model, maze_id, maze, size):
             lose_by_steps = env.envs[0].episode_result.get("lose_by_steps")
             if win:
                 print("Maze solved")
+                socketio.emit("finish_map")
                 if maze not in user.completed_dungeons:
                     user.completed_dungeons.append(maze)
+                    newPoints = 0
                     if env.envs[0].minimum_steps == steps:
                         user.points += size + steps
+                        newPoints += size + steps
                     else:
                         user.points += size
+                        newPoints += size
                     db.session.commit()
-                    results["status"] = "finished"
-                    yield results
+                    socketio.emit("training_status", {"status": "finished"})
+                    socketio.emit("win", {"points": newPoints})
                     print(f"User {user.username} completed the maze {maze_id}.")
                 else:
                     print(f"The user {user.username} already completed this maze.")
-                results["status"] = "finished"
-                yield results
+                socketio.emit("training_status", {"status": "finished"})
 
             if lose_by_mine:
+                pos = env.envs[0].final_position
+                socketio.emit("lose_by_mine", {"pos": pos})
                 print("You agent died brutally when stepped in a mine")
+                print(f"{pos}")
+
             if lose_by_steps:
-                print(
-                    f"Your agent could not complete the maze in {env.envs[0].maximum_steps} steps!!"
-                )
+                max_steps = env.envs[0].maximum_steps
+                print(f"Your agent could not complete the maze in {max_steps} steps!!")
             break
+
+        if env.envs[0].lose_by_mine | env.envs[0].lose_by_steps:
+            socketio.emit("lose")
 
     running_tests.pop(maze_id, None)  # Eliminar la prueba de la lista de ejecuciones
 
@@ -146,7 +153,7 @@ def setup_environment(grid, maze_id):
     model_to_load = os.path.join(
         "app", "saved_models", "trained_models_per_id", str(maze_id), "ppo.zip"
     )
-    
+
     env = DummyVecEnv([lambda: Maze(grid)])
     try:
         env = VecNormalize.load(load_path=vec_norm_path, venv=env)

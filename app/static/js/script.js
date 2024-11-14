@@ -81,52 +81,112 @@ if (window.location.pathname === '/map') {
         },1000);
     });
     
+    // Escuchar el evento "lose_by_mine"
+    socket.on('lose_by_mine', function(data) {
+        // Buscar la celda del agente en el grid
+        const pos = data.pos; // Esta es la posición de la mina
+        const gridCells = document.querySelectorAll('.cell'); // Asegúrate de que este sea el selector correcto
+        const [y, x] = pos;
+
+        // Suponiendo que n es el tamaño original del mapa (sin bordes)
+        const n = Math.sqrt(gridCells.length) - 2; // Número de celdas en una fila/columna del mapa original
+        // Calcular el índice en el NodeList
+        const index = (y + 1) * (n + 2) + (x + 1)
+        
+        const Cell = gridCells[index];
+        
+        // Cambiar la imagen de fondo de la celda del agente a explosion.gif
+        if (Cell) {
+            Cell.style.backgroundImage = "url('/static/gifs/explotion.gif'), url(/static/img/dirt.jpg)";
+            Cell.style.backgroundSize = 'cover'; // Asegúrate de que la imagen cubra completamente la celda
+            Cell.style.backgroundPosition = 'center'; // Centrar la imagen
+            Cell.style.backgroundRepeat = 'no-repeat';
+
+            // Ralentizar la reaparición del agente después de 2 segundos
+            setTimeout(() => {
+                // Restaurar la imagen del agente después de la explosión
+                Cell.style.backgroundImage = `url('/static/img/mine.png'), url(/static/img/dirt.jpg)`;
+                Cell.style.backgroundSize = 'cover'; // Ajustar el tamaño del fondo
+                Cell.style.backgroundPosition = 'center bottom, center center';
+                Cell.style.backgroundRepeat = 'no-repeat, no-repeat';
+            }, 1500); // Esperar 2 segundos
+        }
+    });
     document.addEventListener('keydown', function(event) {
         const key = event.key;
         if ((key == 'ArrowUp' || key == 'ArrowLeft' || key == 'ArrowDown' || key == 'ArrowRight')) {
             socket.emit('move', key);
         }
     });
+
+    const showModal = (message) => {
+        const modal = document.getElementById('modal');
+        const modalMessage = document.getElementById('modal-message');
+        modalMessage.textContent = message;
+        modal.style.display = 'block';
+    };
+    
+    const closeModal = () => {
+        const modal = document.getElementById('modal');
+        modal.style.display = 'none';
+    };
+
+    // Escuchar el evento "win"
+    socket.on("win", (data) => {
+        const points = data.points;
+        showModal(`¡Ganaste! Has obtenido ${points} puntos.`);
+    });
+    document.getElementById('close-modal').addEventListener('click', closeModal);
+    // Escuchar el evento "lose"
+    socket.on("lose", () => {
+        showModal("Tu agente no pudo completar el laberinto en el número máximo de pasos. ¡Inténtalo de nuevo!");
+    });
 }
 
+
 document.getElementById('trainBtn').addEventListener('click', function() {
-    // Obtener el maze_id del atributo data-maze-id del cuerpo
+    // Configuración inicial para restablecer el modal y el progreso
     const socket = io();
     const mazeId = document.body.getAttribute('data-maze-id');
     socket.emit('start_training', { maze_id: mazeId });
 
-    document.getElementById('overlay').classList.add('visible'); // Muestra el overlay
-    document.getElementById('progressModal').style.display = 'block'; // Muestra la barra de progreso
-    document.getElementById('progressBar').style.width = '0%'; // Reinicia la barra de progreso
-    document.getElementById('progressBar').textContent = '0%'; // Reinicia el texto
+    // Mostrar overlay y modal, reiniciando visibilidad y barra de progreso
+    const overlay = document.getElementById('overlay');
+    const progressModal = document.getElementById('progressModal');
+    const progressBar = document.getElementById('progressBar');
+    
+    overlay.classList.add('visible');           // Muestra el overlay
+    overlay.style.visibility = 'visible';       // Asegura que esté visible en la segunda ejecución
+    progressModal.style.display = 'block';      // Muestra la barra de progreso
+    progressBar.style.width = '0%';             // Reinicia el ancho de la barra de progreso
+    progressBar.textContent = '0%';             // Reinicia el texto de la barra
 
-    // Mostrar el overlay y la barra de progreso
+    // Evento para verificar si el entrenamiento finalizó
     socket.on('training_status', function(data) {
-        const overlay = document.getElementById('overlay');
         if (data.status === "finished") {
             overlay.classList.remove('visible'); // Oculta el overlay
             setTimeout(() => {
-                document.getElementById('progressModal').style.display = 'none'; // Ocultar la barra de progreso
-            }, 500); // Retardo antes de ocultar (opcional)
+                progressModal.style.display = 'none'; // Oculta el modal con un pequeño retardo
+            }, 500);
         }
     });
 
     // Actualizar barra de progreso
     socket.on('progress', function(data) {
         const progress = data.progress;
-        const progressBar = document.getElementById('progressBar');
         progressBar.style.width = progress + '%';
         progressBar.textContent = Math.round(progress) + '%';
 
-        // Ocultar el overlay al llegar al 100%
+        // Ocultar el overlay y el modal al llegar al 100%
         if (progress >= 100) {
             setTimeout(() => {
-                document.getElementById('overlay').style.visibility = 'hidden';
-                document.getElementById('progressModal').style.display = 'none'; // Ocultar la barra de progreso
-            }, 500); // Retardo antes de ocultar (opcional)
+                overlay.style.visibility = 'hidden';
+                progressModal.style.display = 'none';
+            }, 500);
         }
     });
 });
+
 
 document.getElementById('testTrainBtn').addEventListener('click', function() {
     // Obtener el maze_id del atributo data-maze-id del cuerpo
@@ -146,6 +206,8 @@ document.getElementById('testTrainBtn').addEventListener('click', function() {
         }
     });
 });
+
+
 
 document.getElementById('stopTrainBtn').addEventListener('click', function() {
     const socket = io();

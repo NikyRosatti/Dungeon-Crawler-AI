@@ -15,6 +15,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), nullable=False, unique=True)
     email = db.Column(db.String(150), nullable=False, unique=True)
+    language = db.Column(db.String(2), nullable=True)
     password = db.Column(db.String(150), nullable=False)
     completed_dungeons = db.Column(db.Integer, nullable=False, default=0)
     avatar = db.Column(db.String(200), nullable=True)

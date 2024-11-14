@@ -18,6 +18,7 @@
         <button class="yellow-button option-button" data-target="change-password-form">{{ _('Change Password') }}</button>
         <button class="yellow-button option-button" data-target="change-email-form">{{ _('Change Email') }}</button>
         <button class="yellow-button option-button" data-target="delete-account-form">{{ _('Delete Account') }}</button>
+        <button class="yellow-button option-button" data-target="change-language-form">{{ _('Change Language') }}</button>
     </div>
 
     <div class="form-container">
@@ -51,6 +52,17 @@
             <p>{{ _('Warning: This action cannot be undone.') }}</p>
             <button class="yellow-button delete-button" type="submit" name="delete_account" onclick="return confirm('{{ _('Are you sure you want to delete your account?') }}')">{{ _('Delete Account') }}</button>
 
+        </form>
+
+           <form id="change-language-form" class="contained-form" method="POST" style="display: none;">
+            <h3 class="form-title">{{ _('Change Language') }}</h3>
+            <label for="language">{{ _('Select Language') }}:</label>
+            <select name="language" required>
+                <option value="en" {% if user_language == 'en' %}selected{% endif %}>English</option>
+                <option value="es" {% if user_language == 'es' %}selected{% endif %}>Español</option>
+                <option value="fr" {% if user_language == 'fr' %}selected{% endif %}>Français</option>
+            </select>
+            <button class="yellow-button" type="submit" name="update_language">{{ _('Update Language') }}</button>
         </form>
     </div>
 

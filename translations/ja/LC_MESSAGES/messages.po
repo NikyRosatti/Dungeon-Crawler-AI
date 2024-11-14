@@ -1,17 +1,18 @@
-# Translations template for PROJECT.
+# Japanese translations for PROJECT.
 # Copyright (C) 2024 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-11-04 18:31-0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2024-11-04 18:20-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ja\n"
+"Language-Team: ja <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,259 +20,259 @@ msgstr ""
 
 #: app/routes.py:82
 msgid "User does not exist."
-msgstr ""
+msgstr "ユーザーが存在しません。"
 
 #: app/routes.py:85
 msgid "Incorrect credentials."
-msgstr ""
+msgstr "資格情報が正しくありません。"
 
 #: app/routes.py:113
 msgid "You must select an avatar"
-msgstr ""
+msgstr "アバターを選択する必要があります。"
 
 #: app/routes.py:121
 msgid "Username already exists"
-msgstr ""
+msgstr "ユーザー名は既に存在します。"
 
 #: app/routes.py:124
 msgid "Username must have at least 3 characters"
-msgstr ""
+msgstr "ユーザー名は3文字以上でなければなりません。"
 
 #: app/routes.py:128
 msgid "Username can only contain letters and numbers"
-msgstr ""
+msgstr "ユーザー名は文字と数字のみを含むことができます。"
 
 #: app/routes.py:133
 msgid "Please enter a valid email address"
-msgstr ""
+msgstr "有効なメールアドレスを入力してください。"
 
 #: app/routes.py:137
 msgid "Password must have at least 8 characters"
-msgstr ""
+msgstr "パスワードは8文字以上でなければなりません。"
 
 #: app/routes.py:204
 msgid "Avatar updated successfully!"
-msgstr ""
+msgstr "アバターが正常に更新されました！"
 
 #: app/routes.py:206
 msgid "Please, select an avatar."
-msgstr ""
+msgstr "アバターを選択してください。"
 
 #: app/routes.py:325
 msgid "Incorrect current password."
-msgstr ""
+msgstr "現在のパスワードが正しくありません。"
 
 #: app/routes.py:330
 msgid "New passwords do not match."
-msgstr ""
+msgstr "新しいパスワードが一致しません。"
 
 #: app/routes.py:338
 msgid "Password updated successfully."
-msgstr ""
+msgstr "パスワードが正常に更新されました。"
 
 #: app/routes.py:347
 msgid "Emails do not match."
-msgstr ""
+msgstr "メールが一致しません。"
 
 #: app/routes.py:351
 msgid "Email is already in use."
-msgstr ""
+msgstr "そのメールは既に使用されています。"
 
 #: app/routes.py:358
 msgid "Email updated successfully."
-msgstr ""
+msgstr "メールが正常に更新されました。"
 
 #: app/templates/base.html:25 app/templates/dashboard.html:3
 msgid "Dashboard"
-msgstr ""
+msgstr "ダッシュボード"
 
 #: app/templates/base.html:26 app/templates/profile.html:3
 msgid "Profile"
-msgstr ""
+msgstr "プロフィール"
 
 #: app/templates/base.html:27 app/templates/map.html:23
 msgid "My Dungeons"
-msgstr ""
+msgstr "私のダンジョン"
 
 #: app/templates/base.html:28
 msgid "Community Maps"
-msgstr ""
+msgstr "コミュニティマップ"
 
 #: app/templates/base.html:29 app/templates/leaderboard.html:3
 msgid "Leaderboard"
-msgstr ""
+msgstr "リーダーボード"
 
 #: app/templates/base.html:30 app/templates/settings.html:3
 #: app/templates/settings.html:7
 msgid "Settings"
-msgstr ""
+msgstr "設定"
 
 #: app/templates/base.html:31
 msgid "Logout"
-msgstr ""
+msgstr "ログアウト"
 
 #: app/templates/base.html:48
 msgid "All Rights Reserved."
-msgstr ""
+msgstr "全著作権所有。"
 
 #: app/templates/community.html:3
 msgid "Community Mazes - DC-AI"
-msgstr ""
+msgstr "コミュニティ迷路 - DC-AI"
 
 #: app/templates/community.html:11
 msgid "Community Mazes"
-msgstr ""
+msgstr "コミュニティ迷路"
 
 #: app/templates/community.html:17
 msgid "Sort by:"
-msgstr ""
+msgstr "並べ替え："
 
 #: app/templates/community.html:19
 msgid "Date (Newest to Oldest)"
-msgstr ""
+msgstr "日付（新しい順）"
 
 #: app/templates/community.html:20
 msgid "Date (Oldest to Newest)"
-msgstr ""
+msgstr "日付（古い順）"
 
 #: app/templates/community.html:21
 msgid "Creator Name (A-Z)"
-msgstr ""
+msgstr "作成者名（A-Z）"
 
 #: app/templates/community.html:22
 msgid "Creator Name (Z-A)"
-msgstr ""
+msgstr "作成者名（Z-A）"
 
 #: app/templates/community.html:23
 msgid "Grid Size (Largest to Smallest)"
-msgstr ""
+msgstr "グリッドサイズ（大から小）"
 
 #: app/templates/community.html:24
 msgid "Grid Size (Smallest to Largest)"
-msgstr ""
+msgstr "グリッドサイズ（小から大）"
 
 #: app/templates/community.html:26
 msgid "Apply Filter"
-msgstr ""
+msgstr "フィルターを適用"
 
 #: app/templates/community.html:38
 msgid "Previous"
-msgstr ""
+msgstr "前"
 
 #: app/templates/community.html:41
 msgid "Page"
-msgstr ""
+msgstr "ページ"
 
 #: app/templates/community.html:41
 msgid "of"
-msgstr ""
+msgstr "の"
 
 #: app/templates/community.html:44
 msgid "Next"
-msgstr ""
+msgstr "次"
 
 #: app/templates/dashboard.html:12
 msgid "Start New Dungeon"
-msgstr ""
+msgstr "新しいダンジョンを開始"
 
 #: app/templates/dashboard.html:17
 msgid "Choose Dungeon"
-msgstr ""
+msgstr "ダンジョンを選択"
 
 #: app/templates/dashboard.html:23
 msgid "Start New Dungeon Sign"
-msgstr ""
+msgstr "新しいダンジョンのサインを開始"
 
 #: app/templates/dashboard.html:24
 msgid "Embark on a new adventure!"
-msgstr ""
+msgstr "新しい冒険に出かけよう！"
 
 #: app/templates/dashboard.html:27
 msgid "Choose Dungeon Sign"
-msgstr ""
+msgstr "ダンジョン選択サイン"
 
 #: app/templates/dashboard.html:28
 msgid "Train the AI with your own dungeons"
-msgstr ""
+msgstr "自分のダンジョンでAIを訓練する"
 
 #: app/templates/dashboard.html:33 app/templates/leaderboard.html:36
 msgid "Largest Dungeon Completed"
-msgstr ""
+msgstr "完了した最大のダンジョン"
 
 #: app/templates/dashboard.html:37 app/templates/leaderboard.html:28
 msgid "Completed Dungeons"
-msgstr ""
+msgstr "完了したダンジョン"
 
 #: app/templates/dashboard.html:41 app/templates/leaderboard.html:44
 msgid "Points"
-msgstr ""
+msgstr "ポイント"
 
 #: app/templates/index.html:12
 msgid "DC-AI, Home"
-msgstr ""
+msgstr "DC-AI, ホーム"
 
 #: app/templates/index.html:23
 msgid "Welcome to Dungeons Crawler AI"
-msgstr ""
+msgstr "ダンジョン・クローラーAIへようこそ"
 
 #: app/templates/index.html:24
 msgid "Your AI-powered adventure begins here"
-msgstr ""
+msgstr "あなたのAI駆動の冒険はここから始まります"
 
 #: app/templates/index.html:27
 msgid "Login"
-msgstr ""
+msgstr "ログイン"
 
 #: app/templates/index.html:28 app/templates/login.html:46
 #: app/templates/register.html:57
 msgid "Register"
-msgstr ""
+msgstr "登録"
 
 #: app/templates/index.html:32
 msgid ""
 "Embark on an adventure where artificial intelligence drives the journey. "
 "Train, explore, and battle through dungeons!"
-msgstr ""
+msgstr "人工知能が旅を導く冒険に出発しよう。訓練し、探索し、ダンジョンで戦おう！"
 
 #: app/templates/index.html:42
 msgid "© 2024 Dungeons Crawler AI. All Rights Reserved."
-msgstr ""
+msgstr "© 2024 ダンジョン・クローラーAI。全著作権所有。"
 
 #: app/templates/leaderboard.html:17
 msgid "Rank"
-msgstr ""
+msgstr "ランク"
 
 #: app/templates/leaderboard.html:20
 msgid "Username"
-msgstr ""
+msgstr "ユーザー名"
 
 #: app/templates/login.html:12
 msgid "DC-AI, Login"
-msgstr ""
+msgstr "DC-AI, ログイン"
 
 #: app/templates/login.html:23
 msgid "Login into an account"
-msgstr ""
+msgstr "アカウントにログイン"
 
 #: app/templates/login.html:24
 msgid "Challenge your mind: log in to explore"
-msgstr ""
+msgstr "あなたの思考に挑戦しよう：ログインして探検する"
 
 #: app/templates/login.html:34
 msgid "Username or Email:"
-msgstr ""
+msgstr "ユーザー名またはメール："
 
 #: app/templates/login.html:38 app/templates/register.html:39
 msgid "Password:"
-msgstr ""
+msgstr "パスワード："
 
 #: app/templates/login.html:41
 msgid "LOGIN"
-msgstr ""
+msgstr "ログイン"
 
 #: app/templates/login.html:45
 msgid "Don't have an account?"
-msgstr ""
+msgstr "アカウントがありませんか？"
 
 #: app/templates/map.html:7
 msgid "Dynamic Grid"
@@ -286,8 +287,9 @@ msgid "Menu"
 msgstr ""
 
 #: app/templates/map.html:25
+#, fuzzy
 msgid "Train"
-msgstr ""
+msgstr "ランク"
 
 #: app/templates/map.html:26
 msgid "Test"
@@ -298,155 +300,193 @@ msgid "Stop"
 msgstr ""
 
 #: app/templates/map_creator.html:19
+#, fuzzy
 msgid "Map Size:"
-msgstr ""
+msgstr "マップ名："
 
 #: app/templates/map_creator.html:21
+#, fuzzy
 msgid "Generate Map"
-msgstr ""
+msgstr "マップを作成"
 
 #: app/templates/map_creator.html:22
 msgid "Export Map"
-msgstr ""
+msgstr "マップをエクスポート"
 
 #: app/templates/map_creator.html:27
 msgid "Block Type"
-msgstr ""
+msgstr "ブロックタイプ"
 
 #: app/templates/map_creator.html:28
 msgid "Floor"
-msgstr ""
+msgstr "床"
 
 #: app/templates/map_creator.html:29
 msgid "Wall"
-msgstr ""
+msgstr "壁"
 
 #: app/templates/map_creator.html:30
 msgid "Start"
-msgstr ""
+msgstr "開始"
 
 #: app/templates/map_creator.html:31
 msgid "End"
-msgstr ""
+msgstr "終了"
 
 #: app/templates/map_creator.html:32
 msgid "Mine"
-msgstr ""
+msgstr "鉱山"
 
 #: app/templates/profile.html:14
 msgid "Avatar of"
-msgstr ""
+msgstr "アバター"
 
 #: app/templates/profile.html:15
 msgid "Email"
-msgstr ""
+msgstr "電子メール"
 
 #: app/templates/profile.html:16
 msgid "Joined"
-msgstr ""
+msgstr "参加した"
 
 #: app/templates/profile.html:18
 msgid "Change avatar"
-msgstr ""
+msgstr "アバターを変更"
 
 #: app/templates/profile.html:28
 msgid "Save"
-msgstr ""
+msgstr "保存"
 
 #: app/templates/register.html:12
 msgid "DC-AI, Register"
-msgstr ""
+msgstr "DC-AI, 登録"
 
 #: app/templates/register.html:23
 msgid "Create Account"
-msgstr ""
+msgstr "アカウントを作成"
 
 #: app/templates/register.html:31
 msgid "Username:"
-msgstr ""
+msgstr "ユーザー名："
 
 #: app/templates/register.html:35
 msgid "Email:"
-msgstr ""
+msgstr "電子メール："
 
 #: app/templates/register.html:42
 msgid "Choose Avatar"
-msgstr ""
+msgstr "アバターを選択"
 
 #: app/templates/register.html:52
 msgid "Select"
-msgstr ""
+msgstr "選択"
 
 #: app/templates/register.html:55
 msgid "Please, choose an avatar before registering."
-msgstr ""
+msgstr "登録する前にアバターを選択してください。"
 
 #: app/templates/register.html:60
 msgid "Already have an account?"
-msgstr ""
+msgstr "すでにアカウントがありますか？"
 
 #: app/templates/register.html:61
 msgid "Log in"
-msgstr ""
+msgstr "ログイン"
 
 #: app/templates/settings.html:18 app/templates/settings.html:26
 msgid "Change Password"
-msgstr ""
+msgstr "パスワードを変更"
 
 #: app/templates/settings.html:19 app/templates/settings.html:40
 msgid "Change Email"
-msgstr ""
+msgstr "メールを変更"
 
 #: app/templates/settings.html:20 app/templates/settings.html:51
 #: app/templates/settings.html:53
 msgid "Delete Account"
-msgstr ""
+msgstr "アカウントを削除"
 
 #: app/templates/settings.html:21
 msgid "Change Language"
-msgstr ""
+msgstr "言語を変更"
 
 #: app/templates/settings.html:27
 msgid "Current Password"
-msgstr ""
+msgstr "現在のパスワード"
 
 #: app/templates/settings.html:30
 msgid "New Password"
-msgstr ""
+msgstr "新しいパスワード"
 
 #: app/templates/settings.html:33
 msgid "Confirm New Password"
-msgstr ""
+msgstr "新しいパスワードを確認"
 
 #: app/templates/settings.html:36
 msgid "Update Password"
-msgstr ""
+msgstr "パスワードを更新"
 
 #: app/templates/settings.html:41
 msgid "New Email"
-msgstr ""
+msgstr "新しいメール"
 
 #: app/templates/settings.html:44
 msgid "Confirm New Email"
-msgstr ""
+msgstr "新しいメールを確認"
 
 #: app/templates/settings.html:47
 msgid "Update Email"
-msgstr ""
+msgstr "メールを更新"
 
 #: app/templates/settings.html:52
 msgid "Warning: This action cannot be undone."
-msgstr ""
+msgstr "警告：この操作は元に戻せません。"
 
 #: app/templates/settings.html:53
 msgid "Are you sure you want to delete your account?"
-msgstr ""
+msgstr "本当にアカウントを削除しますか？"
 
 #: app/templates/user_mazes.html:3
 msgid "User Mazes - DC-AI"
-msgstr ""
+msgstr "ユーザー迷路 - DC-AI"
 
 #: app/templates/user_mazes.html:10
 msgid "My Created Mazes"
-msgstr ""
+msgstr "私が作成した迷路"
+
+#~ msgid "Forgot Password?"
+#~ msgstr "パスワードを忘れましたか？"
+
+#~ msgid "Create one"
+#~ msgstr "作成する"
+
+#~ msgid "Map"
+#~ msgstr "マップ"
+
+#~ msgid "Save Map"
+#~ msgstr "マップを保存"
+
+#~ msgid "Load Map"
+#~ msgstr "マップを読み込む"
+
+#~ msgid "Import"
+#~ msgstr "インポート"
+
+#~ msgid "Export"
+#~ msgstr "エクスポート"
+
+#~ msgid "Export your map for later use"
+#~ msgstr "後で使用するためにマップをエクスポートします"
+
+#~ msgid "Import Map"
+#~ msgstr "マップをインポート"
+
+#~ msgid "Import a map from a file"
+#~ msgstr "ファイルからマップをインポートします"
+
+#~ msgid "Mines"
+#~ msgstr "鉱山"
+
+#~ msgid "Mines are destructible blocks that add challenge."
+#~ msgstr "鉱山は破壊可能なブロックで、挑戦を加えます。"
 

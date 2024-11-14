@@ -1,17 +1,18 @@
-# Translations template for PROJECT.
+# Latin translations for PROJECT.
 # Copyright (C) 2024 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-11-04 18:31-0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2024-11-04 18:20-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: la\n"
+"Language-Team: la <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,434 +20,472 @@ msgstr ""
 
 #: app/routes.py:82
 msgid "User does not exist."
-msgstr ""
+msgstr "Usor non existit."
 
 #: app/routes.py:85
 msgid "Incorrect credentials."
-msgstr ""
+msgstr "Credentials incorrectae."
 
 #: app/routes.py:113
 msgid "You must select an avatar"
-msgstr ""
+msgstr "Debes seligere avatar"
 
 #: app/routes.py:121
 msgid "Username already exists"
-msgstr ""
+msgstr "Usoris nomen iam existit"
 
 #: app/routes.py:124
 msgid "Username must have at least 3 characters"
-msgstr ""
+msgstr "Usoris nomen saltem 3 characteres habere debet"
 
 #: app/routes.py:128
 msgid "Username can only contain letters and numbers"
-msgstr ""
+msgstr "Usoris nomen solum litteras et numeros continere potest"
 
 #: app/routes.py:133
 msgid "Please enter a valid email address"
-msgstr ""
+msgstr "Quaeso, introducere validum inscriptio"
 
 #: app/routes.py:137
 msgid "Password must have at least 8 characters"
-msgstr ""
+msgstr "Tessera saltem 8 characteres habere debet"
 
 #: app/routes.py:204
 msgid "Avatar updated successfully!"
-msgstr ""
+msgstr "Avatar feliciter renovatum est!"
 
 #: app/routes.py:206
 msgid "Please, select an avatar."
-msgstr ""
+msgstr "Quaeso, selige avatar."
 
 #: app/routes.py:325
 msgid "Incorrect current password."
-msgstr ""
+msgstr "Tessera currentis incorrecta."
 
 #: app/routes.py:330
 msgid "New passwords do not match."
-msgstr ""
+msgstr "Novae tesserae non congruunt."
 
 #: app/routes.py:338
 msgid "Password updated successfully."
-msgstr ""
+msgstr "Tessera feliciter renovata est."
 
 #: app/routes.py:347
 msgid "Emails do not match."
-msgstr ""
+msgstr "Inscriptiones non congruunt."
 
 #: app/routes.py:351
 msgid "Email is already in use."
-msgstr ""
+msgstr "Inscriptio iam adhibetur."
 
 #: app/routes.py:358
 msgid "Email updated successfully."
-msgstr ""
+msgstr "Inscriptio feliciter renovata est."
 
 #: app/templates/base.html:25 app/templates/dashboard.html:3
 msgid "Dashboard"
-msgstr ""
+msgstr "Tabula"
 
 #: app/templates/base.html:26 app/templates/profile.html:3
 msgid "Profile"
-msgstr ""
+msgstr "Profilum"
 
 #: app/templates/base.html:27 app/templates/map.html:23
 msgid "My Dungeons"
-msgstr ""
+msgstr "Meae Dungeons"
 
 #: app/templates/base.html:28
 msgid "Community Maps"
-msgstr ""
+msgstr "Tabulae Communitatis"
 
 #: app/templates/base.html:29 app/templates/leaderboard.html:3
 msgid "Leaderboard"
-msgstr ""
+msgstr "Tabula Dominorum"
 
 #: app/templates/base.html:30 app/templates/settings.html:3
 #: app/templates/settings.html:7
 msgid "Settings"
-msgstr ""
+msgstr "Instauratio"
 
 #: app/templates/base.html:31
 msgid "Logout"
-msgstr ""
+msgstr "Exire"
 
 #: app/templates/base.html:48
 msgid "All Rights Reserved."
-msgstr ""
+msgstr "Omnia iura reservata."
 
 #: app/templates/community.html:3
 msgid "Community Mazes - DC-AI"
-msgstr ""
+msgstr "Labyrinthi Communitatis - DC-AI"
 
 #: app/templates/community.html:11
 msgid "Community Mazes"
-msgstr ""
+msgstr "Labyrinthi Communitatis"
 
 #: app/templates/community.html:17
 msgid "Sort by:"
-msgstr ""
+msgstr "Ordina per:"
 
 #: app/templates/community.html:19
 msgid "Date (Newest to Oldest)"
-msgstr ""
+msgstr "Data (Novissimus ad Vetus)"
 
 #: app/templates/community.html:20
 msgid "Date (Oldest to Newest)"
-msgstr ""
+msgstr "Data (Vetus ad Novissimus)"
 
 #: app/templates/community.html:21
 msgid "Creator Name (A-Z)"
-msgstr ""
+msgstr "Nomen Creatoris (A-Z)"
 
 #: app/templates/community.html:22
 msgid "Creator Name (Z-A)"
-msgstr ""
+msgstr "Nomen Creatoris (Z-A)"
 
 #: app/templates/community.html:23
 msgid "Grid Size (Largest to Smallest)"
-msgstr ""
+msgstr "Magnitudo Retis (Maxima ad Minima)"
 
 #: app/templates/community.html:24
 msgid "Grid Size (Smallest to Largest)"
-msgstr ""
+msgstr "Magnitudo Retis (Minima ad Maxima)"
 
 #: app/templates/community.html:26
 msgid "Apply Filter"
-msgstr ""
+msgstr "Applicare Filtrum"
 
 #: app/templates/community.html:38
 msgid "Previous"
-msgstr ""
+msgstr "Praecedens"
 
 #: app/templates/community.html:41
 msgid "Page"
-msgstr ""
+msgstr "Pagina"
 
 #: app/templates/community.html:41
 msgid "of"
-msgstr ""
+msgstr "de"
 
 #: app/templates/community.html:44
 msgid "Next"
-msgstr ""
+msgstr "Sequens"
 
 #: app/templates/dashboard.html:12
 msgid "Start New Dungeon"
-msgstr ""
+msgstr "Incipe Novum Dungeon"
 
 #: app/templates/dashboard.html:17
 msgid "Choose Dungeon"
-msgstr ""
+msgstr "Elige Dungeon"
 
 #: app/templates/dashboard.html:23
 msgid "Start New Dungeon Sign"
-msgstr ""
+msgstr "Incipe Signum Novum Dungeon"
 
 #: app/templates/dashboard.html:24
 msgid "Embark on a new adventure!"
-msgstr ""
+msgstr "Incipe in nova aventura!"
 
 #: app/templates/dashboard.html:27
 msgid "Choose Dungeon Sign"
-msgstr ""
+msgstr "Elige Signum Dungeon"
 
 #: app/templates/dashboard.html:28
 msgid "Train the AI with your own dungeons"
-msgstr ""
+msgstr "Instructio AI cum tuis dungeons"
 
 #: app/templates/dashboard.html:33 app/templates/leaderboard.html:36
 msgid "Largest Dungeon Completed"
-msgstr ""
+msgstr "Maximus Dungeon Perfectus"
 
 #: app/templates/dashboard.html:37 app/templates/leaderboard.html:28
 msgid "Completed Dungeons"
-msgstr ""
+msgstr "Dungeons Perfecti"
 
 #: app/templates/dashboard.html:41 app/templates/leaderboard.html:44
 msgid "Points"
-msgstr ""
+msgstr "Puncta"
 
 #: app/templates/index.html:12
 msgid "DC-AI, Home"
-msgstr ""
+msgstr "DC-AI, Domus"
 
 #: app/templates/index.html:23
 msgid "Welcome to Dungeons Crawler AI"
-msgstr ""
+msgstr "Salve ad Dungeons Crawler AI"
 
 #: app/templates/index.html:24
 msgid "Your AI-powered adventure begins here"
-msgstr ""
+msgstr "Tua aventura potestate AI hic incipit"
 
 #: app/templates/index.html:27
 msgid "Login"
-msgstr ""
+msgstr "Intra"
 
 #: app/templates/index.html:28 app/templates/login.html:46
 #: app/templates/register.html:57
 msgid "Register"
-msgstr ""
+msgstr "Constituere"
 
 #: app/templates/index.html:32
 msgid ""
 "Embark on an adventure where artificial intelligence drives the journey. "
 "Train, explore, and battle through dungeons!"
 msgstr ""
+"Incipe in aventura ubi intelligentia artificialis iter ducit. Instructio,"
+" exploratio, et pugna per dungeons!"
 
 #: app/templates/index.html:42
 msgid "© 2024 Dungeons Crawler AI. All Rights Reserved."
-msgstr ""
+msgstr "© 2024 Dungeons Crawler AI. Omnia iura reservata."
 
 #: app/templates/leaderboard.html:17
 msgid "Rank"
-msgstr ""
+msgstr "Rang"
 
 #: app/templates/leaderboard.html:20
 msgid "Username"
-msgstr ""
+msgstr "Nomen Usoris"
 
 #: app/templates/login.html:12
 msgid "DC-AI, Login"
-msgstr ""
+msgstr "DC-AI, Intra"
 
 #: app/templates/login.html:23
 msgid "Login into an account"
-msgstr ""
+msgstr "Intra in rationem"
 
 #: app/templates/login.html:24
 msgid "Challenge your mind: log in to explore"
-msgstr ""
+msgstr "Provoca mentem tuam: intra ad explorandum"
 
 #: app/templates/login.html:34
 msgid "Username or Email:"
-msgstr ""
+msgstr "Nomen Usoris:"
 
 #: app/templates/login.html:38 app/templates/register.html:39
 msgid "Password:"
-msgstr ""
+msgstr "Tessera:"
 
 #: app/templates/login.html:41
 msgid "LOGIN"
-msgstr ""
+msgstr "Intra"
 
 #: app/templates/login.html:45
 msgid "Don't have an account?"
-msgstr ""
+msgstr "Non habes rationem?"
 
 #: app/templates/map.html:7
 msgid "Dynamic Grid"
-msgstr ""
+msgstr "Dynamic malesuada euismod"
 
 #: app/templates/map.html:13
 msgid "Training Progress:"
-msgstr ""
+msgstr "Disciplina progressus"
 
 #: app/templates/map.html:24
 msgid "Menu"
-msgstr ""
+msgstr "Menu"
 
 #: app/templates/map.html:25
 msgid "Train"
-msgstr ""
+msgstr "Rang"
 
 #: app/templates/map.html:26
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
 #: app/templates/map.html:27
 msgid "Stop"
-msgstr ""
+msgstr "Stop"
 
 #: app/templates/map_creator.html:19
 msgid "Map Size:"
-msgstr ""
+msgstr "Nomen Tabulae:"
 
 #: app/templates/map_creator.html:21
 msgid "Generate Map"
-msgstr ""
+msgstr "Creare Tabulam"
 
 #: app/templates/map_creator.html:22
 msgid "Export Map"
-msgstr ""
+msgstr "Exportare Tabulam"
 
 #: app/templates/map_creator.html:27
 msgid "Block Type"
-msgstr ""
+msgstr "Typus Blocca"
 
 #: app/templates/map_creator.html:28
 msgid "Floor"
-msgstr ""
+msgstr "Tegimen"
 
 #: app/templates/map_creator.html:29
 msgid "Wall"
-msgstr ""
+msgstr "Mur"
 
 #: app/templates/map_creator.html:30
 msgid "Start"
-msgstr ""
+msgstr "Initium"
 
 #: app/templates/map_creator.html:31
 msgid "End"
-msgstr ""
+msgstr "Finis"
 
 #: app/templates/map_creator.html:32
 msgid "Mine"
-msgstr ""
+msgstr "Fossa"
 
 #: app/templates/profile.html:14
 msgid "Avatar of"
-msgstr ""
+msgstr "Avatar de"
 
 #: app/templates/profile.html:15
 msgid "Email"
-msgstr ""
+msgstr "Inscriptio"
 
 #: app/templates/profile.html:16
 msgid "Joined"
-msgstr ""
+msgstr "Coniunctus"
 
 #: app/templates/profile.html:18
 msgid "Change avatar"
-msgstr ""
+msgstr "Mutare avatar"
 
 #: app/templates/profile.html:28
 msgid "Save"
-msgstr ""
+msgstr "Servare"
 
 #: app/templates/register.html:12
 msgid "DC-AI, Register"
-msgstr ""
+msgstr "DC-AI, Constituere"
 
 #: app/templates/register.html:23
 msgid "Create Account"
-msgstr ""
+msgstr "Creare Rationem"
 
 #: app/templates/register.html:31
 msgid "Username:"
-msgstr ""
+msgstr "Nomen Usoris:"
 
 #: app/templates/register.html:35
 msgid "Email:"
-msgstr ""
+msgstr "Inscriptio:"
 
 #: app/templates/register.html:42
 msgid "Choose Avatar"
-msgstr ""
+msgstr "Elige Avatar"
 
 #: app/templates/register.html:52
 msgid "Select"
-msgstr ""
+msgstr "Elige"
 
 #: app/templates/register.html:55
 msgid "Please, choose an avatar before registering."
-msgstr ""
+msgstr "Quaeso, elige avatar antequam te constituis."
 
 #: app/templates/register.html:60
 msgid "Already have an account?"
-msgstr ""
+msgstr "Iam habes rationem?"
 
 #: app/templates/register.html:61
 msgid "Log in"
-msgstr ""
+msgstr "Intra"
 
 #: app/templates/settings.html:18 app/templates/settings.html:26
 msgid "Change Password"
-msgstr ""
+msgstr "Mutare Tessera"
 
 #: app/templates/settings.html:19 app/templates/settings.html:40
 msgid "Change Email"
-msgstr ""
+msgstr "Mutare Inscriptio"
 
 #: app/templates/settings.html:20 app/templates/settings.html:51
 #: app/templates/settings.html:53
 msgid "Delete Account"
-msgstr ""
+msgstr "Delere Rationem"
 
 #: app/templates/settings.html:21
 msgid "Change Language"
-msgstr ""
+msgstr "Mutare Linguam"
 
 #: app/templates/settings.html:27
 msgid "Current Password"
-msgstr ""
+msgstr "Tessera currentis"
 
 #: app/templates/settings.html:30
 msgid "New Password"
-msgstr ""
+msgstr "Nova Tessera"
 
 #: app/templates/settings.html:33
 msgid "Confirm New Password"
-msgstr ""
+msgstr "Confirma Novam Tessera"
 
 #: app/templates/settings.html:36
 msgid "Update Password"
-msgstr ""
+msgstr "Renovare Tessera"
 
 #: app/templates/settings.html:41
 msgid "New Email"
-msgstr ""
+msgstr "Nova Inscriptio"
 
 #: app/templates/settings.html:44
 msgid "Confirm New Email"
-msgstr ""
+msgstr "Confirma Novam Inscriptio"
 
 #: app/templates/settings.html:47
 msgid "Update Email"
-msgstr ""
+msgstr "Renovare Inscriptio"
 
 #: app/templates/settings.html:52
 msgid "Warning: This action cannot be undone."
-msgstr ""
+msgstr "Monitio: Hoc actio non potest reverti."
 
 #: app/templates/settings.html:53
 msgid "Are you sure you want to delete your account?"
-msgstr ""
+msgstr "Certe vis delere tuam rationem?"
 
 #: app/templates/user_mazes.html:3
 msgid "User Mazes - DC-AI"
-msgstr ""
+msgstr "Dungeons Usoris - DC-AI"
 
 #: app/templates/user_mazes.html:10
 msgid "My Created Mazes"
-msgstr ""
+msgstr "Meae Dungeons Creatae"
+
+#~ msgid "Forgot Password?"
+#~ msgstr "Obliviscere Tessera?"
+
+#~ msgid "Create one"
+#~ msgstr "Creare unum"
+
+#~ msgid "Map"
+#~ msgstr "Tabula"
+
+#~ msgid "Save Map"
+#~ msgstr "Servare Tabulam"
+
+#~ msgid "Load Map"
+#~ msgstr "Onere Tabulam"
+
+#~ msgid "Import"
+#~ msgstr "Importare"
+
+#~ msgid "Export"
+#~ msgstr "Exportare"
+
+#~ msgid "Export your map for later use"
+#~ msgstr "Exporta tuam tabulam ad usum futurum"
+
+#~ msgid "Import Map"
+#~ msgstr "Importare Tabulam"
+
+#~ msgid "Import a map from a file"
+#~ msgstr "Importa tabulam ex fasciculo"
+
+#~ msgid "Mines"
+#~ msgstr "Fossae"
+
+#~ msgid "Mines are destructible blocks that add challenge."
+#~ msgstr "Fossae sunt blocca destructibilia quae addunt provocationem."
 

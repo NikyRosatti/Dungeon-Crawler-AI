@@ -1,5 +1,8 @@
 import json
 
+from flask import render_template, request
+from flask_babel import gettext as _
+
 from app.models import MazeBd, User, db
 
 
@@ -38,3 +41,16 @@ def serialize_mazes(mazes):
         }
         for maze in mazes
     ]
+
+
+def update_language(user):
+    selected_language = request.form["language"]
+
+    user.language = selected_language
+    db.session.commit()
+
+    return render_template(
+        "settings.html",
+        success=_("Language updated successfully."),
+        user_language=selected_language,
+    )

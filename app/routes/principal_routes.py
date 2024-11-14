@@ -21,6 +21,7 @@ from app.controllers.auth_controllers import (
 from app.controllers.principal_controllers import (
     build_maze_query,
     serialize_mazes,
+    update_language,
 )
 from app.models import User, MazeBd, db
 
@@ -117,7 +118,6 @@ def settings():
     user = User.query.get(session["user_id"])
 
     if request.method == "POST":
-        # Actualizar contraseña
         if "update_password" in request.form:
             return update_password(user)
 
@@ -126,6 +126,9 @@ def settings():
 
         elif "delete_account" in request.form:
             return delete_account(user)
+
+        elif "update_language" in request.form:
+            return update_language(user)
 
     return render_template("settings.html")
 

@@ -1,8 +1,13 @@
-import time
-import numpy as np
 import gymnasium as gym
+import numpy as np
 from gymnasium import spaces
-from app.environment.utils import get_min_steps, find_points, increment_position
+
+from app.services.map_services import (
+    find_points,
+    get_min_steps,
+    increment_position,
+)
+
 
 # Possible movements: left, down, right, up
 LEFT = 0
@@ -69,7 +74,7 @@ class Maze(gym.Env):
         self.win = False
         self.lose_by_mine = False
         self.lose_by_steps = False
-        
+
         return self._obs_space(), {}
 
     def _obs_space(self):
@@ -123,7 +128,7 @@ class Maze(gym.Env):
             self.lose_by_steps = True
 
         self.done = self.lose_by_mine or self.lose_by_steps or self.win
-        
+
         if self.done:
             self.episode_result = {
                 "win": self.win,

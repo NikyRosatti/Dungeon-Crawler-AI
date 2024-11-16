@@ -102,6 +102,8 @@ if (window.location.pathname === '/map') {
             Cell.style.backgroundPosition = 'center'; // Centrar la imagen
             Cell.style.backgroundRepeat = 'no-repeat';
 
+            showModal(`You lost because you stepped on a mine, keep training!`);
+
             // Ralentizar la reaparición del agente después de 2 segundos
             setTimeout(() => {
                 // Restaurar la imagen del agente después de la explosión

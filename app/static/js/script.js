@@ -111,7 +111,7 @@ if (window.location.pathname === '/map') {
                 Cell.style.backgroundSize = 'cover'; // Ajustar el tamaño del fondo
                 Cell.style.backgroundPosition = 'center bottom, center center';
                 Cell.style.backgroundRepeat = 'no-repeat, no-repeat';
-            }, 1500); // Esperar 2 segundos
+            }, 1500); // Esperar 1.5 segundos
         }
     });
     document.addEventListener('keydown', function(event) {

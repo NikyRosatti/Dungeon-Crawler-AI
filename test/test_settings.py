@@ -1,5 +1,4 @@
 from app.models import User
-from flask import session
 
 def test_update_password(login_user):
     

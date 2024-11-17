@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %}User Mazes - DC-AI{% endblock %}
+{% block title %}{{ _('User Mazes - DC-AI') }}{% endblock %}
 
 {% block styles %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/user_mazes.css') }}">
 {% endblock %}
 
 {% block content %}
-    <h2>My Created Mazes</h2>
+<h2>{{ _('My Created Mazes') }}</h2>
     <div class="mazes-grid">
         <div id="mazes-grid" data-mazes='{{ mazes|safe }}'></div>                  
     </div>   
-    <a href="{{ url_for('routes.map_creator') }}" class="add-button">
+    <a href="{{ url_for('game.map_creator') }}" class="add-button">
         <span> + </span>  
     </a>
 {% endblock %}

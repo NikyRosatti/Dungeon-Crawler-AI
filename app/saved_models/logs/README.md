@@ -1,7 +1,14 @@
 # Tensorboard Logs
 Para ver los logs creados por tensorboard de los entrenamientos que se fueron guardando
 
-# Dependencia Numpy
+Modificar en el código en la parte de la creación del modelo (PPO por ejemplo) tal que:
+
+<i>model = PPO("MlpPolicy", env=envs, ...<b>tensorboard_log=logdir</b>)</i>
+
+
+# Dependencia Numpy y TensorFlow
+
+## Ubuntu
 Para poder ver los logs correctamente, la version de Numpy tiene que ser numpy<2.0.0
 
 Se deberia reemplazar y desinstalar
@@ -29,6 +36,14 @@ Instalar globalmente TensorFlow
 pip install TensorFlow
 ```
 
+## Instalacion local
+En <b>requirements.txt</b> se encuentra Tensorflow como dependencia de Pip
+Al hacer
+``` bash
+pip install -r requirements.txt
+```
+Se deberia instalar tambien sin problemas
+
 # Ver Logs
 Pararse una carpeta antes de logs/
 
@@ -40,6 +55,5 @@ cd /app/saved_models
 Hacer:
 
 ``` bash
-
 tensorboard --logdir=logs
 ```

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}{{ _('Profile') }}{% endblock %}
+
 
 {% block styles %}
 {{ super() }}
@@ -10,11 +11,11 @@
 {% block content %}
         <div class="profile">
             <h2>{{ user.username }}</h2>
-            <img src="{{ user.avatar or '/static/avatars/default.png' }}" alt="Avatar de {{ user.username }}" width="150" height="150">
-            <p>Email: {{ user.email }}</p>
-            <p>Joined: {{ user.joined_at.strftime('%B %d, %Y') }}</p>
+            <img src="{{ user.avatar or url_for('static', filename='avatars/default.png') }}" alt="{{ _('Avatar of') }} {{ user.username }}" width="150" height="150">
+            <p>{{ _('Email') }}: {{ user.email }}</p>
+            <p>{{ _('Joined') }}: {{ user.joined_at.strftime('%B %d, %Y') }}</p>
                     
-            <button class="show-avatar-options">Change avatar</button>
+            <button class="show-avatar-options">{{ _('Change avatar') }}</button>
             <form action="/profile" method="POST">
                 <div class="avatar-options">
                     {% for avatar in avatars %}
@@ -24,7 +25,7 @@
                     </label>
                     {% endfor %}
                 </div>
-                <button id="changeavatarbutton" class="buttonavatar" type="submit">Guardar</button>
+                <button id="changeavatarbutton" class="buttonavatar" type="submit">{{ _('Save') }}</button>
             </form>
         </div>
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ get_locale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,13 +22,13 @@
                 <h1>DC-AI</h1>
             </div>
             <ul class="menu">
-                <li><a href="{{ url_for('routes.dashboard') }}" class="menu-item{% if request.path =="/dashboard" %} active{% endif %}">Dashboard</a></li>
-                <li><a href="{{ url_for('routes.profile') }}" class="menu-item{% if request.path =="/profile" %} active{% endif %}">Profile</a></li>
-                <li><a href="{{ url_for('routes.my_mazes') }}" class="menu-item{% if request.path =="/dungeons" %} active{% endif %}">My Dungeons</a></li>
-                <li><a href="{{ url_for('routes.community') }}" class="menu-item{% if request.path =="/community" %} active{% endif %}">Community Maps</a></li>
-                <li><a href="{{ url_for('routes.leaderboard') }}" class="menu-item{% if request.path == "/leaderboard" %} active{% endif %}">Leaderboard</a></li>
-                <li><a href="{{ url_for('routes.settings') }}" class="menu-item{% if request.path =="/settings" %} active{% endif %}">Settings</a></li>
-                <li><a href="{{ url_for('routes.logout') }}" class="menu-item">Logout</a></li>
+                <li><a href="{{ url_for('principal.dashboard') }}" class="menu-item{% if request.path == '/dashboard' %} active{% endif %}">{{ _('Dashboard') }}</a></li>
+                <li><a href="{{ url_for('principal.profile') }}" class="menu-item{% if request.path == '/profile' %} active{% endif %}">{{ _('Profile') }}</a></li>
+                <li><a href="{{ url_for('principal.my_mazes') }}" class="menu-item{% if request.path == '/dungeons' %} active{% endif %}">{{ _('My Dungeons') }}</a></li>
+                <li><a href="{{ url_for('principal.community') }}" class="menu-item{% if request.path == '/community' %} active{% endif %}">{{ _('Community Maps') }}</a></li>
+                <li><a href="{{ url_for('principal.leaderboard') }}" class="menu-item{% if request.path == '/leaderboard' %} active{% endif %}">{{ _('Leaderboard') }}</a></li>
+                <li><a href="{{ url_for('principal.settings') }}" class="menu-item{% if request.path == '/settings' %} active{% endif %}">{{ _('Settings') }}</a></li>
+                <li><a href="{{ url_for('auth.logout') }}" class="menu-item">{{ _('Logout') }}</a></li>
             </ul>
         </div>
 
@@ -45,6 +45,6 @@
 
 </body>
 <footer>
-    <p>© 2024 Dungeons Crawler AI. All Rights Reserved.</p>
+    <p>© 2024 Dungeons Crawler AI. {{ _('All Rights Reserved.') }}</p>
 </footer>
 </html>

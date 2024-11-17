@@ -1,0 +1,496 @@
+# Irish translations for PROJECT.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-11-04 18:31-0300\n"
+"PO-Revision-Date: 2024-11-04 18:20-0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ga\n"
+"Language-Team: ga <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#: app/routes.py:82
+msgid "User does not exist."
+msgstr "Níl an úsáideoir ann."
+
+#: app/routes.py:85
+msgid "Incorrect credentials."
+msgstr "Ní réitíonn na creidiúnaithe."
+
+#: app/routes.py:113
+msgid "You must select an avatar"
+msgstr "Caithfidh tú avatar a roghnú"
+
+#: app/routes.py:121
+msgid "Username already exists"
+msgstr "Tá an t-ainm úsáideora ann cheana"
+
+#: app/routes.py:124
+msgid "Username must have at least 3 characters"
+msgstr "Caithfidh an t-ainm úsáideora a bheith ar a laghad 3 charachtar"
+
+#: app/routes.py:128
+msgid "Username can only contain letters and numbers"
+msgstr "Ní féidir le h-ainm úsáideora ach litreacha agus uimhreacha a bheith ann"
+
+#: app/routes.py:133
+msgid "Please enter a valid email address"
+msgstr "Le do thoil, cuir isteach seoladh ríomhphoist bailí"
+
+#: app/routes.py:137
+msgid "Password must have at least 8 characters"
+msgstr "Caithfidh an pasfhocal a bheith ar a laghad 8 charachtar"
+
+#: app/routes.py:204
+msgid "Avatar updated successfully!"
+msgstr "Nuashonraíodh an t-avatar go rathúil!"
+
+#: app/routes.py:206
+msgid "Please, select an avatar."
+msgstr "Le do thoil, roghnaigh avatar."
+
+#: app/routes.py:325
+msgid "Incorrect current password."
+msgstr "Ní réitíonn an pasfhocal reatha."
+
+#: app/routes.py:330
+msgid "New passwords do not match."
+msgstr "Ní comhoiriúnach na pasfhocail nua."
+
+#: app/routes.py:338
+msgid "Password updated successfully."
+msgstr "Nuashonraíodh an pasfhocal go rathúil."
+
+#: app/routes.py:347
+msgid "Emails do not match."
+msgstr "Ní comhoiriúnach na ríomhphoist."
+
+#: app/routes.py:351
+msgid "Email is already in use."
+msgstr "Tá an ríomhphost á úsáid cheana."
+
+#: app/routes.py:358
+msgid "Email updated successfully."
+msgstr "Nuashonraíodh an ríomhphost go rathúil."
+
+#: app/templates/base.html:25 app/templates/dashboard.html:3
+msgid "Dashboard"
+msgstr "Painéal"
+
+#: app/templates/base.html:26 app/templates/profile.html:3
+msgid "Profile"
+msgstr "Profail"
+
+#: app/templates/base.html:27 app/templates/map.html:23
+msgid "My Dungeons"
+msgstr "Mo Dúnóga"
+
+#: app/templates/base.html:28
+msgid "Community Maps"
+msgstr "Mapaí na Comhphobail"
+
+#: app/templates/base.html:29 app/templates/leaderboard.html:3
+msgid "Leaderboard"
+msgstr "Tábla na n-úsáideoirí"
+
+#: app/templates/base.html:30 app/templates/settings.html:3
+#: app/templates/settings.html:7
+msgid "Settings"
+msgstr "Socruithe"
+
+#: app/templates/base.html:31
+msgid "Logout"
+msgstr "Logáil amach"
+
+#: app/templates/base.html:48
+msgid "All Rights Reserved."
+msgstr "Gach ceart ar cosaint."
+
+#: app/templates/community.html:3
+msgid "Community Mazes - DC-AI"
+msgstr "Dúnóga na Comhphobail - DC-AI"
+
+#: app/templates/community.html:11
+msgid "Community Mazes"
+msgstr "Dúnóga na Comhphobail"
+
+#: app/templates/community.html:17
+msgid "Sort by:"
+msgstr "Déan socrú de réir:"
+
+#: app/templates/community.html:19
+msgid "Date (Newest to Oldest)"
+msgstr "Dáta (Nua go Seana)"
+
+#: app/templates/community.html:20
+msgid "Date (Oldest to Newest)"
+msgstr "Dáta (Sean go Nua)"
+
+#: app/templates/community.html:21
+msgid "Creator Name (A-Z)"
+msgstr "Ainm an Cruthóra (A-Z)"
+
+#: app/templates/community.html:22
+msgid "Creator Name (Z-A)"
+msgstr "Ainm an Cruthóra (Z-A)"
+
+#: app/templates/community.html:23
+msgid "Grid Size (Largest to Smallest)"
+msgstr "Méid na Grille (Is Mó go Is Lú)"
+
+#: app/templates/community.html:24
+msgid "Grid Size (Smallest to Largest)"
+msgstr "Méid na Grille (Is Lú go Is Mó)"
+
+#: app/templates/community.html:26
+msgid "Apply Filter"
+msgstr "Cuir Filtr i bhfeidhm"
+
+#: app/templates/community.html:38
+msgid "Previous"
+msgstr "Roimhe"
+
+#: app/templates/community.html:41
+msgid "Page"
+msgstr "Leathanach"
+
+#: app/templates/community.html:41
+msgid "of"
+msgstr "de"
+
+#: app/templates/community.html:44
+msgid "Next"
+msgstr "Chun"
+
+#: app/templates/dashboard.html:12
+msgid "Start New Dungeon"
+msgstr "Tosaigh Dún Nua"
+
+#: app/templates/dashboard.html:17
+msgid "Choose Dungeon"
+msgstr "Roghnaigh Dún"
+
+#: app/templates/dashboard.html:23
+msgid "Start New Dungeon Sign"
+msgstr "Tosaigh Comhoiriúnacht Dún Nua"
+
+#: app/templates/dashboard.html:24
+msgid "Embark on a new adventure!"
+msgstr "Tosaigh ar eachtra nua!"
+
+#: app/templates/dashboard.html:27
+msgid "Choose Dungeon Sign"
+msgstr "Roghnaigh Comhoiriúnacht Dún"
+
+#: app/templates/dashboard.html:28
+msgid "Train the AI with your own dungeons"
+msgstr "Déan oiliúnacht ar an AI le do dhúnóga féin"
+
+#: app/templates/dashboard.html:33 app/templates/leaderboard.html:36
+msgid "Largest Dungeon Completed"
+msgstr "Dún is Mó atá Críochnaithe"
+
+#: app/templates/dashboard.html:37 app/templates/leaderboard.html:28
+msgid "Completed Dungeons"
+msgstr "Dúnóga Críochnaithe"
+
+#: app/templates/dashboard.html:41 app/templates/leaderboard.html:44
+msgid "Points"
+msgstr "Pointe"
+
+#: app/templates/index.html:12
+msgid "DC-AI, Home"
+msgstr "DC-AI, Baile"
+
+#: app/templates/index.html:23
+msgid "Welcome to Dungeons Crawler AI"
+msgstr "Fáilte chuig Dúnóga Crawlaithe AI"
+
+#: app/templates/index.html:24
+msgid "Your AI-powered adventure begins here"
+msgstr "Tosaíonn do eachtra a dhéantar le AI anseo"
+
+#: app/templates/index.html:27
+msgid "Login"
+msgstr "Logáil isteach"
+
+#: app/templates/index.html:28 app/templates/login.html:46
+#: app/templates/register.html:57
+msgid "Register"
+msgstr "Cláraigh"
+
+#: app/templates/index.html:32
+msgid ""
+"Embark on an adventure where artificial intelligence drives the journey. "
+"Train, explore, and battle through dungeons!"
+msgstr ""
+"Tosaigh ar eachtra ina gcuireann intleacht shaorga tús leis an turas. "
+"Oiliún, déan iniúchadh, agus troid trí dhúnóga!"
+
+#: app/templates/index.html:42
+msgid "© 2024 Dungeons Crawler AI. All Rights Reserved."
+msgstr "© 2024 Dúnóga Crawlaithe AI. Gach ceart ar cosaint."
+
+#: app/templates/leaderboard.html:17
+msgid "Rank"
+msgstr "Rang"
+
+#: app/templates/leaderboard.html:20
+msgid "Username"
+msgstr "Ainm Úsáideora"
+
+#: app/templates/login.html:12
+msgid "DC-AI, Login"
+msgstr "DC-AI, Logáil isteach"
+
+#: app/templates/login.html:23
+msgid "Login into an account"
+msgstr "Logáil isteach i gcuntas"
+
+#: app/templates/login.html:24
+msgid "Challenge your mind: log in to explore"
+msgstr "Dúshlán do mheabhair: logáil isteach le haghaidh iniúchadh"
+
+#: app/templates/login.html:34
+#, fuzzy
+msgid "Username or Email:"
+msgstr "Ainm Úsáideora:"
+
+#: app/templates/login.html:38 app/templates/register.html:39
+msgid "Password:"
+msgstr "Pasfhocal:"
+
+#: app/templates/login.html:41
+#, fuzzy
+msgid "LOGIN"
+msgstr "Logáil isteach"
+
+#: app/templates/login.html:45
+msgid "Don't have an account?"
+msgstr "Níl cuntas agat?"
+
+#: app/templates/map.html:7
+msgid "Dynamic Grid"
+msgstr ""
+
+#: app/templates/map.html:13
+msgid "Training Progress:"
+msgstr ""
+
+#: app/templates/map.html:24
+msgid "Menu"
+msgstr ""
+
+#: app/templates/map.html:25
+#, fuzzy
+msgid "Train"
+msgstr "Rang"
+
+#: app/templates/map.html:26
+msgid "Test"
+msgstr ""
+
+#: app/templates/map.html:27
+msgid "Stop"
+msgstr ""
+
+#: app/templates/map_creator.html:19
+#, fuzzy
+msgid "Map Size:"
+msgstr "Ainm na Léarscáil:"
+
+#: app/templates/map_creator.html:21
+#, fuzzy
+msgid "Generate Map"
+msgstr "Cruthaigh Léarscáil"
+
+#: app/templates/map_creator.html:22
+msgid "Export Map"
+msgstr "Easpórtáil Léarscáil"
+
+#: app/templates/map_creator.html:27
+msgid "Block Type"
+msgstr "Cineál Bloc"
+
+#: app/templates/map_creator.html:28
+msgid "Floor"
+msgstr "Tír"
+
+#: app/templates/map_creator.html:29
+msgid "Wall"
+msgstr "Balla"
+
+#: app/templates/map_creator.html:30
+msgid "Start"
+msgstr "Tús"
+
+#: app/templates/map_creator.html:31
+msgid "End"
+msgstr "Deireadh"
+
+#: app/templates/map_creator.html:32
+msgid "Mine"
+msgstr "Moinse"
+
+#: app/templates/profile.html:14
+msgid "Avatar of"
+msgstr "Avatar de"
+
+#: app/templates/profile.html:15
+msgid "Email"
+msgstr "Ríomhphost"
+
+#: app/templates/profile.html:16
+msgid "Joined"
+msgstr "Chláraigh"
+
+#: app/templates/profile.html:18
+msgid "Change avatar"
+msgstr "Athraigh avatar"
+
+#: app/templates/profile.html:28
+msgid "Save"
+msgstr "Sábháil"
+
+#: app/templates/register.html:12
+msgid "DC-AI, Register"
+msgstr "DC-AI, Cláraigh"
+
+#: app/templates/register.html:23
+msgid "Create Account"
+msgstr "Cruthaigh Cuntas"
+
+#: app/templates/register.html:31
+msgid "Username:"
+msgstr "Ainm Úsáideora:"
+
+#: app/templates/register.html:35
+msgid "Email:"
+msgstr "Ríomhphost:"
+
+#: app/templates/register.html:42
+msgid "Choose Avatar"
+msgstr "Roghnaigh Avatar"
+
+#: app/templates/register.html:52
+msgid "Select"
+msgstr "Roghnaigh"
+
+#: app/templates/register.html:55
+msgid "Please, choose an avatar before registering."
+msgstr "Le do thoil, roghnaigh avatar sula gcláraíonn tú."
+
+#: app/templates/register.html:60
+msgid "Already have an account?"
+msgstr "An bhfuil cuntas agat cheana?"
+
+#: app/templates/register.html:61
+msgid "Log in"
+msgstr "Logáil isteach"
+
+#: app/templates/settings.html:18 app/templates/settings.html:26
+msgid "Change Password"
+msgstr "Athraigh Pasfhocal"
+
+#: app/templates/settings.html:19 app/templates/settings.html:40
+msgid "Change Email"
+msgstr "Athraigh Ríomhphost"
+
+#: app/templates/settings.html:20 app/templates/settings.html:51
+#: app/templates/settings.html:53
+msgid "Delete Account"
+msgstr "Scrios Cuntas"
+
+#: app/templates/settings.html:21
+msgid "Change Language"
+msgstr "Athraigh Teanga"
+
+#: app/templates/settings.html:27
+msgid "Current Password"
+msgstr "Pasfhocal reatha"
+
+#: app/templates/settings.html:30
+msgid "New Password"
+msgstr "Pasfhocal Nua"
+
+#: app/templates/settings.html:33
+msgid "Confirm New Password"
+msgstr "Deimhnigh Pasfhocal Nua"
+
+#: app/templates/settings.html:36
+msgid "Update Password"
+msgstr "Nuashonraigh Pasfhocal"
+
+#: app/templates/settings.html:41
+msgid "New Email"
+msgstr "Ríomhphost Nua"
+
+#: app/templates/settings.html:44
+msgid "Confirm New Email"
+msgstr "Deimhnigh Ríomhphost Nua"
+
+#: app/templates/settings.html:47
+msgid "Update Email"
+msgstr "Nuashonraigh Ríomhphost"
+
+#: app/templates/settings.html:52
+msgid "Warning: This action cannot be undone."
+msgstr "Rabhadh: Ní féidir an gníomh seo a chur ar ais."
+
+#: app/templates/settings.html:53
+msgid "Are you sure you want to delete your account?"
+msgstr "An bhfuil tú cinnte go bhfuil tú ag iarraidh do chuntas a scriosadh?"
+
+#: app/templates/user_mazes.html:3
+msgid "User Mazes - DC-AI"
+msgstr "Dúnóga Úsáideora - DC-AI"
+
+#: app/templates/user_mazes.html:10
+msgid "My Created Mazes"
+msgstr "Mo Dúnóga Cruthaithe"
+
+#~ msgid "Forgot Password?"
+#~ msgstr "An bhfuil pasfhocal dearmadta agat?"
+
+#~ msgid "Create one"
+#~ msgstr "Cruthaigh ceann"
+
+#~ msgid "Map"
+#~ msgstr "Léarscáil"
+
+#~ msgid "Save Map"
+#~ msgstr "Sábháil Léarscáil"
+
+#~ msgid "Load Map"
+#~ msgstr "Lódáil Léarscáil"
+
+#~ msgid "Import"
+#~ msgstr "Iompórtáil"
+
+#~ msgid "Export"
+#~ msgstr "Easpórtáil"
+
+#~ msgid "Export your map for later use"
+#~ msgstr "Easpórtáil do léarscáil le húsáid amach anseo"
+
+#~ msgid "Import Map"
+#~ msgstr "Iompórtáil Léarscáil"
+
+#~ msgid "Import a map from a file"
+#~ msgstr "Iompórtáil léarscáil ó chomhad"
+
+#~ msgid "Mines"
+#~ msgstr "Moinse"
+
+#~ msgid "Mines are destructible blocks that add challenge."
+#~ msgstr "Is blocaí scriosatel iad moinse a chuireann dúshlán leis."
+

@@ -1,0 +1,452 @@
+# Translations template for PROJECT.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-11-04 18:31-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#: app/routes.py:82
+msgid "User does not exist."
+msgstr ""
+
+#: app/routes.py:85
+msgid "Incorrect credentials."
+msgstr ""
+
+#: app/routes.py:113
+msgid "You must select an avatar"
+msgstr ""
+
+#: app/routes.py:121
+msgid "Username already exists"
+msgstr ""
+
+#: app/routes.py:124
+msgid "Username must have at least 3 characters"
+msgstr ""
+
+#: app/routes.py:128
+msgid "Username can only contain letters and numbers"
+msgstr ""
+
+#: app/routes.py:133
+msgid "Please enter a valid email address"
+msgstr ""
+
+#: app/routes.py:137
+msgid "Password must have at least 8 characters"
+msgstr ""
+
+#: app/routes.py:204
+msgid "Avatar updated successfully!"
+msgstr ""
+
+#: app/routes.py:206
+msgid "Please, select an avatar."
+msgstr ""
+
+#: app/routes.py:325
+msgid "Incorrect current password."
+msgstr ""
+
+#: app/routes.py:330
+msgid "New passwords do not match."
+msgstr ""
+
+#: app/routes.py:338
+msgid "Password updated successfully."
+msgstr ""
+
+#: app/routes.py:347
+msgid "Emails do not match."
+msgstr ""
+
+#: app/routes.py:351
+msgid "Email is already in use."
+msgstr ""
+
+#: app/routes.py:358
+msgid "Email updated successfully."
+msgstr ""
+
+#: app/templates/base.html:25 app/templates/dashboard.html:3
+msgid "Dashboard"
+msgstr ""
+
+#: app/templates/base.html:26 app/templates/profile.html:3
+msgid "Profile"
+msgstr ""
+
+#: app/templates/base.html:27 app/templates/map.html:23
+msgid "My Dungeons"
+msgstr ""
+
+#: app/templates/base.html:28
+msgid "Community Maps"
+msgstr ""
+
+#: app/templates/base.html:29 app/templates/leaderboard.html:3
+msgid "Leaderboard"
+msgstr ""
+
+#: app/templates/base.html:30 app/templates/settings.html:3
+#: app/templates/settings.html:7
+msgid "Settings"
+msgstr ""
+
+#: app/templates/base.html:31
+msgid "Logout"
+msgstr ""
+
+#: app/templates/base.html:48
+msgid "All Rights Reserved."
+msgstr ""
+
+#: app/templates/community.html:3
+msgid "Community Mazes - DC-AI"
+msgstr ""
+
+#: app/templates/community.html:11
+msgid "Community Mazes"
+msgstr ""
+
+#: app/templates/community.html:17
+msgid "Sort by:"
+msgstr ""
+
+#: app/templates/community.html:19
+msgid "Date (Newest to Oldest)"
+msgstr ""
+
+#: app/templates/community.html:20
+msgid "Date (Oldest to Newest)"
+msgstr ""
+
+#: app/templates/community.html:21
+msgid "Creator Name (A-Z)"
+msgstr ""
+
+#: app/templates/community.html:22
+msgid "Creator Name (Z-A)"
+msgstr ""
+
+#: app/templates/community.html:23
+msgid "Grid Size (Largest to Smallest)"
+msgstr ""
+
+#: app/templates/community.html:24
+msgid "Grid Size (Smallest to Largest)"
+msgstr ""
+
+#: app/templates/community.html:26
+msgid "Apply Filter"
+msgstr ""
+
+#: app/templates/community.html:38
+msgid "Previous"
+msgstr ""
+
+#: app/templates/community.html:41
+msgid "Page"
+msgstr ""
+
+#: app/templates/community.html:41
+msgid "of"
+msgstr ""
+
+#: app/templates/community.html:44
+msgid "Next"
+msgstr ""
+
+#: app/templates/dashboard.html:12
+msgid "Start New Dungeon"
+msgstr ""
+
+#: app/templates/dashboard.html:17
+msgid "Choose Dungeon"
+msgstr ""
+
+#: app/templates/dashboard.html:23
+msgid "Start New Dungeon Sign"
+msgstr ""
+
+#: app/templates/dashboard.html:24
+msgid "Embark on a new adventure!"
+msgstr ""
+
+#: app/templates/dashboard.html:27
+msgid "Choose Dungeon Sign"
+msgstr ""
+
+#: app/templates/dashboard.html:28
+msgid "Train the AI with your own dungeons"
+msgstr ""
+
+#: app/templates/dashboard.html:33 app/templates/leaderboard.html:36
+msgid "Largest Dungeon Completed"
+msgstr ""
+
+#: app/templates/dashboard.html:37 app/templates/leaderboard.html:28
+msgid "Completed Dungeons"
+msgstr ""
+
+#: app/templates/dashboard.html:41 app/templates/leaderboard.html:44
+msgid "Points"
+msgstr ""
+
+#: app/templates/index.html:12
+msgid "DC-AI, Home"
+msgstr ""
+
+#: app/templates/index.html:23
+msgid "Welcome to Dungeons Crawler AI"
+msgstr ""
+
+#: app/templates/index.html:24
+msgid "Your AI-powered adventure begins here"
+msgstr ""
+
+#: app/templates/index.html:27
+msgid "Login"
+msgstr ""
+
+#: app/templates/index.html:28 app/templates/login.html:46
+#: app/templates/register.html:57
+msgid "Register"
+msgstr ""
+
+#: app/templates/index.html:32
+msgid ""
+"Embark on an adventure where artificial intelligence drives the journey. "
+"Train, explore, and battle through dungeons!"
+msgstr ""
+
+#: app/templates/index.html:42
+msgid "© 2024 Dungeons Crawler AI. All Rights Reserved."
+msgstr ""
+
+#: app/templates/leaderboard.html:17
+msgid "Rank"
+msgstr ""
+
+#: app/templates/leaderboard.html:20
+msgid "Username"
+msgstr ""
+
+#: app/templates/login.html:12
+msgid "DC-AI, Login"
+msgstr ""
+
+#: app/templates/login.html:23
+msgid "Login into an account"
+msgstr ""
+
+#: app/templates/login.html:24
+msgid "Challenge your mind: log in to explore"
+msgstr ""
+
+#: app/templates/login.html:34
+msgid "Username or Email:"
+msgstr ""
+
+#: app/templates/login.html:38 app/templates/register.html:39
+msgid "Password:"
+msgstr ""
+
+#: app/templates/login.html:41
+msgid "LOGIN"
+msgstr ""
+
+#: app/templates/login.html:45
+msgid "Don't have an account?"
+msgstr ""
+
+#: app/templates/map.html:7
+msgid "Dynamic Grid"
+msgstr ""
+
+#: app/templates/map.html:13
+msgid "Training Progress:"
+msgstr ""
+
+#: app/templates/map.html:24
+msgid "Menu"
+msgstr ""
+
+#: app/templates/map.html:25
+msgid "Train"
+msgstr ""
+
+#: app/templates/map.html:26
+msgid "Test"
+msgstr ""
+
+#: app/templates/map.html:27
+msgid "Stop"
+msgstr ""
+
+#: app/templates/map_creator.html:19
+msgid "Map Size:"
+msgstr ""
+
+#: app/templates/map_creator.html:21
+msgid "Generate Map"
+msgstr ""
+
+#: app/templates/map_creator.html:22
+msgid "Export Map"
+msgstr ""
+
+#: app/templates/map_creator.html:27
+msgid "Block Type"
+msgstr ""
+
+#: app/templates/map_creator.html:28
+msgid "Floor"
+msgstr ""
+
+#: app/templates/map_creator.html:29
+msgid "Wall"
+msgstr ""
+
+#: app/templates/map_creator.html:30
+msgid "Start"
+msgstr ""
+
+#: app/templates/map_creator.html:31
+msgid "End"
+msgstr ""
+
+#: app/templates/map_creator.html:32
+msgid "Mine"
+msgstr ""
+
+#: app/templates/profile.html:14
+msgid "Avatar of"
+msgstr ""
+
+#: app/templates/profile.html:15
+msgid "Email"
+msgstr ""
+
+#: app/templates/profile.html:16
+msgid "Joined"
+msgstr ""
+
+#: app/templates/profile.html:18
+msgid "Change avatar"
+msgstr ""
+
+#: app/templates/profile.html:28
+msgid "Save"
+msgstr ""
+
+#: app/templates/register.html:12
+msgid "DC-AI, Register"
+msgstr ""
+
+#: app/templates/register.html:23
+msgid "Create Account"
+msgstr ""
+
+#: app/templates/register.html:31
+msgid "Username:"
+msgstr ""
+
+#: app/templates/register.html:35
+msgid "Email:"
+msgstr ""
+
+#: app/templates/register.html:42
+msgid "Choose Avatar"
+msgstr ""
+
+#: app/templates/register.html:52
+msgid "Select"
+msgstr ""
+
+#: app/templates/register.html:55
+msgid "Please, choose an avatar before registering."
+msgstr ""
+
+#: app/templates/register.html:60
+msgid "Already have an account?"
+msgstr ""
+
+#: app/templates/register.html:61
+msgid "Log in"
+msgstr ""
+
+#: app/templates/settings.html:18 app/templates/settings.html:26
+msgid "Change Password"
+msgstr ""
+
+#: app/templates/settings.html:19 app/templates/settings.html:40
+msgid "Change Email"
+msgstr ""
+
+#: app/templates/settings.html:20 app/templates/settings.html:51
+#: app/templates/settings.html:53
+msgid "Delete Account"
+msgstr ""
+
+#: app/templates/settings.html:21
+msgid "Change Language"
+msgstr ""
+
+#: app/templates/settings.html:27
+msgid "Current Password"
+msgstr ""
+
+#: app/templates/settings.html:30
+msgid "New Password"
+msgstr ""
+
+#: app/templates/settings.html:33
+msgid "Confirm New Password"
+msgstr ""
+
+#: app/templates/settings.html:36
+msgid "Update Password"
+msgstr ""
+
+#: app/templates/settings.html:41
+msgid "New Email"
+msgstr ""
+
+#: app/templates/settings.html:44
+msgid "Confirm New Email"
+msgstr ""
+
+#: app/templates/settings.html:47
+msgid "Update Email"
+msgstr ""
+
+#: app/templates/settings.html:52
+msgid "Warning: This action cannot be undone."
+msgstr ""
+
+#: app/templates/settings.html:53
+msgid "Are you sure you want to delete your account?"
+msgstr ""
+
+#: app/templates/user_mazes.html:3
+msgid "User Mazes - DC-AI"
+msgstr ""
+
+#: app/templates/user_mazes.html:10
+msgid "My Created Mazes"
+msgstr ""
+

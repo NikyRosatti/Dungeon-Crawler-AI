@@ -1,9 +1,4 @@
-
-
 import os
-import shutil
-from app.routes import train
-
 
 def test_map_exist(login_user):
 
@@ -23,17 +18,15 @@ def test_map_doesnt_exists(login_user):
     
     assert response.status_code == 404
 
+
 def test_start_training(login_user):
-    
+
     response = login_user.get('/map?maze_id=1')
     assert response.status_code == 200
-    
-    train(1, "./app/test_saved_models")
-    vec_norm_path = "./app/test_saved_models/vec_normalize.pkl"
+
+    model_path = os.path.join("app", "saved_models", "trained_models_per_id", "1", "")
+
+    vec_norm_path =  model_path + "norm_env.pkl"
     assert os.path.exists(vec_norm_path) == True
-    model_ppo_path = "./app/test_saved_models/ppo_dungeons.zip"
+    model_ppo_path = model_path + "ppo.zip"
     assert os.path.exists(model_ppo_path) == True
-    
-    shutil.rmtree("test_saved_models")
-
-

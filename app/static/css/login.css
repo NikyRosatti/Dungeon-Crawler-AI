@@ -305,3 +305,8 @@ button[type="submit"]:hover {
   font-size: 18px;
   text-align: justify center;
 }
+
+/* Style for when the password is invalid */
+input.invalid {
+  border: 2px solid red;
+}

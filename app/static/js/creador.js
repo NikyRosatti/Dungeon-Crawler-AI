@@ -1,3 +1,5 @@
+import { showModal } from './modal.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     const grid = document.getElementById('grid-container');
     const generateButton = document.getElementById('generate');
@@ -150,25 +152,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-const showModal = (message) => {
-    const modal = document.getElementById('modal');
-    const modalMessage = document.getElementById('modal-message');
-    modalMessage.textContent = message;
-    modal.style.display = 'block';
-};
-
-const closeModal = () => {
-    const modal = document.getElementById('modal');
-    modal.style.display = 'none';
-};
-
 // Evento para cerrar el modal al hacer clic en la "X"
-document.getElementById('close-modal').addEventListener('click', closeModal);
+//document.getElementById('close-modal').addEventListener('click', closeModal);
 
 // También permite cerrar el modal al hacer clic fuera de él
-window.addEventListener('click', (event) => {
+/*window.addEventListener('click', (event) => {
     const modal = document.getElementById('modal');
     if (event.target == modal) {
         closeModal();
     }
-});
+});*/

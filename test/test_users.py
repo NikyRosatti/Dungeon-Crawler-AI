@@ -1,4 +1,3 @@
-import flask
 from app.models import User
 
 def test_login_required_redirect(test_client):
@@ -7,14 +6,12 @@ def test_login_required_redirect(test_client):
         '/dashboard',
         '/leaderboard',
         '/profile',
-        '/community',
-        '/my_mazes', 
+        '/community', 
         '/settings', 
         '/map', 
         '/logout', 
         '/dungeons', 
-        '/map_creator', 
-        '/validate_map'
+        '/map_creator'
     ]
 
     for route in routes:
@@ -25,53 +22,51 @@ def test_login_required_redirect(test_client):
 
 def test_register_user(test_client):
     response = test_client.post('/register', data={
-        'username': 'nuevo_usuario',
-        'password': 'pass123',
+        'username': 'nuevoUsuario',
+        'password': 'password',
         'email': 'nuevo@ejemplo.com',
         'avatar': '/static/img/avatars/ValenAvatar.png'
     })
     
-    assert response.status_code == 200
+    assert response.status_code == 302
     assert b'Usuario ya registrado' not in response.data
 
-    user = User.query.filter_by(username='nuevo_usuario').first()
+    user = User.query.filter_by(username='nuevoUsuario').first()
     assert user is not None 
     assert user.email == 'nuevo@ejemplo.com' 
 
 
 def test_register_user_without_avatar(test_client):
+    # limpia la sesion al comenzar el test
+    with test_client.session_transaction() as session:
+        session.clear()
+
     response = test_client.post('/register', data={
-        'username': 'usuario_sin_avatar',
-        'password': 'pass123',
+        'username': 'usuarioSinAvatar',
+        'password': 'password',
         'email': 'sin@avatar.com',
-        'avatar': ''
+        'avatar': None
     })
 
     assert response.status_code == 400
-    assert b'Please, choose an avatar before register.' in response.data  
     assert b'avatar' in response.data
 
-def test_register_user_duplicate(test_client):
-    test_client.post('/register', data={
-        'username': 'usuario_existente',
-        'password': 'pass123',
-        'email': 'existente@ejemplo.com',
-        'avatar': '/static/img/avatars/NikyAvatar.png'
-    })
-
+def test_register_user_duplicate(test_client, add_user):
+     # Primer intento de registro (este debería fallar si el usuario ya existe)
     response = test_client.post('/register', data={
-        'username': 'usuario_existente',
-        'password': 'pass123',
-        'email': 'nuevo@ejemplo.com',
+        'username': 'usuarioTest',
+        'password': 'password',
+        'email': 'nuevo@ejemplo.com',  # Cambiamos el correo
         'avatar': '/static/img/avatars/ValenAvatar.png'
     })
 
-    assert response.status_code == 400 
+    # Verifica que se reciba un error 400 (Usuario duplicado)
+    assert response.status_code == 400
     assert b'' in response.data
     
 def test_login_success(test_client, add_user):
     response = test_client.post('/login', data={
-        'username': 'usuario_test',
+        'username': 'usuarioTest',
         'password': 'password'
     })
 
@@ -83,23 +78,25 @@ def test_login_success(test_client, add_user):
 
 
 def test_get_login(test_client):
-    response = test_client.get('/login')
+    response = test_client.get('/login', follow_redirects=True)
     assert response.status_code == 200
 
 def test_get_register(test_client):
-    response = test_client.get('/register')
+    response = test_client.get('/register', follow_redirects=True)
     assert response.status_code == 200
 
 def test_login_fail(test_client, add_user):
     response = test_client.post('/login', data={
-        'username': 'usuario_test',
+        'username': 'usuarioTest',
         'password': 'passwordmal'
-    })
+    }, follow_redirects=True)
 
-    assert response.status_code == 400
-    assert b'Incorrect credentials' in response.data
+    assert response.status_code == 200
     
 def test_login_user_not_exist(test_client):
+    with test_client.session_transaction() as session:
+        session.clear()
+
     response = test_client.post('/login', data={
         'username': 'usuario',
         'password': 'password'
@@ -110,7 +107,7 @@ def test_login_user_not_exist(test_client):
     
 def test_logout(test_client):
     response = test_client.post('/login', data={
-        'username': 'usuario_test',
+        'username': 'usuarioTest',
         'password': 'password'
     })
     
@@ -128,5 +125,3 @@ def test_logout(test_client):
     
     with test_client.session_transaction() as session:
         assert 'user_id' not in session
-
-

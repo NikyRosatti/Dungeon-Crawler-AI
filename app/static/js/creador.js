@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             if (data.valid) {
-                window.location.href = data.redirect_url;
+                window.location.href = data.redirect_url,200;
             } else {
                 showModal('Invalid Map');
             }

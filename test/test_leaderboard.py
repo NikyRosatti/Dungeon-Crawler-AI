@@ -7,4 +7,4 @@ def test_leaderboard_display(login_user, add_user):
     
     assert b'Leaderboard' in response.data
     
-    assert b'usuario_test' in response.data
+    assert b'usuarioTest' in response.data

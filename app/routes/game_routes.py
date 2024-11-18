@@ -1,6 +1,7 @@
 import json
 
 from flask import (
+    abort,
     Blueprint,
     jsonify,
     render_template,
@@ -46,6 +47,9 @@ def map():
     maze_id = int(request.args.get("maze_id", 0))
     maze = MazeBd.query.filter_by(id=maze_id).first()
 
+    if maze is None:
+        abort(404)
+
     # Diccionario con información del laberinto
     maze_info["mapa_original"] = json.loads(
         maze.grid
@@ -88,7 +92,7 @@ def validate_map():
     if is_winneable(grid):
         return save_maze_and_respond(map_grid, size)
     else:
-        return jsonify({"valid": False})
+        return jsonify({"valid": False, "error": "No hay camino posible"}), 400
 
 
 @socketio.on("start_training")

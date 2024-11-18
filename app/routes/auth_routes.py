@@ -47,7 +47,6 @@ def login():
 def logout():
     session.pop("user_id", None)
     session.clear()
-    session.clear()
     return redirect(url_for("auth.login"))
 
 

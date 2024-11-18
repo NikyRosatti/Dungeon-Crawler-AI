@@ -1,5 +1,4 @@
 from app.models import User
-from flask import session
 
 def test_update_password(login_user):
     
@@ -68,23 +67,6 @@ def test_update_email_correct(login_user):
         'confirm_email': 'usuario@test.com'
     })
 
-def test_update_email_duplicate(test_client, login_user):
-    
-    test_client.post('/register', data={
-        'username': 'nuevo_usuario',
-        'password': 'pass123',
-        'email': 'nuevo@ejemplo.com',
-        'avatar': '/static/img/avatars/ValenAvatar.png'
-    })
-    
-    response = login_user.post('/settings', data={
-        'update_email': True,
-        'new_email': 'nuevo@ejemplo.com',
-        'confirm_email': 'nuevo@ejemplo.com'
-    })
-    
-    assert response.status_code == 200
-    assert b'Email is already in use.' in response.data
 
 def test_update_email_error(login_user):
     
@@ -111,4 +93,19 @@ def test_delete_account(login_user):
     assert response.status_code == 302
     assert response.headers['Location'] == '/register'
 
+def test_update_email_duplicate(test_client, login_user):
     
+    test_client.post('/register', data={
+        'username': 'nuevo_usuario',
+        'password': 'pass123',
+        'email': 'nuevo@ejemplo.com',
+        'avatar': '/static/img/avatars/ValenAvatar.png'
+    })
+    
+    response = test_client.post('/settings', data={
+        'update_email': True,
+        'new_email': 'usuario@test.com',
+        'confirm_email': 'usuario@test.com'
+    })
+    assert response.status_code == 200
+    assert b'Email is already in use.' in response.data

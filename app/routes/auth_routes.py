@@ -1,5 +1,4 @@
 import bcrypt
-from sqlalchemy import or_
 import re
 
 from flask import (
@@ -29,7 +28,7 @@ def login():
     password = request.form["password"].strip().encode("utf-8")
 
     user = User.query.filter(
-        or_(User.username == username, User.email == username)
+        (User.username == username) | (User.email == username)
     ).first()
 
     if not user:
@@ -61,18 +60,18 @@ def register():
     username = request.form["username"]
     password = request.form["password"].encode("utf-8")
     email = request.form["email"]
-    avatar = request.form["avatar"]
+    avatar = request.form.get("avatar") # Evita errores si no esta presente
 
     if not avatar:
         return render_template(
             "register.html", error=_("You must select an avatar"), avatars=AVATARS
-        )
+        ), 400
 
     existing_user = User.query.filter(
-        or_(User.username == username, User.email == email)
+        (User.username == username) | (User.email == email)
     ).first()
 
-    if existing_user:
+    if existing_user is not None:
         return render_template("register.html", error=_("Username already exists"), avatars=AVATARS), 400
 
     if len(username) < 3:

@@ -41,7 +41,7 @@ def test_dashboard_buttons_exist(login_user):
     
     assert response.status_code == 200
     assert b'/map_creator' in response.data
-    assert b'/train-ai' in response.data 
+    assert b'/community' in response.data 
 
 def test_dashboard_signs_content(login_user):
     response = login_user.get('/dashboard')
@@ -76,7 +76,7 @@ def test_dashboard_links_functionality(login_user):
     
     assert response.status_code == 200
     assert b'href="/map_creator"' in response.data 
-    assert b'href="/train-ai"' in response.data 
+    assert b'href="/community"' in response.data 
 
 def test_dashboard_content_order(login_user):
     response = login_user.get('/dashboard')

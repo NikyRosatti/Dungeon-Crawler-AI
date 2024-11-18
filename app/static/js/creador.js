@@ -151,14 +151,3 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Mapa exportado:', innerMap);
     });
 });
-
-// Evento para cerrar el modal al hacer clic en la "X"
-//document.getElementById('close-modal').addEventListener('click', closeModal);
-
-// También permite cerrar el modal al hacer clic fuera de él
-/*window.addEventListener('click', (event) => {
-    const modal = document.getElementById('modal');
-    if (event.target == modal) {
-        closeModal();
-    }
-});*/

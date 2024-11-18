@@ -102,6 +102,8 @@ if (window.location.pathname === '/map') {
             Cell.style.backgroundPosition = 'center'; // Centrar la imagen
             Cell.style.backgroundRepeat = 'no-repeat';
 
+            showModal(`You lost because you stepped on a mine, keep training!`);
+
             // Ralentizar la reaparición del agente después de 2 segundos
             setTimeout(() => {
                 // Restaurar la imagen del agente después de la explosión
@@ -109,7 +111,7 @@ if (window.location.pathname === '/map') {
                 Cell.style.backgroundSize = 'cover'; // Ajustar el tamaño del fondo
                 Cell.style.backgroundPosition = 'center bottom, center center';
                 Cell.style.backgroundRepeat = 'no-repeat, no-repeat';
-            }, 1500); // Esperar 2 segundos
+            }, 1500); // Esperar 1.5 segundos
         }
     });
     document.addEventListener('keydown', function(event) {

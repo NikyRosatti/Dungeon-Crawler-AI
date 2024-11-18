@@ -54,6 +54,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 case 3:
                     cell.classList.add('end');    // Final
                     break;
+                case 4:
+                    cell.classList.add('mine');
+                    break;
             }
 
             mazeGrid.appendChild(cell);

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-11-01 01:34-0300\n"
+"POT-Creation-Date: 2024-11-04 18:31-0300\n"
 "PO-Revision-Date: 2024-10-31 19:16-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,67 +18,67 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: app/routes.py:83
+#: app/routes.py:82
 msgid "User does not exist."
 msgstr ""
 
-#: app/routes.py:86
+#: app/routes.py:85
 msgid "Incorrect credentials."
 msgstr ""
 
-#: app/routes.py:114
+#: app/routes.py:113
 msgid "You must select an avatar"
 msgstr ""
 
-#: app/routes.py:122
+#: app/routes.py:121
 msgid "Username already exists"
 msgstr ""
 
-#: app/routes.py:125
+#: app/routes.py:124
 msgid "Username must have at least 3 characters"
 msgstr ""
 
-#: app/routes.py:129
+#: app/routes.py:128
 msgid "Username can only contain letters and numbers"
 msgstr ""
 
-#: app/routes.py:134
+#: app/routes.py:133
 msgid "Please enter a valid email address"
 msgstr ""
 
-#: app/routes.py:138
+#: app/routes.py:137
 msgid "Password must have at least 8 characters"
 msgstr ""
 
-#: app/routes.py:205
+#: app/routes.py:204
 msgid "Avatar updated successfully!"
 msgstr ""
 
-#: app/routes.py:207
+#: app/routes.py:206
 msgid "Please, select an avatar."
 msgstr ""
 
-#: app/routes.py:326
+#: app/routes.py:325
 msgid "Incorrect current password."
 msgstr ""
 
-#: app/routes.py:331
+#: app/routes.py:330
 msgid "New passwords do not match."
 msgstr ""
 
-#: app/routes.py:339
+#: app/routes.py:338
 msgid "Password updated successfully."
 msgstr ""
 
-#: app/routes.py:348
+#: app/routes.py:347
 msgid "Emails do not match."
 msgstr ""
 
-#: app/routes.py:352
+#: app/routes.py:351
 msgid "Email is already in use."
 msgstr ""
 
-#: app/routes.py:359
+#: app/routes.py:358
 msgid "Email updated successfully."
 msgstr ""
 
@@ -207,34 +207,34 @@ msgstr ""
 msgid "Points"
 msgstr ""
 
-#: app/templates/index.html:11
+#: app/templates/index.html:12
 msgid "DC-AI, Home"
 msgstr ""
 
-#: app/templates/index.html:22
+#: app/templates/index.html:23
 msgid "Welcome to Dungeons Crawler AI"
 msgstr ""
 
-#: app/templates/index.html:23
+#: app/templates/index.html:24
 msgid "Your AI-powered adventure begins here"
 msgstr ""
 
-#: app/templates/index.html:26
+#: app/templates/index.html:27
 msgid "Login"
 msgstr ""
 
-#: app/templates/index.html:27 app/templates/login.html:46
+#: app/templates/index.html:28 app/templates/login.html:46
 #: app/templates/register.html:57
 msgid "Register"
 msgstr ""
 
-#: app/templates/index.html:31
+#: app/templates/index.html:32
 msgid ""
 "Embark on an adventure where artificial intelligence drives the journey. "
 "Train, explore, and battle through dungeons!"
 msgstr ""
 
-#: app/templates/index.html:41
+#: app/templates/index.html:42
 msgid "© 2024 Dungeons Crawler AI. All Rights Reserved."
 msgstr ""
 
@@ -330,6 +330,10 @@ msgstr ""
 msgid "End"
 msgstr ""
 
+#: app/templates/map_creator.html:32
+msgid "Mine"
+msgstr ""
+
 #: app/templates/profile.html:14
 msgid "Avatar of"
 msgstr ""
@@ -386,52 +390,56 @@ msgstr ""
 msgid "Log in"
 msgstr ""
 
-#: app/templates/settings.html:18 app/templates/settings.html:25
+#: app/templates/settings.html:18 app/templates/settings.html:26
 msgid "Change Password"
 msgstr ""
 
-#: app/templates/settings.html:19 app/templates/settings.html:39
+#: app/templates/settings.html:19 app/templates/settings.html:40
 msgid "Change Email"
 msgstr ""
 
-#: app/templates/settings.html:20 app/templates/settings.html:50
-#: app/templates/settings.html:52
+#: app/templates/settings.html:20 app/templates/settings.html:51
+#: app/templates/settings.html:53
 msgid "Delete Account"
 msgstr ""
 
-#: app/templates/settings.html:26
+#: app/templates/settings.html:21
+msgid "Change Language"
+msgstr ""
+
+#: app/templates/settings.html:27
 msgid "Current Password"
 msgstr ""
 
-#: app/templates/settings.html:29
+#: app/templates/settings.html:30
 msgid "New Password"
 msgstr ""
 
-#: app/templates/settings.html:32
+#: app/templates/settings.html:33
 msgid "Confirm New Password"
 msgstr ""
 
-#: app/templates/settings.html:35
+#: app/templates/settings.html:36
 msgid "Update Password"
 msgstr ""
 
-#: app/templates/settings.html:40
+#: app/templates/settings.html:41
 msgid "New Email"
 msgstr ""
 
-#: app/templates/settings.html:43
+#: app/templates/settings.html:44
 msgid "Confirm New Email"
 msgstr ""
 
-#: app/templates/settings.html:46
+#: app/templates/settings.html:47
 msgid "Update Email"
 msgstr ""
 
-#: app/templates/settings.html:51
+#: app/templates/settings.html:52
 msgid "Warning: This action cannot be undone."
 msgstr ""
 
-#: app/templates/settings.html:52
+#: app/templates/settings.html:53
 msgid "Are you sure you want to delete your account?"
 msgstr ""
 

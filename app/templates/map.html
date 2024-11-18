@@ -26,7 +26,12 @@
         <button id="testTrainBtn" class="btn">{{ _('Test') }}</button>
         <button id="stopTrainBtn" class="btn">{{ _('Stop') }}</button>
     </div>
-    
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span id="close-modal" class="close">&times;</span>
+            <p id="modal-message"></p>
+        </div>
+    </div>
     <audio id="winSound" src="/static/sound/win_sound.mp3" preload="auto"></audio>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js"></script>

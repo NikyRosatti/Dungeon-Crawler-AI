@@ -90,6 +90,16 @@
             }
         });
     });
+    document.getElementById('password').addEventListener('input', function() {
+        var password = this.value;
+        var warning = document.getElementById('password-warning');
+
+        if (password.length < 8) {
+            this.classList.add('invalid');  // Add red border
+        } else {
+            this.classList.remove('invalid');  // Remove red border
+        }
+    });
     </script>
 </body>
 </html>

@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 Cell.style.backgroundPosition = 'center'; // Centrar la imagen
                 Cell.style.backgroundRepeat = 'no-repeat';
 
-                showModal(`You lost because you stepped on a mine, keep training!`);
+                showModal('mineExploded');
 
                 // Ralentizar la reaparición del agente después de 2 segundos
                 setTimeout(() => {
@@ -125,12 +125,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Escuchar el evento "win"
         socket.on("win", (data) => {
             const {points} = data;
-            showModal(`¡Ganaste! Has obtenido ${points} puntos.`);
+            showModal('won');
         });
 
         // Escuchar el evento "lose"
         socket.on("lose", () => {
-            showModal("Tu agente no pudo completar el laberinto en el número máximo de pasos. ¡Inténtalo de nuevo!");
+            showModal("maximumSteps");
         });
     }
 

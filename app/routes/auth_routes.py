@@ -16,17 +16,22 @@ from app.controllers.auth_controllers import login_required, logout_required, AV
 
 bp = Blueprint("auth", __name__)
 
+# Email regex pattern for validation
+EMAIL_REGEX_PATTERN = r"^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$"
+
 
 @bp.route("/login", methods=["GET", "POST"])
 @logout_required
 def login():
+    """Handles user login"""
     if request.method != "POST":
         return render_template("login.html")
+    
     username = request.form["username"].strip()
     if username == "TheVoidItself":
         return render_template("login.html")
-    password = request.form["password"].strip().encode("utf-8")
 
+    password = request.form["password"].strip().encode("utf-8")
     user = User.query.filter(
         (User.username == username) | (User.email == username)
     ).first()
@@ -44,6 +49,7 @@ def login():
 @bp.route("/logout")
 @login_required
 def logout():
+    """Handles user logout"""
     session.pop("user_id", None)
     session.clear()
     return redirect(url_for("auth.login"))
@@ -52,21 +58,21 @@ def logout():
 @bp.route("/register", methods=["GET", "POST"])
 @logout_required
 def register():
+    """Handles user registration"""
     if request.method != "POST":
         return render_template("register.html", avatars=AVATARS)
-
-    EMAIL_REGEX = r"^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$"
 
     username = request.form["username"]
     password = request.form["password"].encode("utf-8")
     email = request.form["email"]
-    avatar = request.form.get("avatar") # Evita errores si no esta presente
+    avatar = request.form.get("avatar")  # Avoid errors if not present
 
     if not avatar:
         return render_template(
             "register.html", error=_("You must select an avatar"), avatars=AVATARS
         ), 400
 
+    # Check if username or email already exists
     existing_user = User.query.filter(
         (User.username == username) | (User.email == email)
     ).first()
@@ -82,7 +88,7 @@ def register():
             "register.html", error=_("Username can only contain letters and numbers"), avatars=AVATARS
         ), 400
 
-    if not re.match(EMAIL_REGEX, email):
+    if not re.match(EMAIL_REGEX_PATTERN, email):
         return render_template(
             "register.html", error=_("Please enter a valid email address"), avatars=AVATARS
         ), 400
@@ -90,6 +96,7 @@ def register():
     if len(password) < 8:
         return render_template("register.html", error=_("Password must have at least 8 characters"), avatars=AVATARS), 400
 
+    # Hash the password and create the new user
     hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
     new_user = User(
         username=username,

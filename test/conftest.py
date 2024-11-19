@@ -39,7 +39,8 @@ def add_user(test_client):
     if not existing_user:
         user = User(
             username='usuarioTest',
-            password=bcrypt.hashpw(b'password', bcrypt.gensalt()).decode('utf-8'),
+            password=bcrypt.hashpw(
+                b'password', bcrypt.gensalt()).decode('utf-8'),
             email='usuario@test.com',
             avatar='/static/img/avatars/NikyAvatar.png'
         )

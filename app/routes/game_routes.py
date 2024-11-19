@@ -34,16 +34,26 @@ from app.services.train_services import (
 )
 
 bp = Blueprint("game", __name__)
+
 maze_info = {
     "mapa_original": [],
     "start": None,
     "map_size": 0,
 }
 
+# Module docstring
+"""
+This module contains routes and event handlers for the game functionality, including map handling, 
+training simulations, and player interactions within the maze.
+"""
 
 @bp.route("/map")
 @login_required
 def map():
+    """
+    Renders the map page for a given maze ID.
+    Loads the maze grid and starts the game for the logged-in user.
+    """
     maze_id = int(request.args.get("maze_id", 0))
     maze = MazeBd.query.filter_by(id=maze_id).first()
 
@@ -51,9 +61,7 @@ def map():
         abort(404)
 
     # Diccionario con información del laberinto
-    maze_info["mapa_original"] = json.loads(
-        maze.grid
-    )  # Asigna el grid a mapa_original,
+    maze_info["mapa_original"] = json.loads(maze.grid)
     maze_info["start"] = maze_info["mapa_original"].index(2)
     maze_info["map_size"] = maze.maze_size  # Calcula el tamaño del mapa
 
@@ -69,12 +77,20 @@ def map():
 @bp.route("/map_creator")
 @login_required
 def map_creator():
+    """
+    Renders the map creator page.
+    Allows users to create custom mazes.
+    """
     return render_template("map_creator.html")
 
 
 @bp.route("/validate_map", methods=["POST"])
 @login_required
 def validate_map():
+    """
+    Validates the submitted maze grid, checks if points are valid and if the maze is solvable.
+    Returns success or error response based on validation.
+    """
     data = request.get_json()
     map_grid = data.get("map")
     size = data.get("size")
@@ -88,15 +104,18 @@ def validate_map():
     if not are_points_valid(start_point, exit_point):
         return invalid_points_response()
 
-    # Validar si el laberinto es resoluble
     if is_winneable(grid):
         return save_maze_and_respond(map_grid, size)
-    else:
-        return jsonify({"valid": False, "error": "No hay camino posible"}), 400
+    
+    return jsonify({"valid": False, "error": "No hay camino posible"}), 400
 
 
 @socketio.on("start_training")
 def handle_training(data):
+    """
+    Starts the training process for the given maze ID.
+    Emits training progress to the client.
+    """
     maze_id = data.get("maze_id")
     if maze_id is not None:
         emit("training_status", {"status": "started"})
@@ -108,6 +127,10 @@ def handle_training(data):
 
 @socketio.on("testTraining")
 def handle_test(data):
+    """
+    Starts a training test for the given maze ID.
+    Emits training progress to the client.
+    """
     maze_id = data.get("maze_id")
     if maze_id is not None:
         emit("training_status", {"status": "started"})
@@ -119,6 +142,10 @@ def handle_test(data):
 
 @socketio.on("connect")
 def handle_connect():
+    """
+    Handles the socket connection event.
+    Emits the current maze grid if available.
+    """
     if not maze_info["mapa_original"]:  # Verificar si mapa_original está inicializado
         emit("map", "No hay un mapa cargado.")
     else:
@@ -127,6 +154,10 @@ def handle_connect():
 
 @socketio.on("move")
 def handle_move(direction):
+    """
+    Handles the player's movement within the maze.
+    Emits the updated map and checks for win condition.
+    """
     move_player(direction, maze_info["mapa_original"], maze_info["map_size"])
 
     if -2 in maze_info["mapa_original"]:
@@ -136,7 +167,11 @@ def handle_move(direction):
 
 
 @socketio.on("restart_pos")
-def restart_position(position):
+def restart_position():
+    """
+    Restarts the player's position in the maze.
+    Resets the start and finish positions.
+    """
     maze_info["mapa_original"][maze_info["mapa_original"].index(-1)] = 3
     maze_info["mapa_original"][maze_info["start"]] = -1
     emit("map", maze_info["mapa_original"])
@@ -144,6 +179,10 @@ def restart_position(position):
 
 @socketio.on("start_simulation")
 def train(maze_id):
+    """
+    Starts the training simulation for the given maze ID.
+    Emits training progress as it runs.
+    """
     for progress_emit in train_model(maze_id):
         emit("progress", progress_emit)
 
@@ -167,6 +206,10 @@ def test(data):
 
 @socketio.on("stopTraining")
 def stop_test(data):
+    """
+    Stops the current training test for the given maze ID.
+    Marks the test as stopped and emits a status message.
+    """
     maze_id = data.get("maze_id")
     maze_id = int(maze_id)
 

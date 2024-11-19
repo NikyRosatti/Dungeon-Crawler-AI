@@ -27,12 +27,14 @@ def move_player(direction, map, map_size):
         new_pos = player_pos - map_size if player_pos >= map_size else player_pos
     elif direction == "ArrowDown":
         new_pos = (
-            player_pos + map_size if player_pos < len(map) - map_size else player_pos
+            player_pos +
+            map_size if player_pos < len(map) - map_size else player_pos
         )
     elif direction == "ArrowLeft":
         new_pos = player_pos - 1 if player_pos % map_size != 0 else player_pos
     elif direction == "ArrowRight":
-        new_pos = player_pos + 1 if (player_pos + 1) % map_size != 0 else player_pos
+        new_pos = player_pos + \
+            1 if (player_pos + 1) % map_size != 0 else player_pos
     else:
         new_pos = player_pos
 
@@ -54,7 +56,7 @@ def change_door(map):
 
 def create_grid(map_grid, size):
     """Convierte el arreglo plano en una matriz 2D."""
-    return [map_grid[i : i + size] for i in range(0, len(map_grid), size)]
+    return [map_grid[i: i + size] for i in range(0, len(map_grid), size)]
 
 
 def are_points_valid(start_point, exit_point):
@@ -67,7 +69,7 @@ def load_maze_from_db(maze_id):
     maze = MazeBd.query.filter_by(id=maze_id).first()
     grid1 = json.loads(maze.grid)
     size = maze.maze_size
-    grid = [grid1[i : i + size] for i in range(0, len(grid1), size)]
+    grid = [grid1[i: i + size] for i in range(0, len(grid1), size)]
 
     return maze, grid, size
 

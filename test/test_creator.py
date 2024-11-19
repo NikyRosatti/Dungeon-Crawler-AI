@@ -1,5 +1,6 @@
 from app.models import MazeBd, User
 
+
 def test_create_map(login_user):
     response = login_user.get('/map_creator')
     assert response.status_code == 200
@@ -18,7 +19,8 @@ def test_validate_map_invalid_points(login_user):
     assert response.status_code == 400
     assert data["valid"] is False
     assert data["error"] == "No se encontró el punto de inicio o salida"
-    
+
+
 def test_validate_map_valid(login_user):
     """
     Prueba cuando los puntos de inicio y salida no son válidos.
@@ -30,7 +32,8 @@ def test_validate_map_valid(login_user):
     )
     data = response.get_json()
     assert response.status_code == 200
-    assert data["valid"] is True    
+    assert data["valid"] is True
+
 
 def test_validate_map_imposible(login_user):
     """
@@ -45,4 +48,3 @@ def test_validate_map_imposible(login_user):
     assert response.status_code == 400
     assert data["valid"] is False
     assert data["error"] == "No hay camino posible"
-    

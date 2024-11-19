@@ -27,16 +27,29 @@ from app.models import User, MazeBd, db
 
 bp = Blueprint("principal", __name__)
 
+# Module docstring
+"""
+This module contains routes related to the user's principal actions,
+including accessing the dashboard, profile settings, leaderboard,
+community, and managing user mazes.
+"""
 
 @bp.route("/")
 @logout_required
 def index():
+    """
+    Renders the index page. Redirects logged-in users to the dashboard.
+    """
     return render_template("index.html")
 
 
 @bp.route("/dashboard")
 @login_required
 def dashboard():
+    """
+    Renders the dashboard page showing user-specific statistics such as 
+    completed dungeons and points.
+    """
     user = User.query.get(session["user_id"])
     completed_dungeons = len(user.completed_dungeons)
     max_dungeon = None
@@ -46,7 +59,7 @@ def dashboard():
         )
         max_size = max_dungeon.maze_size
     else:
-        max_size = 0  # Si no ha completado dungeons, el tamaño es 0
+        max_size = 0  # If no dungeons are completed, size is 0
 
     points = user.points
     return render_template(
@@ -60,11 +73,14 @@ def dashboard():
 @bp.route("/leaderboard")
 @login_required
 def leaderboard():
-
+    """
+    Displays the leaderboard, sorted by a specified criterion ('completed_dungeons' or 'points'),
+    in ascending or descending order.
+    """
     sort_by = request.args.get(
         "sort_by", "completed_dungeons"
-    )  # 'completed_dungeons' como valor predeterminado
-    order = request.args.get("order", "desc")  # 'desc' como valor predeterminado
+    )  # Default sort by 'completed_dungeons'
+    order = request.args.get("order", "desc")
 
     users = User.query.all()
     users_list = [
@@ -84,13 +100,17 @@ def leaderboard():
     ]
 
     reverse_order = order == "desc"
-    users_sorted = sorted(users_list, key=lambda u: u[sort_by], reverse=reverse_order)
+    users_sorted = sorted(
+        users_list, key=lambda u: u[sort_by], reverse=reverse_order)
     return render_template("leaderboard.html", users=users_sorted)
 
 
 @bp.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
+    """
+    Displays and updates the user's profile, including avatar selection.
+    """
     user = User.query.get_or_404(session["user_id"])
 
     if request.method != "POST":
@@ -108,6 +128,9 @@ def profile():
 @bp.route("/profile/<int:user_id>")
 @login_required
 def profileusers(user_id):
+    """
+    Displays the profile of a user specified by user_id.
+    """
     user = User.query.get_or_404(user_id)
     return render_template("profile.html", user=user)
 
@@ -115,19 +138,22 @@ def profileusers(user_id):
 @bp.route("/settings", methods=["GET", "POST"])
 @login_required
 def settings():
+    """
+    Allows the user to update their account settings such as password, email, and language.
+    """
     user = User.query.get(session["user_id"])
 
     if request.method == "POST":
         if "update_password" in request.form:
             return update_password(user)
 
-        elif "update_email" in request.form:
+        if "update_email" in request.form:
             return update_email(user)
 
-        elif "delete_account" in request.form:
+        if "delete_account" in request.form:
             return delete_account(user)
 
-        elif "update_language" in request.form:
+        if "update_language" in request.form:
             return update_language(user)
 
     return render_template("settings.html")
@@ -136,21 +162,19 @@ def settings():
 @bp.route("/community")
 @login_required
 def community():
-    # Obtener los parámetros de la solicitud, como el filtro y la página
+    """
+    Displays a list of public mazes in the community, with pagination.
+    """
     filter_by = request.args.get("filter", "created_at_desc")
     page = request.args.get("page", 1, type=int)
     per_page = 8
 
-    # Construir la consulta base, uniendo con la tabla User
     query = build_maze_query(filter_by)
 
-    # Paginación de los resultados
     paginated_mazes = query.paginate(page=page, per_page=per_page)
 
-    # Serializar los laberintos
     mazes_serialized = serialize_mazes(paginated_mazes)
 
-    # Manejo de la paginación
     pagination = {
         "page": paginated_mazes.page,
         "total_pages": paginated_mazes.pages,
@@ -160,7 +184,6 @@ def community():
         "prev_num": paginated_mazes.prev_num,
     }
 
-    # Devolver la plantilla con los datos
     return render_template(
         "community.html", mazes=json.dumps(mazes_serialized), pagination=pagination
     )
@@ -169,10 +192,12 @@ def community():
 @bp.route("/dungeons")
 @login_required
 def my_mazes():
+    """
+    Displays a list of mazes that the logged-in user has created.
+    """
     user_id = session["user_id"]
     user_mazes = MazeBd.query.filter_by(user_id=user_id).all()
 
-    # Convertir los mazes a diccionarios serializables
     user_mazes_serialized = serialize_mazes(user_mazes)
 
     return render_template("user_mazes.html", mazes=json.dumps(user_mazes_serialized))

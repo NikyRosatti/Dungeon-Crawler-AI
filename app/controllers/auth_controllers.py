@@ -4,9 +4,8 @@ user login, logout, updating password and email, and deleting user accounts.
 It also includes decorators for protecting routes that require login.
 """
 
-import bcrypt
 from functools import wraps
-
+import bcrypt
 from flask import redirect, render_template, request, session, url_for
 from flask_babel import gettext as _
 

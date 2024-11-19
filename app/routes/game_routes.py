@@ -1,3 +1,7 @@
+"""
+This module contains routes and event handlers for the game functionality,
+including map handling, training simulations, and player interactions within the maze.
+"""
 import json
 
 from flask import (

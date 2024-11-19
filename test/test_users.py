@@ -69,7 +69,7 @@ def test_register_user_without_avatar(test_client):
     assert b'avatar' in response.data
 
 
-def test_register_user_duplicate(test_client):
+def test_register_user_duplicate(test_client, add_user):
     """
     Test that an error is returned when trying to register a user 
     with a duplicate username.

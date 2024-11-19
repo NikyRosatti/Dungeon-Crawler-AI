@@ -103,7 +103,7 @@ def test_delete_account(login_user):
     assert response.headers['Location'] == '/register'
 
 
-def test_update_email_duplicate(test_client):
+def test_update_email_duplicate(test_client, login_user):
     """Test updating email to one that is already in use."""
     test_client.post('/register', data={
         'username': 'nuevo_usuario',

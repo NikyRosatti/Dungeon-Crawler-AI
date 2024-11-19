@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Escuchar el evento "win"
         socket.on("win", (data) => {
             const {points} = data;
-            showModal('won');
+            showModal('won', points);
         });
 
         // Escuchar el evento "lose"

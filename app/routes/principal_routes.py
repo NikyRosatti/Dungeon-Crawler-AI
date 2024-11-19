@@ -1,3 +1,8 @@
+# Module docstring
+"""
+This module contains all the routes of the main page
+"""
+
 import json
 
 from flask import (
@@ -33,6 +38,7 @@ This module contains routes related to the user's principal actions,
 including accessing the dashboard, profile settings, leaderboard,
 community, and managing user mazes.
 """
+
 
 @bp.route("/")
 @logout_required

@@ -11,8 +11,10 @@ from app import db
 # Intermediate table to relate users and completed mazes
 user_completed_dungeons = db.Table(
     "user_completed_maze",
-    db.Column("user_id", db.Integer, db.ForeignKey("user.id"), primary_key=True),
-    db.Column("maze_id", db.Integer, db.ForeignKey("maze_bd.id"), primary_key=True),
+    db.Column("user_id", db.Integer, db.ForeignKey(
+        "user.id"), primary_key=True),
+    db.Column("maze_id", db.Integer, db.ForeignKey(
+        "maze_bd.id"), primary_key=True),
     db.Column("completed_at", db.DateTime, default=datetime.utcnow),
 )
 
@@ -68,8 +70,10 @@ class MazeBd(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     grid = db.Column(db.JSON, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)  # FK to User
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # Creation date
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user.id"), nullable=False)  # FK to User
+    created_at = db.Column(db.DateTime, nullable=False,
+                           default=datetime.utcnow)  # Creation date
     maze_size = db.Column(db.Integer, nullable=False)
 
     # Relationship with the User model
@@ -82,4 +86,3 @@ class MazeBd(db.Model):
         This method returns a string representing the MazeBd instance, displaying its grid.
         """
         return f"<MazeBd {self.grid}>"
-

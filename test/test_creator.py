@@ -1,16 +1,19 @@
-from app.models import MazeBd, User
+"""
+Tests for maze map creation and validation functionalities.
+"""
 
 
 def test_create_map(login_user):
+    """Test if an authenticated user can access the map creator page."""
     response = login_user.get('/map_creator')
     assert response.status_code == 200
 
 
 def test_validate_map_invalid_points(login_user):
     """
-    Prueba cuando los puntos de inicio y salida no son válidos.
+    Test validation fails when the map lacks valid start or exit points.
     """
-    # Mapa sin puntos de inicio o salida
+    # Map without start or exit points
     response = login_user.post(
         "/validate_map",
         json={"map": [0, 0, 0, 0, 0, 0, 0, 0, 0], "size": 3},
@@ -18,14 +21,13 @@ def test_validate_map_invalid_points(login_user):
     data = response.get_json()
     assert response.status_code == 400
     assert data["valid"] is False
-    assert data["error"] == "No se encontró el punto de inicio o salida"
+    assert data["error"] == "Start or exit point not found"
 
 
 def test_validate_map_valid(login_user):
     """
-    Prueba cuando los puntos de inicio y salida no son válidos.
+    Test validation succeeds when the map has valid start and exit points.
     """
-    # Mapa sin puntos de inicio o salida
     response = login_user.post(
         "/validate_map",
         json={"map": [2, 0, 0, 0, 0, 0, 0, 0, 3], "size": 3},
@@ -37,9 +39,8 @@ def test_validate_map_valid(login_user):
 
 def test_validate_map_imposible(login_user):
     """
-    Prueba cuando los puntos de inicio y salida no son válidos.
+    Test validation fails when there is no possible path between start and exit.
     """
-    # Mapa sin puntos de inicio o salida
     response = login_user.post(
         "/validate_map",
         json={"map": [2, 1, 1, 1, 1, 1, 1, 1, 3], "size": 3},

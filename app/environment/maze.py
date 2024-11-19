@@ -47,7 +47,8 @@ class Maze(gym.Env):
         self.start_point, self.exit_point = find_points(
             grid, start_point, exit_point)
         self.minimum_steps = len(get_min_steps(self.grid)) - 1
-        # Maximum number of steps to be taken: When the agent makes (Maze.size() * 10) actions (steps), it ends (losing).
+        # Maximum number of steps to be taken:
+        # When the agent makes (Maze.size() * 10) actions (steps), it ends (losing).
         self.maximum_steps = self.size() * 10
         self.action_space = spaces.Discrete(4)
 
@@ -76,9 +77,17 @@ class Maze(gym.Env):
         self.episode_result = None
 
     def size(self):
+        """ 
+        It returns the size of the maze
+
+        """
         return self.nrow if self.nrow == self.ncol else np.shape(self.grid)
 
     def reset(self, *, seed=None, return_info=False, options=None):
+        """
+        Reset the enviroment
+
+        """
         if seed is not None:
             np.random.seed(seed)
         # Initial states

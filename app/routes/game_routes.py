@@ -47,6 +47,7 @@ This module contains routes and event handlers for the game functionality, inclu
 training simulations, and player interactions within the maze.
 """
 
+
 @bp.route("/map")
 @login_required
 def map():
@@ -106,7 +107,7 @@ def validate_map():
 
     if is_winneable(grid):
         return save_maze_and_respond(map_grid, size)
-    
+
     return jsonify({"valid": False, "error": "No hay camino posible"}), 400
 
 
@@ -122,7 +123,8 @@ def handle_training(data):
         train(maze_id)
         emit("training_status", {"status": "finished"})
     else:
-        emit("training_status", {"status": "error", "message": "Maze ID is missing"})
+        emit("training_status", {"status": "error",
+             "message": "Maze ID is missing"})
 
 
 @socketio.on("testTraining")
@@ -137,7 +139,8 @@ def handle_test(data):
         train(maze_id)
         emit("training_status", {"status": "finished"})
     else:
-        emit("training_status", {"status": "error", "message": "Maze ID is missing"})
+        emit("training_status", {"status": "error",
+             "message": "Maze ID is missing"})
 
 
 @socketio.on("connect")

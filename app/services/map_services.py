@@ -1,9 +1,7 @@
 import heapq
 import json
-
 import numpy as np
 from gymnasium.utils import seeding
-
 from app.models import MazeBd
 
 # Possible movements: left, down, right, up
@@ -14,6 +12,15 @@ UP = 3
 
 
 def find_player_position(map):
+    """
+    Finds the player's position in the map.
+
+    Parameters:
+        maze_map (list): A list representation of the map.
+
+    Returns:
+        int: The index of the player's position, or the position of the value 2 if -1 is not found.
+    """
     try:
         return map.index(-1)  # Buscar la posición del jugador (-1)
     except ValueError:
@@ -21,6 +28,14 @@ def find_player_position(map):
 
 
 def move_player(direction, map, map_size):
+    """
+    Moves the player in the specified direction if possible.
+
+    Parameters:
+        direction (str): Direction of movement (ArrowUp, ArrowDown, ArrowLeft, ArrowRight).
+        maze_map (list): A list representing the map state.
+        maze_size (int): The size of the map grid.
+    """
     player_pos = find_player_position(map)
 
     if direction == "ArrowUp":
@@ -47,6 +62,12 @@ def move_player(direction, map, map_size):
 
 
 def change_door(map):
+    """
+    Changes the door's position in the map by replacing the value 2 with -1.
+
+    Parameters:
+        maze_map (list): The map list containing the door value 2.
+    """
     if isinstance(map, list) and 2 in map:
         i = map.index(2)
         map[i] = -1
@@ -55,17 +76,43 @@ def change_door(map):
 
 
 def create_grid(map_grid, size):
-    """Convierte el arreglo plano en una matriz 2D."""
+    """
+    Converts a flat array into a 2D matrix.
+
+    Parameters:
+        map_grid (list): The flat array of the map.
+        size (int): Size of the grid.
+
+    Returns:
+        list: A 2D list representation of the grid.
+    """
     return [map_grid[i: i + size] for i in range(0, len(map_grid), size)]
 
 
 def are_points_valid(start_point, exit_point):
-    """Valida si se encontraron el punto de inicio y salida."""
+    """
+    Validates the existence of both start and exit points.
+
+    Parameters:
+        start_point (tuple | None): Starting position.
+        exit_point (tuple | None): Exit position.
+
+    Returns:
+        bool: True if both points are valid, False otherwise.
+    """
     return start_point is not None and exit_point is not None
 
 
 def load_maze_from_db(maze_id):
-    """Carga el laberinto desde la base de datos y devuelve su información."""
+    """
+    Loads the maze from the database.
+
+    Parameters:
+        maze_id (int): ID of the maze to be loaded.
+
+    Returns:
+        tuple: A tuple containing the maze object, its grid as a list, and its size.
+    """
     maze = MazeBd.query.filter_by(id=maze_id).first()
     grid1 = json.loads(maze.grid)
     size = maze.maze_size
@@ -91,7 +138,14 @@ def find_points(grid, start_point=None, exit_point=None):
 
     def find_coordinates(matrix, value):
         """
-        Given a matrix and a value, returns the position of that value in the matrix.
+        Finds the coordinates of a value in the matrix.
+
+        Parameters:
+            matrix (list): 2D list representing the maze.
+            value (int): Value to search for.
+
+        Returns:
+            tuple: Coordinates (row, column) of the value if found, else None.
         """
         for i, row in enumerate(matrix):
             for j, elem in enumerate(row):

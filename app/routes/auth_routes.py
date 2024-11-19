@@ -1,6 +1,9 @@
-import bcrypt
-import re
+"""
+Authentication routes for handling user login, logout, and registration.
+"""
 
+import re
+import bcrypt
 from flask import (
     Blueprint,
     redirect,
@@ -10,7 +13,6 @@ from flask import (
     url_for,
 )
 from flask_babel import gettext as _
-
 from app.models import User, db
 from app.controllers.auth_controllers import login_required, logout_required, AVATARS
 
@@ -26,7 +28,7 @@ def login():
     """Handles user login"""
     if request.method != "POST":
         return render_template("login.html")
-    
+
     username = request.form["username"].strip()
     if username == "TheVoidItself":
         return render_template("login.html")
@@ -65,38 +67,12 @@ def register():
     username = request.form["username"]
     password = request.form["password"].encode("utf-8")
     email = request.form["email"]
-    avatar = request.form.get("avatar")  # Avoid errors if not present
+    avatar = request.form.get("avatar")
 
-    if not avatar:
-        return render_template(
-            "register.html", error=_("You must select an avatar"), avatars=AVATARS
-        ), 400
+    error = validate_registration_input(username, password, email, avatar)
+    if error:
+        return render_template("register.html", error=error, avatars=AVATARS), 400
 
-    # Check if username or email already exists
-    existing_user = User.query.filter(
-        (User.username == username) | (User.email == email)
-    ).first()
-
-    if existing_user is not None:
-        return render_template("register.html", error=_("Username already exists"), avatars=AVATARS), 400
-
-    if len(username) < 3:
-        return render_template("register.html", error=_("Username must have at least 3 characters"), avatars=AVATARS), 400
-
-    if not username.isalnum():
-        return render_template(
-            "register.html", error=_("Username can only contain letters and numbers"), avatars=AVATARS
-        ), 400
-
-    if not re.match(EMAIL_REGEX_PATTERN, email):
-        return render_template(
-            "register.html", error=_("Please enter a valid email address"), avatars=AVATARS
-        ), 400
-
-    if len(password) < 8:
-        return render_template("register.html", error=_("Password must have at least 8 characters"), avatars=AVATARS), 400
-
-    # Hash the password and create the new user
     hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
     new_user = User(
         username=username,
@@ -104,9 +80,36 @@ def register():
         email=email,
         avatar=avatar,
     )
-
     db.session.add(new_user)
     db.session.commit()
 
     session["user_id"] = new_user.id
     return redirect(url_for("principal.dashboard"))
+
+
+def validate_registration_input(username, password, email, avatar):
+    """
+    Validates the registration input fields.
+
+    Args:
+        username (str): The username input.
+        password (bytes): The password input (encoded).
+        email (str): The email input.
+        avatar (str | None): The selected avatar.
+
+    Returns:
+        str | None: Error message if validation fails, otherwise None.
+    """
+    if not avatar:
+        return _("You must select an avatar")
+    if User.query.filter((User.username == username) | (User.email == email)).first():
+        return _("Username already exists")
+    if len(username) < 3:
+        return _("Username must have at least 3 characters")
+    if not username.isalnum():
+        return _("Username can only contain letters and numbers")
+    if not re.match(EMAIL_REGEX_PATTERN, email):
+        return _("Please enter a valid email address")
+    if len(password) < 8:
+        return _("Password must have at least 8 characters")
+    return None

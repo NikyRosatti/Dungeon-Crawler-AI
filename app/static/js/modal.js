@@ -1,4 +1,4 @@
-export const showModal = async (type_message, points) => {
+export const showModal = async (type_message, value) => {
     const modal = document.getElementById('modal');
     const modalMessage = document.getElementById('modal-message');
     const modalClose = document.getElementById('close-modal');
@@ -14,12 +14,15 @@ export const showModal = async (type_message, points) => {
     // Check if the key exists in the translations and assign the translated message
     let translatedMessage = translations[type_message] ? translations[type_message][userLanguage] || translations[type_message].en : `Translation not found for key: ${type_message}`; 
     // Detailed error message if not found
-    
-    console.log("Valor de puntos:", points);
 
     // If there is a score, it is replaced by its value
     if (translatedMessage.includes('${points}')) {
-        translatedMessage = translatedMessage.replace('${points}', points);
+        translatedMessage = translatedMessage.replace('${points}', value);
+    }
+
+    // If the maximum number of steps is reached, it is replaced by its value
+    if (translatedMessage.includes('${steps}')) {
+        translatedMessage = translatedMessage.replace('${steps}', value);
     }
 
     // Update the modal message with the translation

@@ -152,6 +152,7 @@ def run_training_test(env, model, maze_id, maze, size):
 
             if lose_by_steps:
                 max_steps = env.envs[0].maximum_steps
+                socketio.emit("lose_by_steps", {"steps": max_steps})
                 print(
                     f"Your agent could not complete the maze in {max_steps} steps!!")
             break

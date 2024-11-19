@@ -122,6 +122,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        socket.on("lose_by_steps", (data) => {
+            const {steps} = data;
+            showModal("maximumSteps", steps);
+        });
+
         // Escuchar el evento "win"
         socket.on("win", (data) => {
             const {points} = data;

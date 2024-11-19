@@ -1,12 +1,13 @@
 """
 Configuration file for pytest fixtures used in testing the application.
 """
-import pytest
+
 import warnings
 import bcrypt
+import pytest
 
-from app import create_app, db
 from config import TestConfig
+from app import create_app, db
 from app.models import User
 
 
@@ -53,9 +54,9 @@ def add_user():
 
 
 @pytest.fixture
-def login_user(test_client, add_user):
+def login_user(test_client_):
     """Simulates logging in to set up future tests."""
-    response = test_client.post(
+    response = test_client_.post(
         '/login',
         data={
             'username': 'usuarioTest',
@@ -63,4 +64,4 @@ def login_user(test_client, add_user):
         }
     )
     assert response.status_code == 302
-    return test_client
+    return test_client_

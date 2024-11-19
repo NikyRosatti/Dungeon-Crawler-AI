@@ -8,6 +8,7 @@ Tests included:
 """
 import os # Standard library import for file path checks
 
+
 def test_map_exist(login_user):
     """
     Test if an existing map can be validated and retrieved.

@@ -1,8 +1,15 @@
-from app.models import User
+"""
+Tests for user authentication and registration routes.
+"""
+
+from app.models import User # Import User model from the app's models
 
 
 def test_login_required_redirect(test_client):
-
+    """
+    Test that unauthenticated users are redirected to the login page
+    when trying to access routes that require authentication.
+    """
     routes = [
         '/dashboard',
         '/leaderboard',
@@ -23,6 +30,10 @@ def test_login_required_redirect(test_client):
 
 
 def test_register_user(test_client):
+    """
+    Test that a user can successfully register with a username, password, 
+    email, and avatar, and that the user is stored in the database.
+    """
     response = test_client.post('/register', data={
         'username': 'nuevoUsuario',
         'password': 'password',
@@ -39,6 +50,10 @@ def test_register_user(test_client):
 
 
 def test_register_user_without_avatar(test_client):
+    """
+    Test that a user registration fails if no avatar is provided, 
+    and that a 400 error is returned when avatar is None.
+    """
     # limpia la sesion al comenzar el test
     with test_client.session_transaction() as session:
         session.clear()
@@ -54,7 +69,11 @@ def test_register_user_without_avatar(test_client):
     assert b'avatar' in response.data
 
 
-def test_register_user_duplicate(test_client, add_user):
+def test_register_user_duplicate(test_client):
+    """
+    Test that an error is returned when trying to register a user 
+    with a duplicate username.
+    """
     # Primer intento de registro (este debería fallar si el usuario ya existe)
     response = test_client.post('/register', data={
         'username': 'usuarioTest',
@@ -68,7 +87,11 @@ def test_register_user_duplicate(test_client, add_user):
     assert b'' in response.data
 
 
-def test_login_success(test_client, add_user):
+def test_login_success(test_client):
+    """
+    Test that a user can log in successfully and is redirected to 
+    the dashboard with their session established.
+    """
     response = test_client.post('/login', data={
         'username': 'usuarioTest',
         'password': 'password'
@@ -82,16 +105,26 @@ def test_login_success(test_client, add_user):
 
 
 def test_get_login(test_client):
+    """
+    Test that the login page can be accessed successfully.
+    """
     response = test_client.get('/login', follow_redirects=True)
     assert response.status_code == 200
 
 
 def test_get_register(test_client):
+    """
+    Test that the registration page can be accessed successfully.
+    """
     response = test_client.get('/register', follow_redirects=True)
     assert response.status_code == 200
 
 
-def test_login_fail(test_client, add_user):
+def test_login_fail(test_client):
+    """
+    Test that a failed login attempt (wrong password) returns 
+    a successful response and an appropriate error message.
+    """
     response = test_client.post('/login', data={
         'username': 'usuarioTest',
         'password': 'passwordmal'
@@ -101,6 +134,10 @@ def test_login_fail(test_client, add_user):
 
 
 def test_login_user_not_exist(test_client):
+    """
+    Test that logging in with a non-existent user returns a 400 error 
+    with the message 'User does not exist.'
+    """
     with test_client.session_transaction() as session:
         session.clear()
 
@@ -114,6 +151,10 @@ def test_login_user_not_exist(test_client):
 
 
 def test_logout(test_client):
+    """
+    Test that a logged-in user can log out successfully, 
+    and that their session is cleared.
+    """
     response = test_client.post('/login', data={
         'username': 'usuarioTest',
         'password': 'password'

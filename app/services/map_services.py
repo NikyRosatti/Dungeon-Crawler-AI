@@ -11,7 +11,7 @@ RIGHT = 2
 UP = 3
 
 
-def find_player_position(map):
+def find_player_position(maze_map):
     """
     Finds the player's position in the map.
 
@@ -22,12 +22,12 @@ def find_player_position(map):
         int: The index of the player's position, or the position of the value 2 if -1 is not found.
     """
     try:
-        return map.index(-1)  # Buscar la posición del jugador (-1)
+        return maze_map.index(-1)  # Buscar la posición del jugador (-1)
     except ValueError:
-        return map.index(2)  # Si no hay -1, devolver la posición de 2
+        return maze_map.index(2)  # Si no hay -1, devolver la posición de 2
 
 
-def move_player(direction, map, map_size):
+def move_player(direction, maze_map, map_size):
     """
     Moves the player in the specified direction if possible.
 
@@ -36,7 +36,7 @@ def move_player(direction, map, map_size):
         maze_map (list): A list representing the map state.
         maze_size (int): The size of the map grid.
     """
-    player_pos = find_player_position(map)
+    player_pos = find_player_position(maze_map)
 
     if direction == "ArrowUp":
         new_pos = player_pos - map_size if player_pos >= map_size else player_pos
@@ -53,24 +53,24 @@ def move_player(direction, map, map_size):
     else:
         new_pos = player_pos
 
-    if map[new_pos] == 0:
-        map[player_pos] = 0
-        map[new_pos] = -1
-    elif map[new_pos] == 3:
-        map[player_pos] = 0
-        map[new_pos] = -2
+    if maze_map[new_pos] == 0:
+        maze_map[player_pos] = 0
+        maze_map[new_pos] = -1
+    elif maze_map[new_pos] == 3:
+        maze_map[player_pos] = 0
+        maze_map[new_pos] = -2
 
 
-def change_door(map):
+def change_door(maze_map):
     """
     Changes the door's position in the map by replacing the value 2 with -1.
 
     Parameters:
         maze_map (list): The map list containing the door value 2.
     """
-    if isinstance(map, list) and 2 in map:
-        i = map.index(2)
-        map[i] = -1
+    if isinstance(maze_map, list) and 2 in maze_map:
+        i = maze_map.index(2)
+        maze_map[i] = -1
     else:
         print("Error: map no es una lista o no contiene el valor 2")
 
@@ -284,7 +284,8 @@ def increment_position(current_row, current_col, action):
     Parameters:
         current_row (tuple): Row of the current state.
         current_col (tuple): Column of the current state.
-        action (int): Movement to perform (up, down, left, right) according to the corresponding integer.
+        action (int): Movement to perform (up, down, left, right) 
+        according to the corresponding integer.
 
     Returns:
         tuple: The new row and column after the action is performed.
@@ -323,7 +324,10 @@ def size(grid):
 
 
 def action_to_string(action):
-    """String representation of actions for the environment. Returns 'UNKNOWN' in case of an invalid action."""
+    """
+    String representation of actions for the environment. 
+    Returns 'UNKNOWN' in case of an invalid action.
+    """
     if action == 0:
         return "LEFT"
     if action == 1:
@@ -336,7 +340,10 @@ def action_to_string(action):
 
 
 def object_to_string(obj):
-    """String representation of environment objects. Returns 'UNKNOWN_OBJ' in case of an invalid object."""
+    """
+    String representation of environment objects. 
+    Returns 'UNKNOWN_OBJ' in case of an invalid object.
+    """
     if obj == -1:
         return "AGENT"
     if obj == 0:

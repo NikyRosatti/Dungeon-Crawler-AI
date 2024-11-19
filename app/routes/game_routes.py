@@ -167,7 +167,7 @@ def handle_move(direction):
 
 
 @socketio.on("restart_pos")
-def restart_position():
+def restart_position(position):
     """
     Restarts the player's position in the maze.
     Resets the start and finish positions.

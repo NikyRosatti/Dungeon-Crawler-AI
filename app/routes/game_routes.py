@@ -179,7 +179,7 @@ def restart_position(position):
     Restarts the player's position in the maze.
     Resets the start and finish positions.
     """
-    maze_info["mapa_original"][maze_info["mapa_original"].index(-1)] = 3
+    maze_info["mapa_original"][maze_info["mapa_original"].index(-2)] = 3
     maze_info["mapa_original"][maze_info["start"]] = -1
     emit("map", maze_info["mapa_original"])
 

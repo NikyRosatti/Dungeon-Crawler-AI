@@ -122,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // Escuchar el evento "lose_by_steps"
         socket.on("lose_by_steps", (data) => {
             const {steps} = data;
             showModal("maximumSteps", steps);
@@ -131,11 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.on("win", (data) => {
             const {points} = data;
             showModal('won', points);
-        });
-
-        // Escuchar el evento "lose"
-        socket.on("lose", () => {
-            showModal("maximumSteps");
         });
     }
 

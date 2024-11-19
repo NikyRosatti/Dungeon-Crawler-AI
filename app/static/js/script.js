@@ -122,15 +122,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // Escuchar el evento "lose_by_steps"
+        socket.on("lose_by_steps", (data) => {
+            const {steps} = data;
+            showModal("maximumSteps", steps);
+        });
+
         // Escuchar el evento "win"
         socket.on("win", (data) => {
             const {points} = data;
-            showModal('won');
-        });
-
-        // Escuchar el evento "lose"
-        socket.on("lose", () => {
-            showModal("maximumSteps");
+            showModal('won', points);
         });
     }
 

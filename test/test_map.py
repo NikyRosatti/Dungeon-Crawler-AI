@@ -6,7 +6,7 @@ Tests included:
 - Retrieval of non-existent maps.
 - Existence of training-related files.
 """
-import os # Standard library import for file path checks
+import os
 
 
 def test_map_exist(login_user):

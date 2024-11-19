@@ -1,3 +1,8 @@
+"""
+This module defines a maze environment for reinforcement learning using Gym.
+The environment allows the agent to navigate through a maze, avoiding walls,
+finding the exit, and dealing with mines.
+"""
 import gymnasium as gym
 import numpy as np
 from gymnasium import spaces
@@ -25,16 +30,25 @@ MINE = 4
 
 
 class Maze(gym.Env):
+    """
+    A maze environment for reinforcement learning using Gym.
+
+    The agent navigates a grid, avoiding walls, finding the exit, and potentially
+    encountering mines. The agent is rewarded or penalized based on its actions.
+    """
+
     metadata = {"render_modes": ["human"], "render_fps": 30}
 
     def __init__(self, grid, start_point=None, exit_point=None):
-        super(Maze, self).__init__()
+        super().__init__()
 
         self.grid = np.array(grid)
         self.nrow, self.ncol = np.shape(self.grid)
-        self.start_point, self.exit_point = find_points(grid, start_point, exit_point)
+        self.start_point, self.exit_point = find_points(
+            grid, start_point, exit_point)
         self.minimum_steps = len(get_min_steps(self.grid)) - 1
-        # Maximum number of steps to be taken: When the agent makes (Maze.size() * 10) actions (steps), it ends (losing).
+        # Maximum number of steps to be taken:
+        # When the agent makes (Maze.size() * 10) actions (steps), it ends (losing).
         self.maximum_steps = self.size() * 10
         self.action_space = spaces.Discrete(4)
 
@@ -59,11 +73,21 @@ class Maze(gym.Env):
         self.win = False
         self.lose_by_mine = False
         self.lose_by_steps = False
+        self.final_position = None
+        self.episode_result = None
 
     def size(self):
+        """ 
+        It returns the size of the maze
+
+        """
         return self.nrow if self.nrow == self.ncol else np.shape(self.grid)
 
-    def reset(self, seed=None):
+    def reset(self, *, seed=None, return_info=False, options=None):
+        """
+        Reset the enviroment
+
+        """
         if seed is not None:
             np.random.seed(seed)
         # Initial states
@@ -78,9 +102,11 @@ class Maze(gym.Env):
         return self._obs_space(), {}
 
     def _obs_space(self):
-        # Private method
-        # Construct the observation state:
-        # [agent_row_pos, agent_col_pos, exit_row_pos, exit_col_pos]
+        """
+        Returns the current observation state of the agent in the maze.
+
+        The observation is a combination of the agent's position and the exit's position.
+        """
         obs1 = np.array(self.current_state)
         obs2 = np.array(self.exit_point)
         total_obs = np.concatenate([obs1, obs2])
@@ -93,7 +119,7 @@ class Maze(gym.Env):
         self.current_state = new_state
         if self.lose_by_mine or self.done:
             self.final_position = self.current_state
-        # truncation=False as the time limit is handled by the `TimeLimit` wrapper added during `make`
+        # truncation=False as the time limit is handled by the TimeLimit wrapper added during make
         return self._obs_space(), self.reward, self.done, False, {}
 
     def _update_state_and_reward(self, row, col, action):

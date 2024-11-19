@@ -1,3 +1,5 @@
+import { showModal } from './modal.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     const grid = document.getElementById('grid-container');
     const generateButton = document.getElementById('generate');
@@ -72,11 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     cell.addEventListener('click', () => {
                         if (selectedBlockType !== null && selectedBlockType !== undefined) {
                             if (selectedBlockType == 2 && startPlaced) {
-                                showModal('Place only one door (Start)');
+                                showModal('startDoor');
                                 return;
                             }
                             if (selectedBlockType == 3 && endPlaced) {
-                                showModal('Place only one door (End)');
+                                showModal('endDoor');
                                 return;
                             }
                             if (selectedBlockType === 2) startPlaced = true;
@@ -141,34 +143,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.valid) {
                 window.location.href = data.redirect_url,200;
             } else {
-                showModal('Invalid Map');
+                showModal('InvalidMap');
             }
         })
         .catch(error => console.error('Error al validar el mapa:', error));
 
         console.log('Mapa exportado:', innerMap);
     });
-});
-
-const showModal = (message) => {
-    const modal = document.getElementById('modal');
-    const modalMessage = document.getElementById('modal-message');
-    modalMessage.textContent = message;
-    modal.style.display = 'block';
-};
-
-const closeModal = () => {
-    const modal = document.getElementById('modal');
-    modal.style.display = 'none';
-};
-
-// Evento para cerrar el modal al hacer clic en la "X"
-document.getElementById('close-modal').addEventListener('click', closeModal);
-
-// También permite cerrar el modal al hacer clic fuera de él
-window.addEventListener('click', (event) => {
-    const modal = document.getElementById('modal');
-    if (event.target == modal) {
-        closeModal();
-    }
 });

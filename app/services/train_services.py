@@ -1,29 +1,38 @@
+"""
+This module contains services related to training a reinforcement learning model
+for a maze environment, including the setup of training, observation formatting, and
+real-time training status updates.
+"""
+
+
+
 import json
 import os
 import time
-
 from flask import session
-from flask_socketio import emit
-
+from stable_baselines3 import PPO
+from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 from app import socketio
 from app.environment.maze import Maze
 from app.models import User, MazeBd, db
 from app.services.map_services import action_to_string
 
-from stable_baselines3 import PPO
-from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 
 running_tests = {}
 
 
 def train_model(maze_id):
+    """
+    Trains a reinforcement learning model using the PPO algorithm in the given maze environment.
+    Outputs the training progress and saves the model at each iteration.
 
+    Parameters:
+        maze_id (int): The ID of the maze for which the model is being trained.
+    """
     maze = MazeBd.query.filter_by(id=maze_id).first()
-
     grid1 = json.loads(maze.grid)
     size = maze.maze_size
-
-    grid = [grid1[i : i + size] for i in range(0, len(grid1), size)]
+    grid = [grid1[i: i + size] for i in range(0, len(grid1), size)]
 
     log_dir = os.path.join("app", "saved_models", "logs", f"{maze_id}")
     os.makedirs(log_dir, exist_ok=True)
@@ -37,16 +46,18 @@ def train_model(maze_id):
     os.makedirs(model_path, exist_ok=True)
 
     try:
-        env = VecNormalize.load(load_path=model_path + "norm_env.pkl", venv=env)
+        env = VecNormalize.load(load_path=model_path +
+                                "norm_env.pkl", venv=env)
         print("TrainEnv: Retraining the environment")
-    except:
-        env = VecNormalize(env, norm_obs=False, norm_reward=True, clip_obs=10.0)
+    except FileNotFoundError:
+        env = VecNormalize(env, norm_obs=False,
+                           norm_reward=True, clip_obs=10.0)
         print("TrainEnv: Creating the environment")
 
     try:
         model = PPO.load(path=model_path + "ppo.zip", env=env)
         print("TrainModel: Retraining the model")
-    except:
+    except FileNotFoundError:
         model = PPO("MlpPolicy", env=env, verbose=0, tensorboard_log=log_dir)
         print("TrainModel: Creating the model")
 
@@ -75,7 +86,8 @@ def run_training_test(env, model, maze_id, maze, size):
     """Ejecuta la prueba de entrenamiento y emite el estado del mapa en tiempo real."""
     global running_tests
 
-    print(f"Minimum steps required to solve the maze: {env.envs[0].minimum_steps}")
+    print(
+        f"Minimum steps required to solve the maze: {env.envs[0].minimum_steps}")
 
     user = User.query.get(session["user_id"])
     env.training = False
@@ -86,14 +98,16 @@ def run_training_test(env, model, maze_id, maze, size):
         steps += 1
         print(f"Steps: {steps}")
 
-        if not running_tests.get(maze_id):  # Si se ha solicitado detener la prueba
+        # Si se ha solicitado detener la prueba
+        if not running_tests.get(maze_id):
             print(f"Test stopped for maze_id {maze_id}")
             socketio.emit("training_status", {"status": "stopped"})
             running_tests.pop(maze_id, None)
             break
 
         action, _ = model.predict(obs)
-        print(f"  Action according to the prediction: {action_to_string(action)}")
+        print(
+            f"  Action according to the prediction: {action_to_string(action)}")
         obs, reward, done, _ = env.step(action)
         print(
             f"  Observation after the step: {obs_to_string(obs)}"
@@ -113,19 +127,21 @@ def run_training_test(env, model, maze_id, maze, size):
                 socketio.emit("finish_map")
                 if maze not in user.completed_dungeons:
                     user.completed_dungeons.append(maze)
-                    newPoints = 0
+                    new_points = 0
                     if env.envs[0].minimum_steps == steps:
                         user.points += size + steps
-                        newPoints += size + steps
+                        new_points += size + steps
                     else:
                         user.points += size
-                        newPoints += size
+                        new_points += size
                     db.session.commit()
                     socketio.emit("training_status", {"status": "finished"})
-                    socketio.emit("win", {"points": newPoints})
-                    print(f"User {user.username} completed the maze {maze_id}.")
+                    socketio.emit("win", {"points": new_points})
+                    print(
+                        f"User {user.username} completed the maze {maze_id}.")
                 else:
-                    print(f"The user {user.username} already completed this maze.")
+                    print(
+                        f"The user {user.username} already completed this maze.")
                 socketio.emit("training_status", {"status": "finished"})
 
             if lose_by_mine:
@@ -136,19 +152,32 @@ def run_training_test(env, model, maze_id, maze, size):
 
             if lose_by_steps:
                 max_steps = env.envs[0].maximum_steps
-                print(f"Your agent could not complete the maze in {max_steps} steps!!")
+                print(
+                    f"Your agent could not complete the maze in {max_steps} steps!!")
             break
 
         if env.envs[0].lose_by_mine | env.envs[0].lose_by_steps:
             socketio.emit("lose")
 
-    running_tests.pop(maze_id, None)  # Eliminar la prueba de la lista de ejecuciones
+    # Eliminar la prueba de la lista de ejecuciones
+    running_tests.pop(maze_id, None)
 
 
 def setup_environment(grid, maze_id):
-    """Configura el entorno de entrenamiento y carga el modelo PPO."""
+    """
+    Sets up the training environment and loads the PPO model.
+
+    Parameters:
+        grid: The maze grid.
+        maze_id (int): The ID of the maze.
+
+    Returns:
+        env: The environment for training.
+        model: The PPO model.
+    """
     vec_norm_path = os.path.join(
-        "app", "saved_models", "trained_models_per_id", str(maze_id), "norm_env.pkl"
+        "app", "saved_models", "trained_models_per_id", str(
+            maze_id), "norm_env.pkl"
     )
     model_to_load = os.path.join(
         "app", "saved_models", "trained_models_per_id", str(maze_id), "ppo.zip"
@@ -158,14 +187,15 @@ def setup_environment(grid, maze_id):
     try:
         env = VecNormalize.load(load_path=vec_norm_path, venv=env)
         print(f"Loading the environment {vec_norm_path}")
-    except:
-        print(f"Vectorized environment not found, loading a generic one")
-        env = VecNormalize(env, norm_obs=False, norm_reward=True, clip_obs=10.0)
+    except FileNotFoundError:
+        print("Vectorized environment not found, loading a generic one")
+        env = VecNormalize(env, norm_obs=False,
+                           norm_reward=True, clip_obs=10.0)
 
     try:
         model = PPO.load(model_to_load, env=env)
         print(f"Loading the file {model_to_load}")
-    except:
+    except FileNotFoundError:
         print("Playing without a trained model!")
         model = PPO("MlpPolicy", env=env)
 
@@ -183,9 +213,9 @@ def obs_to_string(obs):
         str: Agent position (X, Y) and exit position (X, Y).
     """
     obs = obs[0]
-    x_Agent = obs[0]
-    y_Agent = obs[1]
-    x_Exit_door = obs[2]
-    y_Exit_door = obs[3]
-    s = f"[X_Agent: {x_Agent}, Y_Agent: {y_Agent}, x_Exit_door: {x_Exit_door}, y_Exit_door: {y_Exit_door}]"
+    x_agent = obs[0]
+    y_agent = obs[1]
+    x_exit_door = obs[2]
+    y_exit_door = obs[3]
+    s = f"[X_Agent: {x_agent}, Y_Agent: {y_agent}, x_Exit_door: {x_exit_door}, y_Exit_door: {y_exit_door}]"
     return s

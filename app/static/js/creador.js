@@ -74,11 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     cell.addEventListener('click', () => {
                         if (selectedBlockType !== null && selectedBlockType !== undefined) {
                             if (selectedBlockType == 2 && startPlaced) {
-                                showModal('startDoor');
+                                showModal('Place only one door (Start)');
                                 return;
                             }
                             if (selectedBlockType == 3 && endPlaced) {
-                                showModal('endDoor');
+                                showModal('Place only one door (End)');
                                 return;
                             }
                             if (selectedBlockType === 2) startPlaced = true;
@@ -141,9 +141,9 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             if (data.valid) {
-                window.location.href = data.redirect_url;
+                window.location.href = data.redirect_url,200;
             } else {
-                showModal('InvalidMap');
+                showModal('Invalid Map');
             }
         })
         .catch(error => console.error('Error al validar el mapa:', error));

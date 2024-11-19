@@ -1,9 +1,7 @@
 import heapq
 import json
-
 import numpy as np
 from gymnasium.utils import seeding
-
 from app.models import MazeBd
 
 # Possible movements: left, down, right, up
@@ -13,61 +11,112 @@ RIGHT = 2
 UP = 3
 
 
-def find_player_position(map):
+def find_player_position(maze_map):
+    """
+    Finds the player's position in the map.
+
+    Parameters:
+        maze_map (list): A list representation of the map.
+
+    Returns:
+        int: The index of the player's position, or the position of the value 2 if -1 is not found.
+    """
     try:
-        return map.index(-1)  # Buscar la posición del jugador (-1)
+        return maze_map.index(-1)  # Buscar la posición del jugador (-1)
     except ValueError:
-        return map.index(2)  # Si no hay -1, devolver la posición de 2
+        return maze_map.index(2)  # Si no hay -1, devolver la posición de 2
 
 
-def move_player(direction, map, map_size):
-    player_pos = find_player_position(map)
+def move_player(direction, maze_map, map_size):
+    """
+    Moves the player in the specified direction if possible.
+
+    Parameters:
+        direction (str): Direction of movement (ArrowUp, ArrowDown, ArrowLeft, ArrowRight).
+        maze_map (list): A list representing the map state.
+        maze_size (int): The size of the map grid.
+    """
+    player_pos = find_player_position(maze_map)
 
     if direction == "ArrowUp":
         new_pos = player_pos - map_size if player_pos >= map_size else player_pos
     elif direction == "ArrowDown":
         new_pos = (
-            player_pos + map_size if player_pos < len(map) - map_size else player_pos
+            player_pos +
+            map_size if player_pos < len(map) - map_size else player_pos
         )
     elif direction == "ArrowLeft":
         new_pos = player_pos - 1 if player_pos % map_size != 0 else player_pos
     elif direction == "ArrowRight":
-        new_pos = player_pos + 1 if (player_pos + 1) % map_size != 0 else player_pos
+        new_pos = player_pos + \
+            1 if (player_pos + 1) % map_size != 0 else player_pos
     else:
         new_pos = player_pos
 
-    if map[new_pos] == 0:
-        map[player_pos] = 0
-        map[new_pos] = -1
-    elif map[new_pos] == 3:
-        map[player_pos] = 0
-        map[new_pos] = -2
+    if maze_map[new_pos] == 0:
+        maze_map[player_pos] = 0
+        maze_map[new_pos] = -1
+    elif maze_map[new_pos] == 3:
+        maze_map[player_pos] = 0
+        maze_map[new_pos] = -2
 
 
-def change_door(map):
-    if isinstance(map, list) and 2 in map:
-        i = map.index(2)
-        map[i] = -1
+def change_door(maze_map):
+    """
+    Changes the door's position in the map by replacing the value 2 with -1.
+
+    Parameters:
+        maze_map (list): The map list containing the door value 2.
+    """
+    if isinstance(maze_map, list) and 2 in maze_map:
+        i = maze_map.index(2)
+        maze_map[i] = -1
     else:
         print("Error: map no es una lista o no contiene el valor 2")
 
 
 def create_grid(map_grid, size):
-    """Convierte el arreglo plano en una matriz 2D."""
-    return [map_grid[i : i + size] for i in range(0, len(map_grid), size)]
+    """
+    Converts a flat array into a 2D matrix.
+
+    Parameters:
+        map_grid (list): The flat array of the map.
+        size (int): Size of the grid.
+
+    Returns:
+        list: A 2D list representation of the grid.
+    """
+    return [map_grid[i: i + size] for i in range(0, len(map_grid), size)]
 
 
 def are_points_valid(start_point, exit_point):
-    """Valida si se encontraron el punto de inicio y salida."""
+    """
+    Validates the existence of both start and exit points.
+
+    Parameters:
+        start_point (tuple | None): Starting position.
+        exit_point (tuple | None): Exit position.
+
+    Returns:
+        bool: True if both points are valid, False otherwise.
+    """
     return start_point is not None and exit_point is not None
 
 
 def load_maze_from_db(maze_id):
-    """Carga el laberinto desde la base de datos y devuelve su información."""
+    """
+    Loads the maze from the database.
+
+    Parameters:
+        maze_id (int): ID of the maze to be loaded.
+
+    Returns:
+        tuple: A tuple containing the maze object, its grid as a list, and its size.
+    """
     maze = MazeBd.query.filter_by(id=maze_id).first()
     grid1 = json.loads(maze.grid)
     size = maze.maze_size
-    grid = [grid1[i : i + size] for i in range(0, len(grid1), size)]
+    grid = [grid1[i: i + size] for i in range(0, len(grid1), size)]
 
     return maze, grid, size
 
@@ -89,7 +138,14 @@ def find_points(grid, start_point=None, exit_point=None):
 
     def find_coordinates(matrix, value):
         """
-        Given a matrix and a value, returns the position of that value in the matrix.
+        Finds the coordinates of a value in the matrix.
+
+        Parameters:
+            matrix (list): 2D list representing the maze.
+            value (int): Value to search for.
+
+        Returns:
+            tuple: Coordinates (row, column) of the value if found, else None.
         """
         for i, row in enumerate(matrix):
             for j, elem in enumerate(row):
@@ -228,7 +284,8 @@ def increment_position(current_row, current_col, action):
     Parameters:
         current_row (tuple): Row of the current state.
         current_col (tuple): Column of the current state.
-        action (int): Movement to perform (up, down, left, right) according to the corresponding integer.
+        action (int): Movement to perform (up, down, left, right) 
+        according to the corresponding integer.
 
     Returns:
         tuple: The new row and column after the action is performed.
@@ -267,7 +324,10 @@ def size(grid):
 
 
 def action_to_string(action):
-    """String representation of actions for the environment. Returns 'UNKNOWN' in case of an invalid action."""
+    """
+    String representation of actions for the environment. 
+    Returns 'UNKNOWN' in case of an invalid action.
+    """
     if action == 0:
         return "LEFT"
     if action == 1:
@@ -280,7 +340,10 @@ def action_to_string(action):
 
 
 def object_to_string(obj):
-    """String representation of environment objects. Returns 'UNKNOWN_OBJ' in case of an invalid object."""
+    """
+    String representation of environment objects. 
+    Returns 'UNKNOWN_OBJ' in case of an invalid object.
+    """
     if obj == -1:
         return "AGENT"
     if obj == 0:

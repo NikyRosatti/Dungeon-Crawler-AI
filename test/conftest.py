@@ -1,9 +1,13 @@
-import pytest
+"""
+Configuration file for pytest fixtures used in testing the application.
+"""
+
 import warnings
 import bcrypt
+import pytest
 
-from app import create_app, db
 from config import TestConfig
+from app import create_app, db
 from app.models import User
 
 
@@ -32,14 +36,16 @@ def suppress_warnings():
 
 
 @pytest.fixture
-def add_user(test_client):
-    """Fixture dependent on test_client. Adds a test user to the database."""
+def add_user():
+    """Adds a test user to the database."""
     existing_user = User.query.filter_by(email='usuario@test.com').first()
 
     if not existing_user:
         user = User(
             username='usuarioTest',
-            password=bcrypt.hashpw(b'password', bcrypt.gensalt()).decode('utf-8'),
+            password=bcrypt.hashpw(
+                b'password', bcrypt.gensalt()
+            ).decode('utf-8'),
             email='usuario@test.com',
             avatar='/static/img/avatars/NikyAvatar.png'
         )
@@ -48,11 +54,14 @@ def add_user(test_client):
 
 
 @pytest.fixture
-def login_user(test_client, add_user):
-    """Fixture dependent on test_client and add_user. Simulates logging in to set up future tests."""
-    response = test_client.post('/login', data={
-        'username': 'usuarioTest',
-        'password': 'password'
-    })
+def login_user(test_client_):
+    """Simulates logging in to set up future tests."""
+    response = test_client_.post(
+        '/login',
+        data={
+            'username': 'usuarioTest',
+            'password': 'password'
+        }
+    )
     assert response.status_code == 302
-    return test_client
+    return test_client_

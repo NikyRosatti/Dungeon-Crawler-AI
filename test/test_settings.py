@@ -1,9 +1,7 @@
-from app.models import User
-
 """
 Tests for updating user settings such as password, email, and account deletion.
 """
-
+from app.models import User
 
 def test_update_password(login_user):
     """Test updating the password with correct data."""
@@ -105,7 +103,7 @@ def test_delete_account(login_user):
     assert response.headers['Location'] == '/register'
 
 
-def test_update_email_duplicate(test_client, login_user):
+def test_update_email_duplicate(test_client):
     """Test updating email to one that is already in use."""
     test_client.post('/register', data={
         'username': 'nuevo_usuario',

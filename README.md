@@ -47,13 +47,18 @@ source venv/bin/activate
 
 Activate the virtual environment on <b>Windows</b> by doing:
 ```shell
-venv\Scripts\activate
+.\venv\Scripts\activate
 ```
 
 ### Installing Dependances
 Once the virtual environment is activated, install the required dependencies listed in requirements.txt:
 ```bash
 pip install -r requirements.txt
+```
+
+On <b>Windows</b>:
+```shell
+pip install -r .\requirements.txt
 ```
 
 # Usage
@@ -69,11 +74,10 @@ python3 run.py
 http://127.0.0.1:5000
 ```
 
-If the project is still in process, and some routes haven't access by front, but you can see them in the routes file, try to enter manually by joining the route string to the localhost link:
+## Tests
+To run the tests provided in the project
 
-<b>In Example</b>
-
-<b>If</b>
-Route /map unreacheable
-<b>Then</b>
-Follow the link http://127.0.0.1:5000/map
+Install the requeriments.txt dependances and run:
+```
+pytest
+```

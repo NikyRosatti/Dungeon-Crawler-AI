@@ -1,0 +1,79 @@
+{
+    "mineExploded": {
+        "en": "You lost because you stepped on a mine, keep training!",
+        "es": "Perdiste porque pisaste una mina, sigue entrenando!",
+        "de": "Du hast verloren, weil du auf eine Mine getreten bist, trainiere weiter!",
+        "fr": "Tu as perdu parce que tu as marché sur une mine, continue à t'entraîner !",
+        "ga": "Chaill tú mar a cheannaigh tú ar mianaigh, lean ort ag traenáil!",
+        "it": "Hai perso perché hai calpestato una mina, continua ad allenarti!",
+        "ja": "地雷を踏んだから負けました、訓練を続けてください！",
+        "la": "Perdiste quia in mima calcavisti, perge exercendo!",
+        "ru": "Вы проиграли, потому что наступили на мину, продолжайте тренироваться!",
+        "zh": "你输了，因为踩到了地雷，继续训练！"
+    },
+
+    "won": {
+        "en": "You won! You scored ${points} points.",
+        "es": "¡Ganaste! Obtuviste ${points} puntos.",
+        "de": "Du hast gewonnen! Du hast ${points} Punkte erzielt.",
+        "fr": "Tu as gagné ! Tu as obtenu ${points} points.",
+        "ga": "Bhuaigh tú! Gheobhaidh tú ${points} pointí.",
+        "it": "Hai vinto! Hai ottenuto ${points} punti.",
+        "ja": "勝った！ ${points} ポイントを獲得しました。",
+        "la": "Vicit! ${points} puncta adeptus es.",
+        "ru": "Вы победили! Вы набрали ${points} очков.",
+        "zh": "你赢了！你获得了 ${points} 分。"
+    },
+
+    "maximumSteps": {
+    "en": "Your agent couldn't complete the maze in ${steps} steps. Try again!",
+    "es": "Tu agente no pudo completar el laberinto en ${steps} pasos. ¡Inténtalo de nuevo!",
+    "de": "Dein Agent konnte das Labyrinth in ${steps} Schritten nicht abschließen. Versuch es noch einmal!",
+    "fr": "Ton agent n'a pas pu terminer le labyrinthe en ${steps} pas. Essaie encore!",
+    "ga": "Ní raibh do ghníomhaí in ann an labhairt a chríochnú i ${steps} céimeanna. Déan iarracht arís!",
+    "it": "Il tuo agente non è riuscito a completare il labirinto in ${steps} passi. Riprova!",
+    "ja": "あなたのエージェントは${steps}ステップで迷路を完了できませんでした。もう一度試してください！",
+    "la": "Agens tuus labyrinthum in ${steps} gradibus conficere non potuit. Iterum tenta!",
+    "ru": "Ваш агент не смог завершить лабиринт за ${steps} шагов. Попробуйте снова!",
+    "zh": "你的代理无法在${steps}步内完成迷宫。再试一次！"
+    },
+
+    "startDoor": {
+        "en": "Please, only one door (Start)",
+        "es": "Por favor, solo una puerta (Inicio)",
+        "de": "Bitte nur eine Tür (Start)",
+        "fr": "Veuillez, une seule porte (Début)",
+        "ga": "Le doirte amháin, le do thoil (Tús)",
+        "it": "Per favore, solo una porta (Inizio)",
+        "ja": "開始のドアは1つだけです。",
+        "la": "Quaeso, una porta tantum (Initium)",
+        "ru": "Пожалуйста, только одна дверь (Начало)",
+        "zh": "请只使用一扇门（开始）"
+    },
+
+    "endDoor": {
+        "en": "Please, only one door (End)",
+        "es": "Por favor, solo una puerta (Fin)",
+        "de": "Bitte nur eine Tür (Ende)",
+        "fr": "Veuillez, une seule porte (Fin)",
+        "ga": "Le doirte amháin, le do thoil (Deireadh)",
+        "it": "Per favore, solo una porta (Fine)",
+        "ja": "終了のドアは1つだけです。",
+        "la": "Quaeso, una porta tantum (Finis)",
+        "ru": "Пожалуйста, только одна дверь (Конец)",
+        "zh": "请只使用一扇门（结束）"
+    },
+
+    "InvalidMap": {
+        "en": "Invalid Map",
+        "es": "Mapa Invalido",
+        "de": "Ungültige Karte",
+        "fr": "Carte invalide",
+        "ga": "Láithreán neamhbhailí",
+        "it": "Mappa non valida",
+        "ja": "無効なマップ",
+        "la": "Tabula invalida",
+        "ru": "Неверная карта",
+        "zh": "无效的地图"
+    }
+}

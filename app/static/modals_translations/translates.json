@@ -26,16 +26,16 @@
     },
 
     "maximumSteps": {
-        "en": "Your agent couldn't complete the maze in the maximum number of steps. Try again!",
-        "es": "Tu agente no pudo completar el laberinto en el número máximo de pasos. ¡Inténtalo de nuevo!",
-        "de": "Dein Agent konnte das Labyrinth in der maximalen Anzahl von Schritten nicht abschließen. Versuch es noch einmal!",
-        "fr": "Ton agent n'a pas pu terminer le labyrinthe en nombre maximum de pas. Essaie encore!",
-        "ga": "Ní raibh do ghníomhaí in ann an labhairt a chríochnú i líon na gcéimeanna uasta. Déan iarracht arís!",
-        "it": "Il tuo agente non è riuscito a completare il labirinto nel numero massimo di passi. Riprova!",
-        "ja": "あなたのエージェントは最大ステップ数で迷路を完了できませんでした。もう一度試してください！",
-        "la": "Agens tuus labyrinthum in numero maximorum gradus conficere non potuit. Iterum tenta!",
-        "ru": "Ваш агент не смог завершить лабиринт за максимальное количество шагов. Попробуйте снова!",
-        "zh": "你的代理无法在最大步数内完成迷宫。再试一次！"
+    "en": "Your agent couldn't complete the maze in ${steps} steps. Try again!",
+    "es": "Tu agente no pudo completar el laberinto en ${steps} pasos. ¡Inténtalo de nuevo!",
+    "de": "Dein Agent konnte das Labyrinth in ${steps} Schritten nicht abschließen. Versuch es noch einmal!",
+    "fr": "Ton agent n'a pas pu terminer le labyrinthe en ${steps} pas. Essaie encore!",
+    "ga": "Ní raibh do ghníomhaí in ann an labhairt a chríochnú i ${steps} céimeanna. Déan iarracht arís!",
+    "it": "Il tuo agente non è riuscito a completare il labirinto in ${steps} passi. Riprova!",
+    "ja": "あなたのエージェントは${steps}ステップで迷路を完了できませんでした。もう一度試してください！",
+    "la": "Agens tuus labyrinthum in ${steps} gradibus conficere non potuit. Iterum tenta!",
+    "ru": "Ваш агент не смог завершить лабиринт за ${steps} шагов. Попробуйте снова!",
+    "zh": "你的代理无法在${steps}步内完成迷宫。再试一次！"
     },
 
     "startDoor": {
